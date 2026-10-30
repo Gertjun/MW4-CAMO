@@ -3,7 +3,7 @@
 // BIJ ELKE RELEASE: VERSION ophogen (gelijk aan js/config.js).
 // NIEUW BESTAND?    Toevoegen aan PRECACHE.
 
-const VERSION = '1.3.2';
+const VERSION = '1.4.0';
 
 // De cache-naam bevat het pad van de app, zodat meerdere apps onder
 // <gebruiker>.github.io elkaars cache niet opruimen.
@@ -131,6 +131,39 @@ const PRECACHE = [
   './img/camos/raster-lite.webp',
   './img/camos/stockpile.webp',
   './img/camos/deathbed.webp',
+  './img/weapons/50-gs.webp',
+  './img/weapons/apoc-338.webp',
+  './img/weapons/astaroth-57.webp',
+  './img/weapons/axion.webp',
+  './img/weapons/cronen-squall.webp',
+  './img/weapons/finn-lmg.webp',
+  './img/weapons/fss-carbon-edge-1095.webp',
+  './img/weapons/han-86.webp',
+  './img/weapons/hyeon-burst.webp',
+  './img/weapons/iso-nightshade.webp',
+  './img/weapons/jokr.webp',
+  './img/weapons/kastov-762.webp',
+  './img/weapons/kg-7-vulcan.webp',
+  './img/weapons/krait-p68.webp',
+  './img/weapons/m4.webp',
+  './img/weapons/mar-9.webp',
+  './img/weapons/mojave-357.webp',
+  './img/weapons/mosin-nagant.webp',
+  './img/weapons/oden.webp',
+  './img/weapons/oris-8-6.webp',
+  './img/weapons/patriot-xmr.webp',
+  './img/weapons/pila.webp',
+  './img/weapons/pm-40-anvil.webp',
+  './img/weapons/ppsh-41.webp',
+  './img/weapons/rezi-12.webp',
+  './img/weapons/rpg-8.webp',
+  './img/weapons/sang-9mm.webp',
+  './img/weapons/signal-50.webp',
+  './img/weapons/type-73.webp',
+  './img/weapons/vel-46.webp',
+  './img/weapons/warlord.webp',
+  './img/weapons/wz-55-striga.webp',
+  './img/weapons/x-58-nyx.webp',
   './js/core/shell.js',
   './js/core/vault.js',
   './js/core/crypto.js',

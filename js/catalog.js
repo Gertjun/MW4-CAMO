@@ -374,3 +374,9 @@ export const CAMO_IMAGES = {
   Garland: 'garland',
 };
 export const imageOf = (name) => (CAMO_IMAGES[name] ? `img/camos/${CAMO_IMAGES[name]}.webp` : null);
+
+// Wapenafbeeldingen staan in img/weapons/<wapen-id>.webp (240×120, transparant).
+// Bron: mw4.gg (api.mw4.gg). Nieuw wapen? Zet het bestand erbij, voeg de id
+// toe aan WEAPON_IMAGES én het pad aan PRECACHE in sw.js.
+const WEAPON_IMAGES = new Set(WEAPONS.map((w) => w.id));
+export const weaponImageOf = (weapon) => (WEAPON_IMAGES.has(weapon.id) ? `img/weapons/${weapon.id}.webp` : null);

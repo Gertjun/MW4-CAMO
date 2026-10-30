@@ -9,7 +9,7 @@
 
 import { h, today } from './core/dom.js';
 import { newRecord, updateById, mergeCollections, purgeTombstones } from './core/records.js';
-import { CLASSES, WEAPONS, camosOf, classById, CAMOS_PER_WEAPON, imageOf } from './catalog.js';
+import { CLASSES, WEAPONS, camosOf, classById, CAMOS_PER_WEAPON, imageOf, weaponImageOf } from './catalog.js';
 
 const SCHEMA = 1;
 const TOMBSTONE_DAYS = 180;
@@ -159,6 +159,13 @@ function swatch(camo) {
     h('img', { src, alt: '', width: 36, height: 36, loading: 'lazy', decoding: 'async' }));
 }
 
+function weaponPic(weapon) {
+  const src = weaponImageOf(weapon);
+  if (!src) return h('span', { class: 'weapon-pic is-empty', 'aria-hidden': 'true' });
+  return h('span', { class: 'weapon-pic', 'aria-hidden': 'true' },
+    h('img', { src, alt: '', width: 120, height: 60, loading: 'lazy', decoding: 'async' }));
+}
+
 function camoRow(ctx, done, weapon, camo) {
   const isDone = done.has(key(weapon.id, camo.id));
   const locked = !isDone && missingFor(done, weapon, camo).length > 0;
@@ -193,6 +200,7 @@ function weaponCard(ctx, done, weapon) {
       card.querySelector('.weapon-body').hidden = !nowOpen;
     },
   },
+  weaponPic(weapon),
   h('span', { class: 'weapon-title' },
     h('span', { class: 'weapon-name' }, weapon.name),
     h('span', { class: 'weapon-count' }, `${count} / ${CAMOS_PER_WEAPON}`)),

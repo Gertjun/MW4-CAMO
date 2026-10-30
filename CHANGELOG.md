@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.0
+
+**Toegevoegd**
+- Bij elk wapen staat nu een afbeelding van het wapen zelf, links in de kop van de wapenkaart. Alle 33 wapens hebben een plaatje (bron: mw4.gg). Ze worden in de app bewaard en werken ook offline.
+
 ## 1.3.2
 
 **Gewijzigd**
