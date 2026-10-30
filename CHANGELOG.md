@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.0
+
+**Toegevoegd**
+- Bij elke camo staat nu een gekleurd blokje dat laat zien hoe de camo eruitziet (kleur en patroon: metaal, vlekken, strepen of korrel). Het is een benadering met CSS, geen echte afbeelding uit het spel.
+
 ## 1.0.0
 
 Eerste versie van MW4 Camo Tracker (gebouwd op de PWA-template 1.2.0).

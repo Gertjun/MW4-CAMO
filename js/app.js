@@ -9,7 +9,7 @@
 
 import { h, today } from './core/dom.js';
 import { newRecord, updateById, mergeCollections, purgeTombstones } from './core/records.js';
-import { CLASSES, WEAPONS, camosOf, classById, CAMOS_PER_WEAPON } from './catalog.js';
+import { CLASSES, WEAPONS, camosOf, classById, CAMOS_PER_WEAPON, swatchOf } from './catalog.js';
 
 const SCHEMA = 1;
 const TOMBSTONE_DAYS = 180;
@@ -152,6 +152,15 @@ function weaponStats(done, weapon) {
   return { count, next };
 }
 
+function swatch(camo) {
+  const [c1, c2, pattern] = swatchOf(camo.name);
+  const el = h('span', { class: `swatch sw-${pattern}`, 'aria-hidden': 'true' });
+  // Via CSSOM: inline style-attributen blokkeert de CSP.
+  el.style.setProperty('--c1', c1);
+  el.style.setProperty('--c2', c2);
+  return el;
+}
+
 function camoRow(ctx, done, weapon, camo) {
   const isDone = done.has(key(weapon.id, camo.id));
   const locked = !isDone && missingFor(done, weapon, camo).length > 0;
@@ -160,6 +169,7 @@ function camoRow(ctx, done, weapon, camo) {
   checkbox.addEventListener('change', () => onToggle(ctx, done, weapon, camo, checkbox));
   return h('li', { class: `camo${isDone ? ' is-done' : ''}${locked ? ' is-locked' : ''}` },
     checkbox,
+    swatch(camo),
     h('label', { for: inputId },
       h('span', { class: 'camo-name' }, camo.name,
         camo.level ? h('span', { class: 'camo-level' }, ` · vanaf level ${camo.level}`) : null,
