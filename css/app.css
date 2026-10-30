@@ -100,6 +100,7 @@
 .weapon-count { font-variant-numeric: tabular-nums; font-weight: 600; }
 .weapon-next { font-size: 0.85rem; }
 .weapon-task { font-size: 0.85rem; line-height: 1.3; }
+.weapon-task:empty { display: none; } /* lege regel bij voltooide wapens alleen op brede schermen */
 .weapon.is-complete .weapon-count { color: var(--ok); }
 .weapon.is-open .weapon-head { border-bottom: 1px solid var(--border); }
 
@@ -193,6 +194,15 @@
     gap: 12px;
   }
   .class-head { grid-column: 1 / -1; margin-top: 12px; }
+
+  /* Alle wapenkaarten even hoog: altijd ruimte voor 2 regels opdracht,
+     langere opdrachten worden afgekort (volledig zichtbaar na openklappen). */
+  .weapon-next { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .weapon-task, .weapon-task:empty {
+    min-height: calc(2 * 1.3em);
+    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
+    line-clamp: 2; overflow: hidden;
+  }
 
   .view-tabs { max-width: 420px; }
   .lo-add { max-width: 320px; }

@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.7.1
+
+**Opgelost**
+- Op brede schermen (laptop) zijn alle wapenkaarten nu even hoog. Er is altijd ruimte voor twee regels opdracht; een langere opdracht wordt afgekort met "…" en staat volledig in het opengeklapte wapen. De regel "Volgende: …" blijft op één regel.
+
 ## 1.7.0
 
 **Toegevoegd**

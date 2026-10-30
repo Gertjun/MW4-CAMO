@@ -280,7 +280,9 @@ function weaponCard(ctx, done, pinned, weapon) {
     h('span', { class: 'weapon-next muted' },
       complete ? 'Alles vrijgespeeld ✓' : `${classById(weapon.cls).name} · Volgende: ${next.name}`,
       prestige ? ` · Prestige ${prestige}/${PRESTIGE_CAMOS.length}` : ''),
-    complete ? null : h('span', { class: 'weapon-task' }, `Opdracht: ${next.mp || 'nog onbekend'}`),
+    complete
+      ? h('span', { class: 'weapon-task', 'aria-hidden': 'true' })
+      : h('span', { class: 'weapon-task' }, `Opdracht: ${next.mp || 'nog onbekend'}`),
   ];
 
   const camos = ALL_CAMOS.get(weapon.id);
