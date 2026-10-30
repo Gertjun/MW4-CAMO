@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.9.0
+
+**Gewijzigd**
+- Het instellingenscherm is overzichtelijker. Op de telefoon vult het nu het hele scherm, en je ziet eerst een kort overzicht: Synchronisatie, Beveiliging, Back-up en Over deze app, elk met de huidige stand erbij (bijvoorbeeld "Gesynchroniseerd 2 min geleden" of "Face ID / passkey aan").
+- Tik op een onderdeel om het te openen; met "‹ Terug" ga je terug naar het overzicht.
+- Formulieren die je zelden nodig hebt (GitHub-verbinding, wachtwoord wijzigen, back-up terugzetten) zijn ingeklapt tot je erop tikt. Is de synchronisatie nog niet ingesteld, dan staat het GitHub-formulier meteen open.
+- "Dit apparaat wissen" staat als aparte rode regel onderaan het overzicht.
+- Dit is een wijziging in de template-kern (index.html, core/shell.js, base.css) en kan zo naar de PWA-template.
+
 ## 1.8.0
 
 **Toegevoegd**

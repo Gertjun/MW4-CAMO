@@ -409,6 +409,7 @@ function setSyncState(state, label) {
   btn.title = label;
   btn.setAttribute('aria-label', `Synchroniseren: ${label}`);
   $('#sync-status').textContent = label;
+  $('#sum-sync').textContent = state === 'off' ? 'Niet ingesteld' : label;
 }
 
 function updateSyncIndicator() {
@@ -478,11 +479,32 @@ function wireAppBar() {
 
 // ---------- Instellingen ----------
 
-function openSettings(section) {
+// Het instellingenscherm toont eerst een overzicht. Een tik op een regel opent
+// dat onderdeel als eigen pagina met een Terug-knop (zoals Instellingen op iOS).
+let settingsPage = null;
+
+function openSettings(page) {
   fillSettings();
   const dlg = $('#dlg-settings');
   if (!dlg.open) dlg.showModal();
-  if (section) $(`#settings-${section}`)?.scrollIntoView({ block: 'start' });
+  showSettingsPage(page ?? null);
+}
+
+function showSettingsPage(page) {
+  const section = page && $(`#settings-${page}`);
+  settingsPage = section ? page : null;
+  $('#settings-menu').hidden = !!settingsPage;
+  $$('#dlg-settings .settings-section').forEach((el) => { el.hidden = el !== section; });
+  $('#btn-settings-back').hidden = !settingsPage;
+  $('#settings-title').textContent = settingsPage ? section.dataset.title : 'Instellingen';
+  $('#dlg-settings .sheet-body').scrollTop = 0;
+  // Zonder verbinding meteen het formulier tonen; anders blijft het dicht.
+  if (settingsPage === 'sync') $('#sync-connection').open = !isSyncConfigured();
+  if (!settingsPage) {
+    $$('#dlg-settings details').forEach((d) => { d.open = false; });
+  }
+  // Focus naar de titel, zodat schermlezers de nieuwe pagina aankondigen.
+  $('#settings-title').focus({ preventScroll: true });
 }
 
 function fillSettings() {
@@ -496,6 +518,8 @@ function fillSettings() {
   f.elements.token.placeholder = gh?.token ? '•••••••• (opgeslagen, leeg laten om te behouden)' : 'github_pat_…';
   f.elements.autoSync.checked = settings?.autoSync !== false;
   $('#btn-github-remove').hidden = !gh;
+  $('#btn-sync-now').hidden = !gh;
+  $('#sum-about').textContent = `Versie ${APP.version}`;
   ['#github-error', '#password-error', '#restore-error'].forEach((s) => showError(s, ''));
   updateSyncIndicator();
   updateBioUI();
@@ -504,13 +528,16 @@ function fillSettings() {
 async function updateBioUI() {
   const btn = $('#btn-bio-toggle');
   const status = $('#bio-status');
+  const summary = $('#sum-security');
   if (bio.isEnrolled()) {
     status.textContent = 'Ingeschakeld op dit apparaat.';
+    summary.textContent = 'Face ID / passkey aan';
     btn.textContent = 'Uitschakelen';
     btn.disabled = false;
     return;
   }
   const supported = await bio.isSupported();
+  summary.textContent = supported ? 'Face ID / passkey uit' : 'Alleen wachtwoord';
   status.textContent = supported
     ? 'Uit. Ontgrendel met Face ID, Touch ID, Windows Hello of een passkey.'
     : 'Niet beschikbaar in deze browser of op dit apparaat.';
@@ -532,6 +559,17 @@ function wireSettings() {
   const dlg = $('#dlg-settings');
   $('#btn-close-settings').addEventListener('click', () => dlg.close());
   dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
+  dlg.addEventListener('close', () => showSettingsPage(null));
+  // Escape op een onderdeel gaat eerst terug naar het overzicht.
+  dlg.addEventListener('cancel', (e) => {
+    if (!settingsPage) return;
+    e.preventDefault();
+    showSettingsPage(null);
+  });
+  $('#btn-settings-back').addEventListener('click', () => showSettingsPage(null));
+  $$('#settings-menu [data-page]').forEach((row) => {
+    row.addEventListener('click', () => showSettingsPage(row.dataset.page));
+  });
 
   // GitHub-sync
   const ghForm = $('#form-github');
