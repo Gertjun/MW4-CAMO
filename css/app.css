@@ -111,3 +111,24 @@
 .camo-dialog .sheet-header h2 { font-size: 1.05rem; margin: 0; }
 .camo-dialog .sheet-body { display: grid; gap: 12px; padding-top: 16px; }
 .missing-list { margin: 0; padding-left: 20px; display: grid; gap: 4px; }
+
+/* ---------- Bredere schermen (iPad, laptop) ----------
+   Op een telefoon blijft alles één kolom. Vanaf tabletbreedte gebruikt de app
+   meer ruimte: de wapenkaarten staan naast elkaar in kolommen (zoveel als er
+   passen, minimaal 340px breed) en de klasse-knoppen lopen door op een
+   tweede regel in plaats van zijwaarts te scrollen. Alleen voor het
+   app-scherm; het ontgrendel- en instelscherm blijven smal. */
+@media (min-width: 760px) {
+  #screen-app .app-main { max-width: 1600px; padding-left: calc(24px + var(--safe-left)); padding-right: calc(24px + var(--safe-right)); }
+  #screen-app .app-header-inner { max-width: 1552px; } /* = inhoudsbreedte (1600px min. 2× 24px marge) */
+
+  .chips { flex-wrap: wrap; overflow: visible; margin: 0; padding: 0; }
+  .sort-line select { flex: 0 1 280px; }
+
+  .class-group {
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    align-items: start;
+    gap: 12px;
+  }
+  .class-head { grid-column: 1 / -1; margin-top: 12px; }
+}

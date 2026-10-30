@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.3.2
+
+**Gewijzigd**
+- Op een laptop en iPad gebruikt de app nu de breedte van het scherm: de wapens staan in twee tot vier kolommen (afhankelijk van de schermbreedte) naast elkaar en de klasse-knoppen passen op het scherm zonder zijwaarts scrollen. Op de iPhone blijft alles hetzelfde.
+
 ## 1.3.1
 
 **Toegevoegd**
