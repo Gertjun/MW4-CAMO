@@ -15,6 +15,24 @@
 }
 /* @accent-end */
 
+/* ---------- Titel met logo ---------- */
+.app-title-logo { display: flex; align-items: center; gap: 10px; min-width: 0; margin: 0; overflow: visible; }
+.app-title-logo picture { display: contents; }
+.app-title-logo img { display: block; height: 36px; width: auto; flex: none; }
+.app-title-logo span {
+  width: min-content; flex: none; white-space: normal; /* "Camo" en "Tracker" onder elkaar */
+  font-size: 0.8rem; line-height: 1.15; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--muted);
+  padding-left: 10px; border-left: 1px solid var(--border);
+}
+@media (min-width: 560px) { .app-title-logo span { width: auto; font-size: 0.9rem; white-space: nowrap; } }
+@media (max-width: 400px) { /* iPhone SE/mini: iets compacter */
+  .app-title-logo { gap: 8px; }
+  .app-title-logo img { height: 32px; }
+  .app-title-logo span { font-size: 0.72rem; padding-left: 8px; }
+}
+@media (max-width: 360px) { .app-title-logo span { display: none; } } /* heel smal scherm: alleen het logo */
+
 /* ---------- Samenvatting ---------- */
 .summary { padding: 16px; display: grid; gap: 10px; }
 .summary-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }

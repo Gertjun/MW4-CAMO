@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.10.0
+
+**Gewijzigd**
+- De titel bovenin de app toont nu het officiële logo van Call of Duty Modern Warfare 4, met "Camo Tracker" ernaast.
+- Het logo past zich aan het thema aan: witte letters in dark mode, donkere letters in light mode (de gele "4" blijft geel). De zachte schaduw uit het originele logo is weggehaald, zodat het scherp blijft op beide achtergronden.
+
 ## 1.9.0
 
 **Gewijzigd**
