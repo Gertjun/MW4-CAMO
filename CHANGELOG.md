@@ -1,34 +1,22 @@
 # Changelog
 
-## 1.2.0
-
-**Toegevoegd**
-- Automatische setup: na *Use this template* stelt de workflow *Nieuwe app instellen* naam, opslag-id, datapad, versie, manifest en titels in en probeert GitHub Pages aan te zetten. Handmatig te starten met een eigen naam, kleur en icoonletter; de iconen worden dan in alle formaten gemaakt (`tools/setup.mjs`).
-- De accentkleur bepaalt automatisch de tekstkleur op knoppen (wit of donker), zodat ook lichte kleuren leesbaar blijven.
-
-## 1.1.0
-
-**Opgelost**
-- Twee tabbladen tegelijk open kon wijzigingen van het andere tabblad overschrijven. Tabbladen laden nu elkaars wijzigingen in.
-- Snel achter elkaar wijzigen kon wijzigingen kwijtraken. Wijzigingen en opslag lopen nu strikt één voor één.
-- Een oudere app-versie kon gegevens van een nieuwere versie beschadigen. De app blokkeert nu het bewerken en synchroniseren en vraagt om bij te werken (`app.schemaVersion`).
-
-**Toegevoegd**
-- Privacyscherm: de inhoud wordt verborgen in de app-wisselaar en op de achtergrond.
-- Synchroniseren wacht 20 seconden na de laatste wijziging (`syncDelaySeconds`), en gebeurt altijd direct bij vergrendelen of het verlaten van de app. Dat geeft minder commits.
-- De app vraagt de browser om de opslag permanent te bewaren (`navigator.storage.persist()`).
-- Back-up op de telefoon gaat via het deelmenu (`saveFile()`).
-- Nieuwe wachtwoorden moeten minimaal 12 tekens hebben (`minPasswordLength`), met een sterktemeter.
-- Knop om het wachtwoord te tonen of te verbergen.
-- Na het instellen of koppelen biedt de app aan om Face ID / passkey in te schakelen.
-- `parseEuro()` voor het invoeren van bedragen in Nederlandse notatie.
-- Verwijderde records worden na 180 dagen opgeruimd (in de demo-`migrate`).
-- Waarschuwing als de versies in `config.js` en `sw.js` verschillen.
-- `CHANGELOG.md`.
-
-**Gewijzigd**
-- De kopbalk op brede schermen is even breed als de inhoud.
-
 ## 1.0.0
 
-- Eerste versie: versleutelde kluis, GitHub-sync, Face ID / passkey, offline en updates, instellingen, back-up.
+Eerste versie van MW4 Camo Tracker (gebouwd op de PWA-template 1.2.0).
+
+**Toegevoegd**
+- Alle 33 wapens van Modern Warfare 4 in 9 klassen, elk met 14 camo's: 8 militair, 3 speciaal en Gold, Platinum en Harmonic Break.
+- Bij elke camo de opdracht (multiplayer en DMZ) en vanaf welk wapenlevel hij beschikbaar is. Waar die nog niet bekend is, staat "Opdracht nog onbekend".
+- Filteren op klasse (Assault, SMG, Shotgun, LMG, Marksman, Sniper, Pistol, Launcher, Melee) en sorteren op klasse, naam, minste of meeste camo's.
+- Totaaloverzicht met voortgang en mastery-tellers (Gold, Platinum, Harmonic Break, Divergence).
+- Vrijspeelregels zoals in het spel. Wat nog niet kan, is geblokkeerd met een pop-up die zegt wat er mist:
+  - militaire camo's op volgorde;
+  - Gold pas na alle 8 militaire en 3 speciale camo's van dat wapen;
+  - Platinum pas als alle wapens van de klasse Gold hebben;
+  - Harmonic Break pas als alle 33 wapens Platinum hebben;
+  - Divergence volgt automatisch bij 33 keer Harmonic Break.
+- Knop "Alle militaire aan" per wapen.
+
+**Nog niet compleet**
+- Opdrachten ontbreken nog voor: PPSh-41 (Iron), X-58 Nyx (Lime), Type 73 (Outcrop, Foxtrail), APOC-338 (Mineral, Tiger Swipe), Mojave .357 (Wallpaper, Garland), FSS Carbon Edge 1095 (alle speciale en mastery), en de aantallen voor Platinum/Harmonic Break bij assault rifles en launchers.
+- Wapenlevels van de militaire camo's zijn alleen bekend voor Han 86, ISO Nightshade, Rezi 12, FiNN LMG, MAR-9, KG-7 Vulcan en SANG 9mm.

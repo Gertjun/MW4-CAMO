@@ -7,21 +7,98 @@
    manifest.webmanifest aanpassen). */
 /* @accent-start */
 :root {
-  --accent: #2563eb;
+  --accent: #4d7c0f;
   --accent-contrast: #ffffff;
 }
 @media (prefers-color-scheme: dark) {
-  :root { --accent: #5b8cff; --accent-contrast: #0b0d12; }
+  :root { --accent: #82a357; --accent-contrast: #0b0d12; }
 }
 /* @accent-end */
 
-/* Demo: invoerregel bovenaan */
-.add-form {
-  display: flex;
-  gap: 8px;
-  padding: 8px;
-}
-.add-form input { border-color: transparent; background: transparent; }
-.add-form input:focus-visible { box-shadow: none; border-color: transparent; }
+/* ---------- Samenvatting ---------- */
+.summary { padding: 16px; display: grid; gap: 10px; }
+.summary-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.summary-label { font-weight: 600; }
+.summary-value { font-variant-numeric: tabular-nums; font-weight: 600; }
 
-.list-item.is-done .check span { color: var(--muted); text-decoration: line-through; }
+.bar { height: 8px; border-radius: 99px; background: var(--surface-2); overflow: hidden; }
+.bar > span { display: block; height: 100%; background: var(--accent); border-radius: inherit; transition: width 0.2s; }
+
+.mastery { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.mastery-tile {
+  display: grid; justify-items: center; gap: 2px; padding: 8px 4px;
+  border-radius: var(--radius-sm); background: var(--surface-2);
+}
+.mastery-value { font-weight: 700; font-variant-numeric: tabular-nums; }
+.mastery-label { font-size: 0.75rem; color: var(--muted); }
+.m-gold .mastery-value { color: #b8860b; }
+.m-plat .mastery-value { color: #7d8a99; }
+.m-hb .mastery-value { color: #7b4fd6; }
+.m-div .mastery-value { color: #c2185b; }
+@media (prefers-color-scheme: dark) {
+  .m-gold .mastery-value { color: #e8c15a; }
+  .m-plat .mastery-value { color: #c7d0db; }
+  .m-hb .mastery-value { color: #b39af0; }
+  .m-div .mastery-value { color: #f48fb1; }
+}
+
+/* ---------- Filters en sorteren ---------- */
+.controls { display: grid; gap: 10px; }
+.chips {
+  display: flex; gap: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+  margin: 0 calc(-1 * 16px); padding: 2px 16px; scrollbar-width: none;
+}
+.chips::-webkit-scrollbar { display: none; }
+.chip {
+  flex: none; min-height: var(--tap); padding: 0 16px; border-radius: 99px;
+  border: 1px solid var(--border); background: var(--surface); color: var(--text);
+  font: inherit; font-size: 0.925rem; cursor: pointer;
+}
+.chip.is-active { background: var(--accent); border-color: var(--accent); color: var(--accent-contrast); font-weight: 600; }
+.chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.sort-line { display: flex; align-items: center; gap: 12px; }
+.sort-line label { color: var(--muted); }
+.sort-line select { flex: 1; min-height: var(--tap); font-size: 16px; }
+.shown-count { font-size: 0.85rem; margin: 4px 0 0; }
+
+/* ---------- Wapens ---------- */
+.class-group { display: grid; gap: 10px; }
+.class-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 1rem; margin: 8px 4px 0;
+}
+.class-head .muted { font-weight: 400; font-size: 0.875rem; font-variant-numeric: tabular-nums; }
+
+.weapon { padding: 0; overflow: hidden; }
+.weapon-head {
+  display: grid; gap: 8px; width: 100%; min-height: var(--tap); padding: 14px 16px;
+  border: 0; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer;
+}
+.weapon-head:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.weapon-title { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.weapon-name { font-weight: 600; }
+.weapon-count { font-variant-numeric: tabular-nums; font-weight: 600; }
+.weapon-next { font-size: 0.85rem; }
+.weapon.is-complete .weapon-count { color: var(--ok); }
+.weapon.is-open .weapon-head { border-bottom: 1px solid var(--border); }
+
+.weapon-body { padding: 4px 16px 12px; }
+.camo-group-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin: 12px 0 4px; }
+.camo-group-head h3 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 0; }
+.camo-list { list-style: none; margin: 0; padding: 0; }
+.camo { display: flex; align-items: flex-start; gap: 12px; padding: 6px 0; }
+.camo + .camo { border-top: 1px solid var(--border); }
+.camo input[type=checkbox] {
+  flex: none; width: 24px; height: 24px; margin: 10px; accent-color: var(--accent); cursor: pointer;
+}
+.camo label { flex: 1; display: grid; gap: 2px; min-height: var(--tap); padding: 8px 0; cursor: pointer; }
+.camo-name { font-weight: 500; }
+.camo-level { font-weight: 400; color: var(--muted); font-size: 0.85rem; }
+.camo-task { font-size: 0.875rem; }
+.camo.is-done .camo-name { color: var(--muted); text-decoration: line-through; }
+.camo.is-locked { opacity: 0.6; }
+
+/* ---------- Pop-up ---------- */
+.camo-dialog .sheet-header h2 { font-size: 1.05rem; margin: 0; }
+.camo-dialog .sheet-body { display: grid; gap: 12px; padding-top: 16px; }
+.missing-list { margin: 0; padding-left: 20px; display: grid; gap: 4px; }
