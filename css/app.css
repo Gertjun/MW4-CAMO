@@ -126,6 +126,38 @@
 .camo-dialog .sheet-body { display: grid; gap: 12px; padding-top: 16px; }
 .missing-list { margin: 0; padding-left: 20px; display: grid; gap: 4px; }
 
+/* ---------- Tabs bovenin (Camo's / Loadouts) ---------- */
+.view-tabs button { min-height: var(--tap); font-size: 1rem; }
+.view-tabs button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+/* ---------- Loadouts ---------- */
+.lo-add { min-height: var(--tap); }
+.loadout-list { display: grid; gap: 10px; }
+.loadout { padding: 14px 16px; display: grid; gap: 12px; }
+.loadout-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.loadout-name { font-size: 1.05rem; overflow-wrap: anywhere; }
+.loadout-head .btn { min-height: var(--tap); flex: none; }
+.lo-weapon { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 14px; align-items: start; }
+.lo-weapon + .lo-weapon { padding-top: 12px; border-top: 1px solid var(--border); }
+.lo-weapon .weapon-pic { grid-row: auto; }
+.lo-weapon-text { display: grid; gap: 2px; min-width: 0; }
+.lo-slot { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.lo-weapon-name { font-weight: 600; }
+.lo-weapon-name .muted { font-weight: 400; }
+.lo-atts { margin: 4px 0 0; padding-left: 18px; display: grid; gap: 2px; font-size: 0.9rem; overflow-wrap: anywhere; }
+.lo-none { font-size: 0.875rem; }
+.lo-notes { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 0.9rem; color: var(--muted);
+  padding-top: 10px; border-top: 1px solid var(--border); }
+
+/* Formulier in de pop-up */
+.lo-dialog .sheet-header h2 { font-size: 1.05rem; margin: 0; }
+.lo-form { padding-top: 16px; }
+.lo-form input, .lo-form select, .lo-form textarea { font-size: 16px; min-height: var(--tap); }
+.lo-fieldset { margin: 0; padding: 12px 14px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); display: grid; gap: 12px; min-width: 0; }
+.lo-fieldset legend { padding: 0 6px; font-weight: 600; }
+.att-inputs { display: grid; gap: 10px; }
+.att-inputs[hidden] { display: none; }
+
 /* ---------- Bredere schermen (iPad, laptop) ----------
    Op een telefoon blijft alles één kolom. Vanaf tabletbreedte gebruikt de app
    meer ruimte: de wapenkaarten staan naast elkaar in kolommen (zoveel als er
@@ -145,4 +177,8 @@
     gap: 12px;
   }
   .class-head { grid-column: 1 / -1; margin-top: 12px; }
+
+  .view-tabs { max-width: 420px; }
+  .lo-add { max-width: 320px; }
+  .loadout-list { grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); align-items: start; gap: 12px; }
 }

@@ -1,8 +1,9 @@
 // =============================================================
 //  MW4 Camo Tracker — app-specifieke code
 // =============================================================
-// Gegevens in de kluis: alleen voortgang.
+// Gegevens in de kluis:
 //   progress: [{ id: '<wapen>:<camo>', weaponId, camoId, done, doneAt, createdAt, updatedAt }]
+//   loadouts: zie js/loadouts.js (sinds schema 2)
 // Eén record per wapen+camo met een vaste id. Uitvinken zet done op false
 // (niets wordt verwijderd), zodat sync per camo de nieuwste wijziging kiest.
 // De wapen- en camolijst zelf staat in js/catalog.js.
@@ -10,12 +11,19 @@
 import { h, today } from './core/dom.js';
 import { newRecord, updateById, mergeCollections, purgeTombstones } from './core/records.js';
 import { CLASSES, WEAPONS, camosOf, classById, CAMOS_PER_WEAPON, imageOf, weaponImageOf } from './catalog.js';
+import { renderLoadouts, closeOnLock } from './loadouts.js';
 
-const SCHEMA = 1;
+// 1 = alleen camo-voortgang; 2 = ook loadouts.
+const SCHEMA = 2;
 const TOMBSTONE_DAYS = 180;
 
 // Schermkeuzes (alleen tijdens gebruik, niet in de kluis).
-const ui = { filter: 'all', sort: 'class', open: new Set() };
+const ui = { view: 'camos', filter: 'all', sort: 'class', open: new Set() };
+
+const VIEWS = [
+  { id: 'camos', label: "Camo's" },
+  { id: 'loadouts', label: 'Loadouts' },
+];
 
 const SORTS = [
   { id: 'class', label: 'Klasse' },
@@ -96,6 +104,7 @@ function showBlocked(title, intro, items) {
       rest > 0 ? h('p', { class: 'muted' }, `…en nog ${rest}.`) : null,
       h('button', { class: 'btn btn-primary btn-block', type: 'button', onClick: () => dlg.close() }, 'OK')));
   dlg.addEventListener('close', () => dlg.remove());
+  closeOnLock(dlg);
   document.body.append(dlg);
   dlg.showModal();
 }
@@ -255,17 +264,33 @@ function controls(ctx, rerender) {
     h('div', { class: 'sort-line' }, h('label', { for: 'sort' }, 'Sorteren'), select));
 }
 
+function viewTabs(rerender) {
+  return h('div', { class: 'segmented view-tabs', role: 'tablist', 'aria-label': 'Scherm' },
+    VIEWS.map((v) => h('button', {
+      type: 'button', role: 'tab', id: `tab-${v.id}`, 'aria-selected': String(ui.view === v.id),
+      onClick: () => {
+        if (ui.view === v.id) return;
+        ui.view = v.id;
+        rerender();
+        window.scrollTo(0, 0);
+      },
+    }, v.label)));
+}
+
 export const app = {
   schemaVersion: SCHEMA,
 
   initialData() {
-    return { schema: SCHEMA, progress: [] };
+    return { schema: SCHEMA, progress: [], loadouts: [] };
   },
 
   migrate(data) {
+    // Schema 1 → 2: lege lijst loadouts erbij. Voortgang blijft ongewijzigd.
     data.progress ??= [];
-    data.schema ??= SCHEMA;
+    data.loadouts ??= [];
+    data.schema = Math.max(data.schema || 0, SCHEMA);
     data.progress = purgeTombstones(data.progress, TOMBSTONE_DAYS);
+    data.loadouts = purgeTombstones(data.loadouts, TOMBSTONE_DAYS);
     return data;
   },
 
@@ -275,11 +300,16 @@ export const app = {
       ...local,
       schema: Math.max(local.schema || 0, remote.schema || 0),
       progress: mergeCollections(local.progress, remote.progress),
+      loadouts: mergeCollections(local.loadouts, remote.loadouts),
     };
   },
 
   render(root, ctx) {
     const rerender = () => app.render(root, ctx);
+    if (ui.view === 'loadouts') {
+      root.replaceChildren(viewTabs(rerender), ...renderLoadouts(ctx));
+      return;
+    }
     const done = progressIndex(ctx.data);
 
     let weapons = WEAPONS.filter((w) => ui.filter === 'all' || w.cls === ui.filter);
@@ -303,6 +333,7 @@ export const app = {
     }
 
     root.replaceChildren(
+      viewTabs(rerender),
       summary(done),
       controls(ctx, rerender),
       h('p', { class: 'muted shown-count' }, `${weapons.length} van ${WEAPONS.length} wapens`),

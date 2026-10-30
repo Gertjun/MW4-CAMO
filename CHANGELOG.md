@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.5.0
+
+**Toegevoegd**
+- Bovenin de app staan nu twee knoppen: **Camo's** en **Loadouts**. Camo's werkt zoals voorheen.
+- Op het scherm Loadouts kun je loadouts opslaan, bewerken en verwijderen. Per loadout: een naam, een primair wapen en (optioneel) een secundair wapen uit de lijst van 33, elk met maximaal 5 attachments als vrije tekst, en een notitie. Bij elk wapen staat de afbeelding.
+- Loadouts worden versleuteld in de kluis bewaard en gesynchroniseerd, net als je camo-voortgang.
+
+**Gewijzigd**
+- Het datamodel is uitgebreid (schema 2). Je bestaande camo-voortgang blijft gewoon staan. Een apparaat met een oudere versie vraagt eerst om bij te werken.
+- Een open pop-up sluit nu vanzelf als de app vergrendelt.
+
 ## 1.4.0
 
 **Toegevoegd**
