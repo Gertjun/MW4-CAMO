@@ -9,7 +9,7 @@
 
 import { h, today } from './core/dom.js';
 import { newRecord, updateById, mergeCollections, purgeTombstones } from './core/records.js';
-import { CLASSES, WEAPONS, camosOf, classById, CAMOS_PER_WEAPON, swatchOf } from './catalog.js';
+import { CLASSES, WEAPONS, camosOf, classById, CAMOS_PER_WEAPON, imageOf } from './catalog.js';
 
 const SCHEMA = 1;
 const TOMBSTONE_DAYS = 180;
@@ -153,12 +153,10 @@ function weaponStats(done, weapon) {
 }
 
 function swatch(camo) {
-  const [c1, c2, pattern] = swatchOf(camo.name);
-  const el = h('span', { class: `swatch sw-${pattern}`, 'aria-hidden': 'true' });
-  // Via CSSOM: inline style-attributen blokkeert de CSP.
-  el.style.setProperty('--c1', c1);
-  el.style.setProperty('--c2', c2);
-  return el;
+  const src = imageOf(camo.name);
+  if (!src) return h('span', { class: 'swatch is-empty', 'aria-hidden': 'true' });
+  return h('span', { class: 'swatch', 'aria-hidden': 'true' },
+    h('img', { src, alt: '', width: 36, height: 36, loading: 'lazy', decoding: 'async' }));
 }
 
 function camoRow(ctx, done, weapon, camo) {

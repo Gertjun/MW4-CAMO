@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.0
+
+**Gewijzigd**
+- De nagemaakte kleurblokjes zijn vervangen door echte camo-afbeeldingen. Voor nu zijn dat Gold, Platinum, Harmonic Break, Blackwell, Iron en Currents. Camo's waarvan nog geen afbeelding is, tonen een leeg vakje.
+
 ## 1.1.0
 
 **Toegevoegd**
