@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.3.0
+
+**Toegevoegd**
+- Echte afbeeldingen bij 105 van de 110 camo's (bron: mw4.gg). Ze worden in de app bewaard en werken ook offline.
+
+**Nog niet compleet**
+- Geen afbeelding bij Brown, Lime, Garland, Dark Tan en Gunmetal; die tonen een leeg vakje.
+
 ## 1.2.0
 
 **Gewijzigd**
