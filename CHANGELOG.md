@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.1
+
+**Toegevoegd**
+- Afbeeldingen bij Brown, Gunmetal, Dark Tan, Lime en Garland. Nu hebben alle 110 camo's een afbeelding.
+- Opdrachten voor Lime (X-58 Nyx) en Garland (Mojave .357) ingevuld.
+
 ## 1.3.0
 
 **Toegevoegd**

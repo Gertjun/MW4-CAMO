@@ -109,7 +109,7 @@ export const WEAPONS = [
   W('x-58-nyx', 'X-58 Nyx', 'smg', null, [
     ['Sniper Veil', 17, '20 kills in beweging', '75 kills in beweging'],
     ['Carbonated', 35, '20 longshot-kills', '75 longshot-kills'],
-    ['Lime', 53, null, null],
+    ['Lime', 53, '40 headshots', '100 longshot-kills'],
   ]),
 
   // Shotguns
@@ -194,7 +194,7 @@ export const WEAPONS = [
   W('mojave-357', 'Mojave .357', 'pistol', null, [
     ['Miami', 16, '20 headshots', '50 one-shot-kills'],
     ['Wallpaper', 30, null, null],
-    ['Garland', 44, null, null],
+    ['Garland', 44, '30 point-blank-kills', '75 point-blank-kills'],
   ]),
 
   // Launchers
@@ -256,7 +256,8 @@ export const classById = (id) => CLASSES.find((c) => c.id === id);
 
 // ---------- Afbeeldingen ----------
 // Echte camo-afbeeldingen staan in img/camos/<bestand>.webp (96×96).
-// Bron: mw4.gg (api.mw4.gg); Gold en Iron uit een screenshot.
+// Bron: mw4.gg (api.mw4.gg); Gold, Iron, Brown, Gunmetal, Dark Tan, Lime en
+// Garland uit screenshots.
 // Nieuwe afbeelding? Zet het bestand in img/camos/, voeg de naam hier toe
 // én het pad aan PRECACHE in sw.js. Camo's zonder afbeelding tonen een
 // leeg vakje.
@@ -366,5 +367,10 @@ export const CAMO_IMAGES = {
   'Raster Lite': 'raster-lite',
   Stockpile: 'stockpile',
   Deathbed: 'deathbed',
+  Brown: 'brown',
+  Gunmetal: 'gunmetal',
+  'Dark Tan': 'dark-tan',
+  Lime: 'lime',
+  Garland: 'garland',
 };
 export const imageOf = (name) => (CAMO_IMAGES[name] ? `img/camos/${CAMO_IMAGES[name]}.webp` : null);
