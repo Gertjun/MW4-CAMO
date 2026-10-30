@@ -215,7 +215,8 @@ function weaponCard(ctx, done, weapon) {
     h('span', { class: 'weapon-count' }, `${count} / ${CAMOS_PER_WEAPON}`)),
   bar(count, CAMOS_PER_WEAPON, `Voortgang ${weapon.name}`),
   h('span', { class: 'weapon-next muted' },
-    complete ? 'Alles vrijgespeeld ✓' : `${classById(weapon.cls).name} · Volgende: ${next.name}`));
+    complete ? 'Alles vrijgespeeld ✓' : `${classById(weapon.cls).name} · Volgende: ${next.name}`),
+  complete ? null : h('span', { class: 'weapon-task' }, `Opdracht: ${next.mp || 'nog onbekend'}`));
 
   const camos = CAMOS.get(weapon.id);
   const milLeft = camos.filter((c) => c.group === 'military' && !done.has(key(weapon.id, c.id)));

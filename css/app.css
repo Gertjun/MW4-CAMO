@@ -80,7 +80,7 @@
 .weapon-head { grid-template-columns: 96px minmax(0, 1fr); column-gap: 14px; row-gap: 6px; align-items: center; }
 .weapon-head > :not(.weapon-pic) { grid-column: 2; }
 .weapon-pic {
-  grid-column: 1; grid-row: 1 / span 3;
+  grid-column: 1; grid-row: 1 / span 4;
   width: 96px; height: 48px; border-radius: 8px;
   background: var(--surface-2); overflow: hidden;
 }
@@ -93,6 +93,7 @@
 .weapon-name { font-weight: 600; }
 .weapon-count { font-variant-numeric: tabular-nums; font-weight: 600; }
 .weapon-next { font-size: 0.85rem; }
+.weapon-task { font-size: 0.85rem; line-height: 1.3; }
 .weapon.is-complete .weapon-count { color: var(--ok); }
 .weapon.is-open .weapon-head { border-bottom: 1px solid var(--border); }
 

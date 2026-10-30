@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.0
+
+**Toegevoegd**
+- Op elke wapenkaart staat onder "Volgende: …" nu ook de opdracht die bij die camo hoort (de multiplayer-opdracht). Zo zie je zonder de kaart te openen wat je moet doen.
+
 ## 1.5.0
 
 **Toegevoegd**
