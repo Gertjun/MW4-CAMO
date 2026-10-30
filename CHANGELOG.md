@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.7.0
+
+**Toegevoegd**
+- **Prestige-camo's** bij elk wapen: Pyroclast, Pyroclast Terminus, Pyroclast Scatter en Pyroclast Cascade, met de opdracht erbij. Ze staan onderaan de wapenkaart onder "Prestige".
+- **Mastery-camo's**: een eigen kaart onder het totaaloverzicht met de 6 camo's die vrijkomen na Harmonic Break op alle 33 wapens (Multiplayer: Mercurial Drift, Polyatomic Reforged, Orion Reforged; DMZ: Chiral, Ripple Tide, Helio).
+- **Wapens vastpinnen**: open een wapen en tik op "Vastpinnen bovenaan". Vastgepinde wapens staan bovenaan in een eigen groep, op al je apparaten.
+- **Groeperen op voortgang**: naast groeperen op klasse kun je nu groeperen op Bezig, Niet begonnen en Klaar, of helemaal niet groeperen. Sorteren staat los daarvan.
+- Het totaaloverzicht telt ook prestige- en mastery-camo's, en Divergence telt nu per wapen (0/33 of 33/33, want hij komt op alle wapens tegelijk vrij).
+- Afbeeldingen bij Divergence en alle nieuwe camo's (bron: mw4.gg).
+
+**Gewijzigd**
+- Aanvinken werkt nu zoals op codmunity.gg: vink je een camo aan, dan worden de eerdere camo's van hetzelfde wapen ook aangevinkt (bijvoorbeeld Gold vinkt alle militaire en speciale camo's mee aan). Uitvinken haalt alleen die ene camo weg. Wat van andere wapens afhangt (Platinum, Harmonic Break, de mastery-camo's) wordt niet automatisch aangevinkt; dan zie je nog steeds een pop-up met wat er mist.
+- Het datamodel is uitgebreid (schema 3) voor de vastgepinde wapens. Je bestaande voortgang en loadouts blijven gewoon staan. Een apparaat met een oudere versie vraagt eerst om bij te werken.
+
 ## 1.6.0
 
 **Toegevoegd**

@@ -251,6 +251,31 @@ export function camosOf(weapon) {
 }
 
 export const CAMOS_PER_WEAPON = 14;
+
+// Weapon Prestige-camo's: per wapen, op volgorde vrij te spelen.
+// Record-id in de kluis: "<wapen-id>:<camo-id>" (net als de gewone camo's).
+export const PRESTIGE_CAMOS = [
+  { id: 'pres1', group: 'prestige', n: 1, name: 'Pyroclast', mp: 'Bereik Weapon Prestige 1' },
+  { id: 'pres2', group: 'prestige', n: 2, name: 'Pyroclast Terminus', mp: 'Bereik het maximale level van Weapon Prestige 1' },
+  { id: 'pres3', group: 'prestige', n: 3, name: 'Pyroclast Scatter', mp: 'Bereik Weapon Prestige Master Level 160' },
+  { id: 'pres4', group: 'prestige', n: 4, name: 'Pyroclast Cascade', mp: 'Bereik Weapon Prestige Master Level 250' },
+];
+
+// Mastery-camo's na Divergence (Harmonic Break op alle 33 wapens). Eén keer
+// vrij te spelen, niet per wapen. Record-id in de kluis: "mastery:<camo-id>".
+// Bron: codmunity.gg (okt. 2026).
+export const MASTERY_MODES = [
+  { id: 'mp', label: 'Multiplayer' },
+  { id: 'dmz', label: 'DMZ' },
+];
+export const MASTERY_CAMOS = [
+  { id: 'mercurial', mode: 'mp', name: 'Mercurial Drift', mp: '10 kills in één potje, 250 keer' },
+  { id: 'polyatomic', mode: 'mp', name: 'Polyatomic Reforged', mp: '3 kills zonder schade op te lopen, 300 keer' },
+  { id: 'orion', mode: 'mp', name: 'Orion Reforged', mp: '5 kills zonder te sterven, 500 keer' },
+  { id: 'chiral', mode: 'dmz', name: 'Chiral', mp: '2.500 kills op vijanden van Tier 3 of hoger' },
+  { id: 'ripple', mode: 'dmz', name: 'Ripple Tide', mp: '50 keer exfiltreren met 2 LT-dogtags in één deployment' },
+  { id: 'helio', mode: 'dmz', name: 'Helio', mp: '25.000 kills met Legendary-wapens op een Operator van maximaal level' },
+];
 export const weaponById = (id) => WEAPONS.find((w) => w.id === id);
 export const classById = (id) => CLASSES.find((c) => c.id === id);
 
@@ -372,6 +397,17 @@ export const CAMO_IMAGES = {
   'Dark Tan': 'dark-tan',
   Lime: 'lime',
   Garland: 'garland',
+  Divergence: 'divergence',
+  Pyroclast: 'pyroclast',
+  'Pyroclast Terminus': 'pyroclast-terminus',
+  'Pyroclast Scatter': 'pyroclast-scatter',
+  'Pyroclast Cascade': 'pyroclast-cascade',
+  'Mercurial Drift': 'mercurial-drift',
+  'Polyatomic Reforged': 'polyatomic-reforged',
+  'Orion Reforged': 'orion-reforged',
+  Chiral: 'chiral',
+  'Ripple Tide': 'ripple-tide',
+  Helio: 'helio',
 };
 export const imageOf = (name) => (CAMO_IMAGES[name] ? `img/camos/${CAMO_IMAGES[name]}.webp` : null);
 
