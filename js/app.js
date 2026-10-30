@@ -189,6 +189,16 @@ function onMasteryToggle(ctx, done, camo, checkbox) {
 
 // ---------- Weergave ----------
 
+/** Percentage naar beneden afgerond: 100% verschijnt pas als echt alles klaar is. */
+function pct(value, max) {
+  return max ? Math.floor((value / max) * 100) : 0;
+}
+
+/** "3 / 14 · 21%" — telling met percentage, voor alle voortgangsblokken. */
+function frac(value, max, sep = ' / ') {
+  return `${value}${sep}${max} · ${pct(value, max)}%`;
+}
+
 function bar(value, max, label) {
   const pct = max ? Math.round((value / max) * 100) : 0;
   const fill = h('span', {});
@@ -275,11 +285,11 @@ function weaponCard(ctx, done, pinned, weapon) {
     weaponPic(weapon),
     h('span', { class: 'weapon-title' },
       h('span', { class: 'weapon-name' }, isPinned ? h('span', { class: 'pin-mark', 'aria-label': 'vastgepind', role: 'img' }, '📌 ') : null, weapon.name),
-      h('span', { class: 'weapon-count' }, `${count} / ${CAMOS_PER_WEAPON}`)),
+      h('span', { class: 'weapon-count' }, frac(count, CAMOS_PER_WEAPON))),
     bar(count, CAMOS_PER_WEAPON, `Voortgang ${weapon.name}`),
     h('span', { class: 'weapon-next muted' },
       complete ? 'Alles vrijgespeeld ✓' : `${classById(weapon.cls).name} · Volgende: ${next.name}`,
-      prestige ? ` · Prestige ${prestige}/${PRESTIGE_CAMOS.length}` : ''),
+      prestige ? ` · Prestige ${frac(prestige, PRESTIGE_CAMOS.length, '/')}` : ''),
     complete
       ? h('span', { class: 'weapon-task', 'aria-hidden': 'true' })
       : h('span', { class: 'weapon-task' }, `Opdracht: ${next.mp || 'nog onbekend'}`),
@@ -298,7 +308,7 @@ function weaponCard(ctx, done, pinned, weapon) {
       const got = list.filter((c) => done.has(key(weapon.id, c.id))).length;
       return h('section', { class: 'camo-group' },
         h('div', { class: 'camo-group-head' },
-          h('h3', {}, g.label, h('span', { class: 'group-count' }, ` ${got}/${list.length}`)),
+          h('h3', {}, g.label, h('span', { class: 'group-count' }, ` ${frac(got, list.length, '/')}`)),
           g.id === 'military' && milLeft.length
             ? h('button', { class: 'btn btn-ghost btn-small', type: 'button', onClick: () => setDone(ctx, weapon.id, milLeft.map((c) => c.id), true) }, 'Alle militaire aan')
             : null),
@@ -317,7 +327,7 @@ function masteryCard(ctx, done) {
   const headParts = [
     h('span', { class: 'weapon-title' },
       h('span', { class: 'weapon-name' }, "Mastery-camo's"),
-      h('span', { class: 'weapon-count' }, `${got} / ${MASTERY_CAMOS.length}`)),
+      h('span', { class: 'weapon-count' }, frac(got, MASTERY_CAMOS.length))),
     bar(got, MASTERY_CAMOS.length, "Voortgang mastery-camo's"),
     h('span', { class: 'weapon-next muted' },
       locked
@@ -345,20 +355,22 @@ function summary(done) {
   const hb = count('harmonic');
   // Divergence komt in één keer vrij op alle wapens zodra ze allemaal Harmonic Break hebben.
   const div = hb === WEAPONS.length ? WEAPONS.length : 0;
-  const tile = (label, value, cls = '') => h('div', { class: `mastery-tile ${cls}` },
-    h('span', { class: 'mastery-value' }, value), h('span', { class: 'mastery-label' }, label));
+  const tile = (label, value, max, cls = '') => h('div', { class: `mastery-tile ${cls}` },
+    h('span', { class: 'mastery-value' }, `${value}/${max}`),
+    h('span', { class: 'mastery-pct' }, `${pct(value, max)}%`),
+    h('span', { class: 'mastery-label' }, label));
   return h('section', { class: 'card summary', 'aria-label': 'Totale voortgang' },
     h('div', { class: 'summary-top' },
       h('span', { class: 'summary-label' }, "Camo's vrijgespeeld"),
-      h('span', { class: 'summary-value' }, `${doneTotal} / ${total}`)),
+      h('span', { class: 'summary-value' }, frac(doneTotal, total))),
     bar(doneTotal, total, 'Totale voortgang'),
     h('div', { class: 'mastery' },
-      tile('Gold', `${count('gold')}/${WEAPONS.length}`, 'm-gold'),
-      tile('Platinum', `${count('platinum')}/${WEAPONS.length}`, 'm-plat'),
-      tile('Harmonic', `${hb}/${WEAPONS.length}`, 'm-hb'),
-      tile('Divergence', `${div}/${WEAPONS.length}`, 'm-div'),
-      tile('Prestige', `${prestigeTotal}/${WEAPONS.length * PRESTIGE_CAMOS.length}`, 'm-pres'),
-      tile('Mastery', `${masteryTotal}/${MASTERY_CAMOS.length}`, 'm-mast')));
+      tile('Gold', count('gold'), WEAPONS.length, 'm-gold'),
+      tile('Platinum', count('platinum'), WEAPONS.length, 'm-plat'),
+      tile('Harmonic', hb, WEAPONS.length, 'm-hb'),
+      tile('Divergence', div, WEAPONS.length, 'm-div'),
+      tile('Prestige', prestigeTotal, WEAPONS.length * PRESTIGE_CAMOS.length, 'm-pres'),
+      tile('Mastery', masteryTotal, MASTERY_CAMOS.length, 'm-mast')));
 }
 
 function controls(ctx, rerender) {
@@ -444,7 +456,7 @@ export const app = {
         h('h2', { class: 'class-head' }, h('span', {}, title), h('span', { class: 'muted' }, total)),
         ws.map(card))
       : null);
-    const sum = (ws) => `${ws.reduce((n, w) => n + cnt(w), 0)} / ${ws.length * CAMOS_PER_WEAPON}`;
+    const sum = (ws) => frac(ws.reduce((n, w) => n + cnt(w), 0), ws.length * CAMOS_PER_WEAPON);
 
     let list;
     if (ui.group === 'class') {

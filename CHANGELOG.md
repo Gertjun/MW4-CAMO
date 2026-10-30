@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.8.0
+
+**Toegevoegd**
+- Overal waar voortgang staat, zie je nu ook een percentage: bij het totaal (bijvoorbeeld 48 / 462 · 10%), de zes tegels (Gold, Platinum, Harmonic, Divergence, Prestige, Mastery), elk wapen, Prestige op de wapenkaart, de camo-groepen in een opengeklapt wapen, de mastery-kaart en de totalen per klasse en bij Vastgepind.
+- Het percentage wordt naar beneden afgerond, zodat je pas 100% ziet als echt alles klaar is.
+
 ## 1.7.1
 
 **Opgelost**

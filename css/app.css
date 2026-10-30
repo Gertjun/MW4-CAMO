@@ -31,6 +31,7 @@
   border-radius: var(--radius-sm); background: var(--surface-2);
 }
 .mastery-value { font-weight: 700; font-variant-numeric: tabular-nums; }
+.mastery-pct { font-size: 0.8rem; font-weight: 600; font-variant-numeric: tabular-nums; }
 .mastery-label { font-size: 0.75rem; color: var(--muted); }
 .m-gold .mastery-value { color: #b8860b; }
 .m-plat .mastery-value { color: #7d8a99; }
