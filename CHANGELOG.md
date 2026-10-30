@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.11.0
+
+**Gewijzigd**
+- Nieuw app-icoon, gebaseerd op het Modern Warfare 4-logo: de letters M en W (onder elkaar, net als in het logo) met de gele "4" erdoorheen, op een donkere achtergrond. De letters zijn rechtstreeks uit het logo overgenomen.
+- Het nieuwe icoon staat ook op het start- en vergrendelscherm en als favicon in de browser.
+- Let op: iPhone onthoudt het icoon van een app op het beginscherm. Het nieuwe icoon zie je pas als je de app verwijdert en opnieuw toevoegt via Safari (Deel → Zet op beginscherm). Verwijderen wist de kluis op die iPhone. Zorg dus eerst dat alles gesynchroniseerd is, en koppel daarna opnieuw via "Bestaande koppelen" (met je GitHub-token en wachtwoord).
+
 ## 1.10.0
 
 **Gewijzigd**
