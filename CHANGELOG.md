@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.14.0
+
+**Toegevoegd**
+- Bij een loadout kies je attachments nu uit een keuzelijst per wapen, net als bij het wapen zelf. De lijst is ingedeeld per slot (Optic, Muzzle, Barrel, Underbarrel, Laser, Magazine, Ammunition, Rear Grip, Stock en bij sommige wapens Bolt, Comb, Guard, Cylinder of Trigger Action, plus Apex).
+- Bovenaan elk slot staan de onderdelen van dat wapen. Bij optics, muzzles, lasers, underbarrels en magazijnen volgen daaronder ook die van verwante wapens ("andere wapens"). Of die echt op dit wapen passen is niet zeker; een volledige officiële lijst per wapen is niet openbaar.
+- Per slot kun je er maar één kiezen: heb je al een optic gekozen, dan zijn de andere optics in de overige lijsten grijs.
+- Staat een onderdeel er niet bij, kies dan "Anders… (zelf typen)".
+- Op de loadout-kaart staat nu het slot vóór elke attachment, bijvoorbeeld "Optic: Corio Bisect".
+
+**Gewijzigd**
+- Kies je een ander wapen in het formulier, dan blijven alleen de attachments staan die ook bij het nieuwe wapen horen (en wat je zelf hebt getypt).
+- Bestaande loadouts blijven gewoon werken. Een attachment die je eerder zelf had getypt en die niet in de lijst staat, verschijnt als "Anders…" met je eigen tekst.
+- Launchers en het mes hebben geen attachments in het spel; daar staat alleen "Anders…".
+
+**Bron**
+- warzoneloadout.games (november 2026). Voor de Cronen Squall is de lijst kleiner, omdat daar geen aparte wapenpagina van is.
+
 ## 1.13.1
 
 **Gewijzigd**

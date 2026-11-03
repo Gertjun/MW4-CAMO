@@ -219,6 +219,12 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 .lo-fieldset legend { padding: 0 6px; font-weight: 600; }
 .att-inputs { display: grid; gap: 10px; }
 .att-inputs[hidden] { display: none; }
+.att-hint { margin: 0; }
+.att-row { gap: 6px; }
+.att-row label > span { font-size: 0.875rem; font-weight: 500; color: var(--muted); }
+.att-row select { width: 100%; }
+.att-row input[hidden] { display: none; }
+.lo-att-slot { color: var(--muted); }
 
 /* ---------- Bredere schermen (iPad, laptop) ----------
    Op een telefoon blijft alles één kolom. Vanaf tabletbreedte gebruikt de app
