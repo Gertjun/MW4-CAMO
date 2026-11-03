@@ -6,14 +6,41 @@
    (tools/setup.mjs); handmatig wijzigen mag ook (dan ook theme_color in
    manifest.webmanifest aanpassen). */
 /* @accent-start */
+/* Kleuren uit het MW4-logo: geel (#ffcf00), bijna-zwart (#14181d / #111317) en wit. */
 :root {
-  --accent: #4d7c0f;
-  --accent-contrast: #ffffff;
+  --accent: #ffcf00;
+  --accent-contrast: #14181d;
+  --accent-text: #7a5a00; /* geel is onleesbaar als tekst op wit: donker goud voor links en focus */
+  --bg: #f4f5f6;
+  --surface: #ffffff;
+  --surface-2: #eceef0;
+  --text: #14181d;
+  --muted: #5f656d;
+  --border: #dcdfe3;
 }
 @media (prefers-color-scheme: dark) {
-  :root { --accent: #82a357; --accent-contrast: #0b0d12; }
+  :root {
+    --accent: #ffcf00;
+    --accent-contrast: #111317;
+    --accent-text: #ffcf00;
+    --bg: #111317;
+    --surface: #1a1d22;
+    --surface-2: #24282e;
+    --text: #f3f4f6;
+    --muted: #9ba1a9;
+    --border: #2f343b;
+  }
 }
 /* @accent-end */
+
+/* Plekken waar de accentkleur als tekst of rand op de achtergrond staat:
+   gebruik --accent-text, zodat het in light mode leesbaar blijft. */
+a, .pw-toggle, .settings-back { color: var(--accent-text); }
+:focus-visible { outline-color: var(--accent-text) !important; }
+input:focus-visible, select:focus-visible, textarea:focus-visible {
+  border-color: var(--accent-text) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent) !important;
+}
 
 /* ---------- Titel met logo ---------- */
 .app-title-logo { display: flex; align-items: center; gap: 10px; min-width: 0; margin: 0; overflow: visible; }

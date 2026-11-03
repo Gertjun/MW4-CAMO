@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.13.0
+
+**Gewijzigd**
+- Het kleurenschema volgt nu het MW4-logo: geel als accentkleur (knoppen, actieve filters, voortgangsbalken, vinkjes) en de bijna-zwarte en witte tinten van het logo voor achtergrond en tekst.
+- In dark mode is de achtergrond hetzelfde donker als het app-icoon.
+- In light mode zijn links en focusranden donker goud in plaats van fel geel, zodat ze leesbaar blijven op een witte achtergrond.
+
 ## 1.12.0
 
 **Toegevoegd**
