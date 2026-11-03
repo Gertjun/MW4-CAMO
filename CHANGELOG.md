@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.12.0
+
+**Toegevoegd**
+- Op elke wapenkaart staat nu een klein plaatje van de eerstvolgende camo vóór "Volgende: …". Zo zie je in één oogopslag welke camo je als volgende vrijspeelt, zonder het wapen open te klappen.
+- Hetzelfde plaatje staat bij "Volgende" op de kaart met mastery-camo's.
+
 ## 1.11.0
 
 **Gewijzigd**

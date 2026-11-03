@@ -227,3 +227,9 @@
   .lo-add { max-width: 320px; }
   .loadout-list { grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); align-items: start; gap: 12px; }
 }
+
+/* Plaatje van de eerstvolgende camo vóór "Volgende: …" op de kaart. */
+.next-swatch {
+  display: inline-block; width: 18px; height: 18px; margin-right: 6px; vertical-align: -4px;
+  border-radius: 4px; object-fit: cover; box-shadow: 0 0 0 1px var(--border);
+}

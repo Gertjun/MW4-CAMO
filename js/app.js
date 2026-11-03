@@ -227,6 +227,13 @@ function swatch(camo) {
     h('img', { src, alt: '', width: 36, height: 36, loading: 'lazy', decoding: 'async' }));
 }
 
+/** Klein plaatje van de eerstvolgende camo, vóór "Volgende: …" op de wapenkaart. */
+function nextSwatch(camo) {
+  const src = imageOf(camo.name);
+  if (!src) return null;
+  return h('img', { class: 'next-swatch', src, alt: '', width: 18, height: 18, decoding: 'async' });
+}
+
 function weaponPic(weapon) {
   const src = weaponImageOf(weapon);
   if (!src) return h('span', { class: 'weapon-pic is-empty', 'aria-hidden': 'true' });
@@ -288,6 +295,7 @@ function weaponCard(ctx, done, pinned, weapon) {
       h('span', { class: 'weapon-count' }, frac(count, CAMOS_PER_WEAPON))),
     bar(count, CAMOS_PER_WEAPON, `Voortgang ${weapon.name}`),
     h('span', { class: 'weapon-next muted' },
+      complete ? null : nextSwatch(next),
       complete ? 'Alles vrijgespeeld ✓' : `${classById(weapon.cls).name} · Volgende: ${next.name}`,
       prestige ? ` · Prestige ${frac(prestige, PRESTIGE_CAMOS.length, '/')}` : ''),
     complete
@@ -332,7 +340,7 @@ function masteryCard(ctx, done) {
     h('span', { class: 'weapon-next muted' },
       locked
         ? `Vrij na Harmonic Break op alle wapens (nog ${missing.length})`
-        : (next ? `Volgende: ${next.name}` : 'Alles vrijgespeeld ✓')),
+        : (next ? [nextSwatch(next), `Volgende: ${next.name}`] : 'Alles vrijgespeeld ✓')),
   ];
   const bodyParts = MASTERY_MODES.map((m) => h('section', { class: 'camo-group' },
     h('div', { class: 'camo-group-head' }, h('h3', {}, m.label)),
