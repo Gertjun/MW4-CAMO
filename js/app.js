@@ -296,7 +296,9 @@ function weaponCard(ctx, done, pinned, weapon) {
     bar(count, CAMOS_PER_WEAPON, `Voortgang ${weapon.name}`),
     h('span', { class: 'weapon-next muted' },
       complete ? null : nextSwatch(next),
-      complete ? 'Alles vrijgespeeld ✓' : `${classById(weapon.cls).name} · Volgende: ${next.name}`,
+      complete ? 'Alles vrijgespeeld ✓'
+        // Klasse alleen tonen als de lijst niet al per klasse is gegroepeerd.
+        : `${ui.group === 'class' ? '' : `${classById(weapon.cls).name} · `}Volgende: ${next.name}`,
       prestige ? ` · Prestige ${frac(prestige, PRESTIGE_CAMOS.length, '/')}` : ''),
     complete
       ? h('span', { class: 'weapon-task', 'aria-hidden': 'true' })

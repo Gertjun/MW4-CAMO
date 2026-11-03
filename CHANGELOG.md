@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.13.1
+
+**Gewijzigd**
+- Op de wapenkaarten staat het wapentype (Assault, Marksman, …) niet meer vóór "Volgende: …" als de lijst per klasse is gegroepeerd. Het type staat dan al in de kop van de groep, en zo is er meer ruimte voor de naam van de volgende camo.
+- Groepeer je op Voortgang of Geen, dan blijft het type wel zichtbaar, omdat je het anders nergens meer ziet.
+
 ## 1.13.0
 
 **Gewijzigd**
