@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.15.0
+
+**Toegevoegd**
+- Face ID start nu vanzelf als je de app opent of terugkomt nadat hij automatisch is vergrendeld. Je hoeft niet meer eerst op "Ontgrendel met Face ID / passkey" te tikken.
+- Annuleer je Face ID, of werkt het niet (bijvoorbeeld op iOS ouder dan 17.4), dan zie je gewoon de knop en het wachtwoordveld, zonder foutmelding.
+- Na zelf vergrendelen (het slotje) of na een tijd niets doen in de app start Face ID niet vanzelf, zodat de app niet meteen weer opengaat.
+
+**Template (core/)**
+- Nieuwe instelling `autoBiometricUnlock` in `js/config.js`. Generiek gemaakt, zodat je dit ook in de template en je andere apps kunt overnemen.
+
 ## 1.14.0
 
 **Toegevoegd**

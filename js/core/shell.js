@@ -30,6 +30,7 @@ let hiddenAt = 0;
 let lastSyncAttempt = 0;
 let swRegistration = null;
 let persistRequested = false;
+let bioBusy = false;       // er loopt al een Face ID / passkey-poging
 
 // Wijzigingen lopen één voor één, zodat elke wijziging voortbouwt op de vorige
 // (ook bij heel snel klikken).
@@ -84,8 +85,10 @@ export async function start() {
   wireLifecycle();
   wireOtherTabs();
 
-  if (vault.hasVault()) showLock();
-  else showScreen('setup');
+  if (vault.hasVault()) {
+    showLock();
+    autoBiometricUnlock();
+  } else showScreen('setup');
 }
 
 // ---------- Hulpjes ----------
@@ -291,14 +294,43 @@ function wireLock() {
     }).catch((err) => showError('#lock-error', err.message));
   });
 
-  $('#btn-bio-unlock').addEventListener('click', async (e) => {
-    showError('#lock-error', '');
-    await withBusy(e.currentTarget, async () => {
+  $('#btn-bio-unlock').addEventListener('click', () => biometricUnlock());
+}
+
+/**
+ * Ontgrendelen met Face ID / passkey. Bij `auto` (vanzelf gestart) wordt
+ * annuleren of "niet toegestaan" stil genegeerd: dan blijven de knop en het
+ * wachtwoordveld gewoon staan.
+ */
+async function biometricUnlock({ auto = false } = {}) {
+  if (bioBusy) return;
+  bioBusy = true;
+  showError('#lock-error', '');
+  try {
+    await withBusy($('#btn-bio-unlock'), async () => {
       const key = await bio.unlock();
       await vault.unlockWithKey(key);
       await afterUnlock();
-    }).catch((err) => showError('#lock-error', bioMessage(err)));
-  });
+    });
+  } catch (err) {
+    const quiet = auto && (err?.name === 'NotAllowedError' || err?.name === 'AbortError');
+    if (!quiet) showError('#lock-error', bioMessage(err));
+  } finally {
+    bioBusy = false;
+  }
+}
+
+/**
+ * Start Face ID vanzelf bij het openen van de app of bij terugkeer naar de app
+ * (APP.autoBiometricUnlock). Niet na zelf vergrendelen of na inactiviteit.
+ * Werkt in Safari vanaf iOS 17.4; oudere versies weigeren stil en dan blijft
+ * de knop staan.
+ */
+async function autoBiometricUnlock() {
+  if (!APP.autoBiometricUnlock || !bio.isEnrolled() || bioBusy) return;
+  await sleep(300); // iOS geeft de pagina na openen/terugkeren pas net focus
+  if (document.hidden || $('#screen-lock').hidden || !bio.isEnrolled()) return;
+  await biometricUnlock({ auto: true });
 }
 
 async function afterUnlock({ skipSync = false } = {}) {
@@ -706,6 +738,7 @@ function wireLifecycle() {
       runSync({ quiet: true });
     }
     cover(false);
+    if (!$('#screen-lock').hidden) autoBiometricUnlock();
   });
 
   // De app-wisselaar op iPhone/Android: inhoud verbergen zodra de app de focus verliest.
