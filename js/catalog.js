@@ -6,7 +6,8 @@
 // voortgang in de kluis verwijst ernaar (record-id = "<wapen-id>:<camo-id>").
 //
 // Bronnen (okt. 2026): codmunity.gg, mw4camos.com, bosslobbies.com, mw4.gg.
-// Aangevuld (nov. 2026): gamerant.com (militaire levels, ontbrekende opdrachten).
+// Aangevuld (nov. 2026): gamerant.com (militaire levels, ontbrekende opdrachten),
+// playerauctions.com (MP-opdrachten mes).
 // `null` betekent: nog niet bekend, de app toont dan "nog onbekend".
 
 export const CLASSES = [
@@ -222,9 +223,9 @@ export const WEAPONS = [
 
   // Melee
   W('fss-carbon-edge-1095', 'FSS Carbon Edge 1095', 'melee', [6, 11, 16, 21, 26, 31, 36, 41], [
-    ['Raster Lite', 16, null, '100 kills tijdens het springen'],
-    ['Stockpile', 31, null, '75 kills met de Heavy Melee Finisher'],
-    ['Deathbed', 46, null, '2 kills binnen 5 seconden, 50 keer'],
+    ['Raster Lite', 16, '25 kills tijdens het springen', '100 kills tijdens het springen'],
+    ['Stockpile', 31, '25 kills met de Heavy Melee Finisher', '75 kills met de Heavy Melee Finisher'],
+    ['Deathbed', 46, '2 kills binnen 5 seconden, 25 keer', '2 kills binnen 5 seconden, 50 keer'],
   ]),
 ];
 

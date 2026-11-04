@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.16.1
+
+**Toegevoegd**
+- De MP-opdrachten van het mes zijn nu bekend: Raster Lite (25 kills tijdens het springen), Stockpile (25 kills met de Heavy Melee Finisher) en Deathbed (2 kills binnen 5 seconden, 25 keer).
+
+**Bron**
+- playerauctions.com (november 2026).
+
 ## 1.16.0
 
 **Toegevoegd**
