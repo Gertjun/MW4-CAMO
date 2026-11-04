@@ -613,20 +613,21 @@ function sideBrand() {
       h('source', { srcset: 'img/logo-white.webp', media: '(prefers-color-scheme: dark)' }),
       h('img', { src: 'img/logo-black.webp', alt: 'Call of Duty Modern Warfare 4', width: 127, height: 36 })),
     h('img', { class: 'side-icon', src: 'icons/icon-192.png', alt: 'MW4 Camo Tracker', width: 40, height: 40 }),
+    sideToggle(),
     h('div', { class: 'side-title' },
       h('span', { class: 'side-name' }, 'Camo Tracker'),
       h('span', { class: 'side-version' }, `v${APP.version}`)));
 }
 
-/** Knop onderin de zijbalk om hem in of uit te klappen (alleen op de laptop). */
-function sideToggle(nav) {
+/** Knop bovenin de zijbalk, naast het logo, om hem in of uit te klappen (alleen op de laptop). */
+function sideToggle() {
   const label = () => (ui.sideCollapsed ? 'Zijbalk uitklappen' : 'Zijbalk inklappen');
   const btn = h('button', {
     type: 'button', class: 'side-toggle', 'aria-label': label(), title: label(),
     'aria-expanded': String(!ui.sideCollapsed),
     onClick: () => {
       ui.sideCollapsed = !ui.sideCollapsed;
-      nav.classList.toggle('is-collapsed', ui.sideCollapsed);
+      btn.closest('.tabbar').classList.toggle('is-collapsed', ui.sideCollapsed);
       btn.setAttribute('aria-label', label());
       btn.setAttribute('title', label());
       btn.setAttribute('aria-expanded', String(!ui.sideCollapsed));
@@ -656,7 +657,6 @@ function tabBar(rerender) {
           window.scrollTo(0, 0);
         },
       }, icon(v.icon), h('span', { class: 'tabbar-label' }, v.label)))));
-  nav.append(sideToggle(nav));
   return nav;
 }
 

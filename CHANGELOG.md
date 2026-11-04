@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.22.1
+
+**Gewijzigd**
+- Laptop: de knop om de zijbalk in en uit te klappen staat nu bovenin, rechts naast het logo (net als in Crypto Portfolio). Ingeklapt staat hij direct onder het app-icoon.
+
+Je gegevens veranderen niet.
+
 ## 1.22.0
 
 **Toegevoegd**

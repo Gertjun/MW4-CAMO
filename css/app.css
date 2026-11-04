@@ -243,15 +243,17 @@ body:has(.tabbar) .toast { bottom: calc(var(--tabbar-h) + 12px + var(--safe-bott
     background: var(--surface); border-top: 0; border-right: 1px solid var(--border);
     -webkit-backdrop-filter: none; backdrop-filter: none;
   }
-  .side-brand { display: grid; gap: 8px; padding: 0 8px; }
-  .side-logo img { display: block; width: 100%; height: auto; } /* volle breedte van de zijbalk */
+  /* Bovenin: logo met rechts de inklapknop, daaronder naam en versie */
+  .side-brand { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 4px; row-gap: 8px; padding: 0 0 0 8px; }
+  .side-logo img { display: block; width: 100%; height: auto; }
+  .side-title { grid-column: 1 / -1; padding-right: 8px; }
   .side-icon { display: none; width: 40px; height: 40px; border-radius: 10px; }
   .side-title { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
   .side-name { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
   .side-version { font-size: 0.75rem; color: var(--muted); font-variant-numeric: tabular-nums; }
   .side-toggle {
-    display: flex; align-items: center; justify-content: center; margin-top: auto; align-self: flex-end;
-    width: var(--tap); height: var(--tap); padding: 0; color: var(--muted);
+    display: flex; align-items: center; justify-content: center;
+    width: 36px; height: var(--tap); padding: 0; color: var(--muted);
     background: none; border: 0; border-radius: var(--radius-sm); cursor: pointer;
   }
   .side-toggle:hover { background: var(--surface-2); color: var(--text); }
@@ -261,11 +263,11 @@ body:has(.tabbar) .toast { bottom: calc(var(--tabbar-h) + 12px + var(--safe-bott
   /* Ingeklapt: smalle balk met alleen iconen */
   :root:has(.tabbar.is-collapsed) { --side-w: 68px; }
   .tabbar.is-collapsed { padding-left: calc(10px + var(--safe-left)); padding-right: 10px; }
-  .tabbar.is-collapsed .side-brand { padding: 0; justify-items: center; }
+  .tabbar.is-collapsed .side-brand { grid-template-columns: none; padding: 0; justify-items: center; row-gap: 4px; }
   .tabbar.is-collapsed .side-logo, .tabbar.is-collapsed .side-title, .tabbar.is-collapsed .tabbar-label { display: none; }
   .tabbar.is-collapsed .side-icon { display: block; }
   .tabbar.is-collapsed .tabbar-btn { justify-content: center; padding: 0; }
-  .tabbar.is-collapsed .side-toggle { align-self: center; }
+  .tabbar.is-collapsed .side-toggle { width: var(--tap); }
   .tabbar.is-collapsed .side-toggle svg { transform: rotate(180deg); }
   .tabbar-inner { max-width: none; margin: 0; display: grid; grid-template-columns: none; gap: 4px; }
   .tabbar-btn {
