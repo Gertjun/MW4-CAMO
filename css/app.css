@@ -8,6 +8,7 @@
 /* @accent-start */
 /* Kleuren uit het MW4-logo: geel (#ffcf00), bijna-zwart (#14181d / #111317) en wit. */
 :root {
+  --swatch-edge: rgb(20 24 29 / 0.28); /* rand om camo-plaatjes, ook zichtbaar bij lichte camo's */
   --accent: #ffcf00;
   --accent-contrast: #14181d;
   --accent-text: #7a5a00; /* geel is onleesbaar als tekst op wit: donker goud voor links en focus */
@@ -20,6 +21,7 @@
 }
 @media (prefers-color-scheme: dark) {
   :root {
+    --swatch-edge: rgb(255 255 255 / 0.22);
     --accent: #ffcf00;
     --accent-contrast: #111317;
     --accent-text: #ffcf00;
@@ -71,13 +73,14 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 
 .mastery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 @media (min-width: 560px) { .mastery { grid-template-columns: repeat(6, 1fr); } }
-.mastery-tile {
-  display: grid; justify-items: center; gap: 2px; padding: 8px 4px;
+.mastery-tile { /* aantal en percentage op één regel, label eronder */
+  display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline;
+  column-gap: 5px; padding: 6px 4px;
   border-radius: var(--radius-sm); background: var(--surface-2);
 }
 .mastery-value { font-weight: 700; font-variant-numeric: tabular-nums; }
-.mastery-pct { font-size: 0.8rem; font-weight: 600; font-variant-numeric: tabular-nums; }
-.mastery-label { font-size: 0.75rem; color: var(--muted); }
+.mastery-pct { font-size: 0.75rem; font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; }
+.mastery-label { flex-basis: 100%; text-align: center; font-size: 0.75rem; color: var(--muted); }
 .m-gold .mastery-value { color: #b8860b; }
 .m-plat .mastery-value { color: #7d8a99; }
 .m-hb .mastery-value { color: #7b4fd6; }
@@ -107,10 +110,11 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 }
 .chip.is-active { background: var(--accent); border-color: var(--accent); color: var(--accent-contrast); font-weight: 600; }
 .chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.sort-lines { display: grid; gap: 8px; }
-.sort-line { display: flex; align-items: center; gap: 12px; }
-.sort-line label { color: var(--muted); min-width: 6.5em; }
-.sort-line select { flex: 1; min-height: var(--tap); font-size: 16px; }
+/* Telefoon: Groeperen en Sorteren naast elkaar, label boven de keuzelijst. */
+.sort-lines { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.sort-line { display: grid; gap: 4px; min-width: 0; }
+.sort-line label { color: var(--muted); font-size: 0.85rem; }
+.sort-line select { width: 100%; min-height: var(--tap); font-size: 16px; }
 .shown-count { font-size: 0.85rem; margin: 4px 0 0; }
 
 /* ---------- Wapens ---------- */
@@ -176,7 +180,8 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   overflow: hidden; background: var(--surface-2);
   box-shadow: inset 0 0 0 1px var(--border);
 }
-.swatch img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.swatch img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: inherit;
+  outline: 1px solid var(--swatch-edge); outline-offset: -1px; }
 .swatch.is-empty { box-shadow: inset 0 0 0 1px var(--border); border: 1px dashed var(--border); }
 
 .camo-task { font-size: 0.875rem; }
@@ -237,8 +242,11 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   #screen-app .app-header-inner { max-width: 1552px; } /* = inhoudsbreedte (1600px min. 2× 24px marge) */
 
   .chips { flex-wrap: wrap; overflow: visible; margin: 0; padding: 0; }
-  .sort-line select { flex: 0 1 280px; }
-  .sort-lines { grid-auto-flow: column; justify-content: start; gap: 24px; }
+  /* Breder scherm: label direct naast de keuzelijst, beide op één regel. */
+  .sort-lines { grid-template-columns: none; grid-auto-flow: column; justify-content: start; gap: 24px; }
+  .sort-line { display: flex; align-items: center; gap: 10px; }
+  .sort-line label { font-size: 1rem; }
+  .sort-line select { width: 240px; }
 
   .class-group {
     grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
@@ -264,7 +272,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 /* Plaatje van de eerstvolgende camo vóór "Volgende: …" op de kaart. */
 .next-swatch {
   display: inline-block; width: 18px; height: 18px; margin-right: 6px; vertical-align: -4px;
-  border-radius: 4px; object-fit: cover; box-shadow: 0 0 0 1px var(--border);
+  border-radius: 4px; object-fit: cover; box-shadow: 0 0 0 1px var(--swatch-edge);
 }
 
 /* ---------- Weergavekeuze (Grid / Lijst) ---------- */
@@ -275,21 +283,47 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 
 /* ---------- Lijstweergave: wapens onder elkaar, camo's naast elkaar ----------
    De tabel scrollt zijwaarts; de kolom met de wapennaam blijft links staan. */
-.list-wrap {
-  position: relative; padding: 0; overflow-x: auto; -webkit-overflow-scrolling: touch;
-  overscroll-behavior-x: contain;
+/* De kaart bevat twee tabellen: de kop (.list-head, blijft bovenaan staan
+   tijdens het scrollen) en de wapens (.list-wrap). Beide scrollen zijwaarts
+   en worden in app.js aan elkaar gekoppeld. overflow: clip (niet hidden),
+   anders werkt de vastgezette kop niet. */
+.list-card { position: relative; min-width: 0; padding: 0; overflow: clip; } /* min-width: anders rekt de tabel de pagina op */
+.list-head {
+  position: sticky; top: calc(61px + var(--safe-top)); /* direct onder de kopbalk */
+  z-index: 4; background: var(--surface);
+  overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain;
+  box-shadow: 0 1px 0 var(--border);
 }
-.list-wrap:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.list-head::-webkit-scrollbar { display: none; }
+/* Lage schermen (telefoon liggend): de kop zou bijna het hele scherm vullen,
+   dus daar scrolt hij gewoon mee weg. */
+@media (max-height: 520px) { .list-head { position: static; } }
+.list-wrap {
+  overflow-x: auto; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain;
+}
+.list-wrap:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 .list-table { border-collapse: separate; border-spacing: 0; font-size: 0.85rem; }
 .list-table th, .list-table td { padding: 0; }
+
+/* Schaduw rechts zolang er nog kolommen verborgen zijn: je kunt verder vegen. */
+.list-card::after {
+  content: ""; position: absolute; top: 0; right: 0; bottom: 0; width: 28px; z-index: 5;
+  pointer-events: none; opacity: 0; transition: opacity 0.2s;
+  background: linear-gradient(to left, color-mix(in srgb, var(--text) 14%, transparent), transparent);
+}
+.list-card.has-more::after { opacity: 1; }
+/* Schaduw naast de wapennaam zodra de camo's eronder door schuiven. */
+.list-card.is-scrolled .lw { box-shadow: 6px 0 8px -6px color-mix(in srgb, var(--text) 35%, transparent); }
 
 /* Vaste eerste kolom */
 .list-table .lw {
   position: sticky; left: 0; z-index: 2;
-  min-width: 118px; max-width: 118px; padding: 4px 8px 4px 12px;
+  width: 100px; min-width: 100px; max-width: 100px; padding: 4px 6px 4px 10px;
   background: var(--surface); text-align: left;
   border-right: 1px solid var(--border);
 }
+/* Kolombreedtes in kop en tabel moeten exact gelijk zijn. */
+.lt-cols th:not(.lw) { width: 44px; min-width: 44px; max-width: 44px; }
 .lw-name { display: block; font-weight: 600; line-height: 1.2; overflow-wrap: anywhere; }
 .lw-count { display: block; font-size: 0.75rem; font-weight: 400; font-variant-numeric: tabular-nums; }
 tr.is-complete .lw-count { color: var(--ok); font-weight: 600; }
@@ -299,20 +333,20 @@ tr.is-complete .lw-count { color: var(--ok); font-weight: 600; }
   padding: 8px 4px 2px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em;
   color: var(--muted); text-align: left; white-space: nowrap;
 }
-.lt-groups th:not(.lw) { border-left: 1px solid var(--border); padding-left: 6px; }
+.lt-groups th:not(.lw) { box-shadow: inset 1px 0 0 var(--border); padding-left: 6px; }
 .lt-groups .lw { vertical-align: bottom; }
 .lt-cols th {
-  height: 104px; vertical-align: bottom; padding: 0 0 6px;
-  font-size: 0.72rem; font-weight: 500; color: var(--muted);
+  height: 92px; vertical-align: bottom; padding: 0 0 6px;
+  font-size: 0.7rem; font-weight: 500; color: var(--muted);
 }
 .lt-cols th > span {
   display: inline-block; writing-mode: vertical-rl; transform: rotate(180deg);
-  white-space: nowrap; max-height: 98px; overflow: hidden; text-overflow: ellipsis;
+  white-space: nowrap; max-height: 86px; overflow: hidden; text-overflow: ellipsis;
 }
 .lt-cols th.lg-special > span { writing-mode: horizontal-tb; transform: none; }
 .lt-cols th, .lt-groups th { border-bottom: 1px solid var(--border); }
 /* Lijntje tussen de groepen (militair | speciaal | mastery | prestige) */
-.list-table .g-start { border-left: 1px solid var(--border); }
+.list-table .g-start { box-shadow: inset 1px 0 0 var(--border); } /* schaduw i.p.v. rand: neemt geen breedte in, zodat kop en tabel gelijk blijven */
 
 /* Sectiekop (klasse / voortgang) over de hele breedte; tekst blijft links staan */
 .lt-section th { background: var(--surface-2); text-align: left; border-bottom: 1px solid var(--border); }
@@ -332,7 +366,7 @@ tbody tr + tr > * { border-top: 1px solid var(--border); }
 }
 .lc img, .lc-empty {
   display: block; width: 32px; height: 32px; border-radius: 6px; object-fit: cover;
-  outline: 1px solid var(--border); outline-offset: -1px;
+  outline: 1px solid var(--swatch-edge); outline-offset: -1px;
   filter: grayscale(1); opacity: 0.4; transition: opacity 0.15s, filter 0.15s;
 }
 @media (prefers-color-scheme: dark) { .lc img, .lc-empty { opacity: 0.55; } }
@@ -343,19 +377,25 @@ tbody tr + tr > * { border-top: 1px solid var(--border); }
   border-radius: 99px; font-size: 0.65rem; font-weight: 700; text-align: center;
 }
 .lc.is-done .lc-mark { background: var(--ok); color: #fff; }
-.lc.is-locked .lc-mark { font-size: 0.6rem; }
+/* Vergrendeld (nog niet vrij): gestippelde rand en een duidelijk slotje. */
+.lc.is-locked img, .lc.is-locked .lc-empty { opacity: 0.3; outline: 1.5px dashed var(--muted); outline-offset: -1.5px; }
+.lc.is-locked .lc-mark {
+  min-width: 20px; height: 20px; line-height: 18px; font-size: 0.7rem;
+  background: var(--surface); box-shadow: 0 0 0 1px var(--border);
+}
 .lc input:focus-visible + label { outline: 2px solid var(--accent-text); outline-offset: -2px; border-radius: 6px; }
 
 /* Lijstweergave op bredere schermen: vakjes, plaatjes en tekst groeien mee
    met de schermbreedte, zodat de tabel de beschikbare ruimte vult. */
 @media (min-width: 760px) {
-  .list-wrap {
+  .list-card {
     --lw: clamp(130px, 12vw, 210px);
     --lc: clamp(44px, calc((min(100vw, 1600px) - 72px - var(--lw)) / 18), 86px);
     --li: calc(var(--lc) * 0.74);
   }
   .list-table { font-size: clamp(0.85rem, 0.55rem + 0.5vw, 1.05rem); }
-  .list-table .lw { min-width: var(--lw); max-width: var(--lw); padding: 6px 12px 6px 16px; }
+  .list-table .lw { width: var(--lw); min-width: var(--lw); max-width: var(--lw); padding: 6px 12px 6px 16px; }
+  .lt-cols th:not(.lw) { width: var(--lc); min-width: var(--lc); max-width: var(--lc); }
   .lw-count { font-size: 0.85em; }
   .lt-groups th { font-size: 0.8em; padding-top: 12px; }
   .lt-cols th { height: calc(var(--lc) * 2.4); font-size: 0.85em; }

@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.18.0
+
+**Gewijzigd**
+- De bovenkant van het camo-scherm is compacter, zodat je eerder bij de wapens bent. De tegels Gold t/m Mastery tonen aantal en percentage op één regel. Op de telefoon staan Groeperen en Sorteren naast elkaar.
+- Lijst-weergave: de kolomkop (met de camonamen) blijft bovenaan staan als je naar beneden scrolt, zodat je altijd ziet welke kolom welke camo is. De kop schuift zijwaarts mee met de tabel.
+- Lijst-weergave op de telefoon: de wapenkolom en de kop zijn wat smaller en lager, zodat er meer camo's in beeld passen. Een schaduw aan de rechterkant laat zien dat je verder kunt vegen.
+- Lichte camo's (zoals Platinum) hebben een randje, zodat ze niet meer op een leeg vakje lijken.
+- Vergrendelde camo's in de lijst (nog niet vrij) hebben een gestippelde rand en een groter slotje, zodat je ze makkelijker onderscheidt van camo's die je nog moet halen.
+
+Je gegevens veranderen niet.
+
 ## 1.17.1
 
 **Gewijzigd**

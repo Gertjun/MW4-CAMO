@@ -65,6 +65,7 @@ const GROUPS = [
 ];
 
 const MASTERY_ID = 'mastery';
+let resizeHooked = false;
 const CAMOS = new Map(WEAPONS.map((w) => [w.id, camosOf(w)]));
 const ALL_CAMOS = new Map(WEAPONS.map((w) => [w.id, [...CAMOS.get(w.id), ...PRESTIGE_CAMOS]]));
 
@@ -476,11 +477,34 @@ function listTable(ctx, done, pinned, sections) {
       h('th', { colspan: span, scope: 'colgroup' },
         h('span', { class: 'lt-section-inner' }, h('span', {}, s.title), h('span', { class: 'muted' }, s.total)))) : null,
     s.weapons.map((w) => listRow(ctx, done, pinned, w))));
-  const wrap = h('div', { class: 'list-wrap card', tabindex: '0', role: 'region', 'aria-label': "Camo's per wapen" },
-    h('table', { class: 'list-table' }, h('thead', {}, groupHead, colHead), ...bodies));
-  // Zijwaartse scrollpositie bewaren: na elk vinkje wordt het scherm opnieuw opgebouwd.
-  wrap.addEventListener('scroll', () => { ui.listScroll = wrap.scrollLeft; }, { passive: true });
-  return wrap;
+
+  // De kolomkop staat in een eigen tabel die bovenaan blijft staan tijdens het
+  // scrollen (sticky). Hij schuift zijwaarts mee met de tabel eronder.
+  const head = h('div', { class: 'list-head', 'aria-hidden': 'true' },
+    h('table', { class: 'list-table' }, h('thead', {}, groupHead, colHead)));
+  const wrap = h('div', { class: 'list-wrap', tabindex: '0', role: 'region', 'aria-label': "Camo's per wapen" },
+    h('table', { class: 'list-table' }, ...bodies));
+  const card = h('div', { class: 'list-card card' }, head, wrap);
+
+  // Zijwaarts scrollen koppelen (in beide richtingen) en een schaduw tonen
+  // zolang er rechts nog kolommen verborgen zijn.
+  let syncing = false;
+  const follow = (from, to) => {
+    if (syncing) { syncing = false; return; }
+    if (to.scrollLeft !== from.scrollLeft) { syncing = true; to.scrollLeft = from.scrollLeft; }
+  };
+  const edges = () => {
+    card.classList.toggle('is-scrolled', wrap.scrollLeft > 1);
+    card.classList.toggle('has-more', wrap.scrollLeft + wrap.clientWidth < wrap.scrollWidth - 1);
+  };
+  wrap.addEventListener('scroll', () => {
+    ui.listScroll = wrap.scrollLeft; // bewaren: na elk vinkje wordt het scherm opnieuw opgebouwd
+    follow(wrap, head);
+    edges();
+  }, { passive: true });
+  head.addEventListener('scroll', () => follow(head, wrap), { passive: true });
+  card.restoreScroll = () => { wrap.scrollLeft = ui.listScroll; head.scrollLeft = ui.listScroll; edges(); };
+  return card;
 }
 
 export const app = {
@@ -569,7 +593,10 @@ export const app = {
       h('p', { class: 'muted shown-count' }, `${weapons.length} van ${WEAPONS.length} wapens`),
       ...list,
     ].filter(Boolean));
-    const wrap = root.querySelector('.list-wrap');
-    if (wrap && ui.listScroll) wrap.scrollLeft = ui.listScroll;
+    root.querySelector('.list-card')?.restoreScroll();
+    if (!resizeHooked) { // schaduw rechts opnieuw bepalen na draaien of venster aanpassen
+      resizeHooked = true;
+      window.addEventListener('resize', () => document.querySelector('.list-card')?.restoreScroll());
+    }
   },
 };
