@@ -26,11 +26,13 @@ const TOMBSTONE_DAYS = 180;
 
 // Schermkeuzes (alleen tijdens gebruik, niet in de kluis).
 // layout: 'grid' (kaarten) of 'list' (tabel met alle camo's naast elkaar).
-const ui = { view: 'camos', layout: 'grid', filter: 'all', group: 'class', sort: 'default', open: new Set(), listScroll: 0 };
+const ui = { view: 'overview', layout: 'grid', filter: 'all', group: 'class', sort: 'default', open: new Set(), listScroll: 0 };
 
+// Schermen in de tabbalk onderin. icon = SVG-paden (24×24, lijnen).
 const VIEWS = [
-  { id: 'camos', label: "Camo's" },
-  { id: 'loadouts', label: 'Loadouts' },
+  { id: 'overview', label: 'Overzicht', icon: ['M4 20V10', 'M10 20V4', 'M16 20v-7', 'M22 20H2'] },
+  { id: 'camos', label: "Camo's", icon: ['M4 4h7v7H4z', 'M13 4h7v7h-7z', 'M4 13h7v7H4z', 'M13 13h7v7h-7z'] },
+  { id: 'loadouts', label: 'Loadouts', icon: ['M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18', 'M12 1v6', 'M12 17v6', 'M1 12h6', 'M17 12h6'] },
 ];
 
 const LAYOUTS = [
@@ -421,17 +423,33 @@ function controls(ctx, rerender) {
       h('div', { class: 'sort-line' }, h('label', { for: 'sort' }, 'Sorteren'), select('sort', SORTS, 'sort'))));
 }
 
-function viewTabs(rerender) {
-  return h('div', { class: 'segmented view-tabs', role: 'tablist', 'aria-label': 'Scherm' },
-    VIEWS.map((v) => h('button', {
-      type: 'button', role: 'tab', id: `tab-${v.id}`, 'aria-selected': String(ui.view === v.id),
-      onClick: () => {
-        if (ui.view === v.id) return;
-        ui.view = v.id;
-        rerender();
-        window.scrollTo(0, 0);
-      },
-    }, v.label)));
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+function icon(paths) {
+  const svg = document.createElementNS(SVG_NS, 'svg');
+  svg.setAttribute('viewBox', '0 0 24 24');
+  svg.setAttribute('aria-hidden', 'true');
+  for (const d of paths) {
+    const p = document.createElementNS(SVG_NS, 'path');
+    p.setAttribute('d', d);
+    svg.append(p);
+  }
+  return svg;
+}
+
+/** Tabbalk onderin het scherm (zoals in een iPhone-app). */
+function tabBar(rerender) {
+  return h('nav', { class: 'tabbar', 'aria-label': 'Schermen' },
+    h('div', { class: 'tabbar-inner' },
+      VIEWS.map((v) => h('button', {
+        type: 'button', class: 'tabbar-btn', 'aria-current': ui.view === v.id ? 'page' : null,
+        onClick: () => {
+          if (ui.view === v.id) { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+          ui.view = v.id;
+          rerender();
+          window.scrollTo(0, 0);
+        },
+      }, icon(v.icon), h('span', {}, v.label)))));
 }
 
 // ---------- Lijstweergave ----------
@@ -550,10 +568,14 @@ export const app = {
   render(root, ctx) {
     const rerender = () => app.render(root, ctx);
     if (ui.view === 'loadouts') {
-      root.replaceChildren(viewTabs(rerender), ...renderLoadouts(ctx));
+      root.replaceChildren(...renderLoadouts(ctx), tabBar(rerender));
       return;
     }
     const done = progressIndex(ctx.data);
+    if (ui.view === 'overview') {
+      root.replaceChildren(summary(done), masteryCard(ctx, done), tabBar(rerender));
+      return;
+    }
     const pinned = pinnedSet(ctx.data);
     const card = (w) => weaponCard(ctx, done, pinned, w);
 
@@ -595,12 +617,10 @@ export const app = {
     }
 
     root.replaceChildren(...[
-      viewTabs(rerender),
-      summary(done),
-      masteryCard(ctx, done),
       controls(ctx, rerender),
       h('p', { class: 'muted shown-count' }, `${weapons.length} van ${WEAPONS.length} wapens`),
       ...list,
+      tabBar(rerender),
     ].filter(Boolean));
     root.querySelector('.list-card')?.restoreScroll();
     if (!resizeHooked) { // schaduw rechts opnieuw bepalen na draaien of venster aanpassen

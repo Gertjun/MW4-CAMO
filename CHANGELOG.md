@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.19.0
+
+**Gewijzigd**
+- Onderin het scherm staat nu een tabbalk met drie knoppen: **Overzicht**, **Camo's** en **Loadouts**, net als in je andere apps. De knoppen bovenaan zijn weg.
+- **Overzicht** is het nieuwe startscherm, met je totale voortgang (de tegels Militair t/m Prestige) en de mastery-camo's.
+- Het **Camo's**-scherm begint nu direct met de filters en de wapens; de samenvatting staat daar niet meer tussen.
+- Tik je nog een keer op de knop van het scherm waar je al bent, dan spring je terug naar boven.
+
+Je gegevens veranderen niet.
+
 ## 1.18.1
 
 **Gewijzigd**

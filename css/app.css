@@ -201,9 +201,29 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 .camo-dialog .sheet-body { display: grid; gap: 12px; padding-top: 16px; }
 .missing-list { margin: 0; padding-left: 20px; display: grid; gap: 4px; }
 
-/* ---------- Tabs bovenin (Camo's / Loadouts) ---------- */
-.view-tabs button { min-height: var(--tap); font-size: 1rem; }
-.view-tabs button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+/* ---------- Tabbalk onderin (Overzicht / Camo's / Loadouts) ---------- */
+:root { --tabbar-h: 56px; }
+.app-root { padding-bottom: var(--tabbar-h); } /* inhoud niet onder de balk (safe area zit al in .app-main) */
+.tabbar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+  padding: 0 var(--safe-right) var(--safe-bottom) var(--safe-left);
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
+  -webkit-backdrop-filter: saturate(180%) blur(16px);
+  backdrop-filter: saturate(180%) blur(16px);
+  border-top: 1px solid var(--border);
+}
+.tabbar-inner { max-width: 520px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); }
+.tabbar-btn {
+  min-height: var(--tabbar-h); padding: 6px 4px 4px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  font: inherit; font-size: 0.7rem; font-weight: 600; color: var(--muted);
+  background: none; border: 0; cursor: pointer;
+}
+.tabbar-btn svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.tabbar-btn[aria-current="page"] { color: var(--accent); }
+.tabbar-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; border-radius: 8px; }
+/* Meldingen (toast) boven de tabbalk tonen */
+body:has(.tabbar) .toast { bottom: calc(var(--tabbar-h) + 12px + var(--safe-bottom)); }
 
 /* ---------- Loadouts ---------- */
 .lo-add { min-height: var(--tap); }
@@ -272,7 +292,6 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
     line-clamp: 2; overflow: hidden;
   }
 
-  .view-tabs { max-width: 420px; }
   .lo-add { max-width: 320px; }
   .loadout-list { grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); align-items: start; gap: 12px; }
 }
