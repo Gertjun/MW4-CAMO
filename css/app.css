@@ -492,8 +492,29 @@ tbody tr + tr > * { border-top: 1px solid var(--border); }
 }
 
 /* ---------- Overzicht: vastgepind, bijna klaar, blokkades, per klasse ---------- */
+/* Telefoon: één kolom in de vertrouwde volgorde (Vastgepind, Bijna klaar,
+   Wat houdt je tegen, Per klasse) en het mastery-blok onderaan. */
 .ov-grid { display: grid; gap: 12px; align-items: start; }
-@media (min-width: 760px) { .ov-grid { grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); } }
+@media (max-width: 759px) {
+  .ov-stack { display: contents; }
+  .ov-stack > .ov-pinned { order: 1; }
+  .ov-grid > .ov-nearly { order: 2; }
+  .ov-stack > .ov-blockers { order: 3; }
+  .ov-grid > .ov-classes { order: 4; }
+  .ov-mastery { order: 1; } /* na de kaarten (in .app-root) */
+}
+/* Tablet: mastery direct onder de totalen; Per klasse en Bijna klaar naast
+   elkaar, daaronder Wat houdt je tegen en Vastgepind naast elkaar. */
+@media (min-width: 760px) {
+  .ov-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ov-stack { display: grid; grid-column: 1 / -1; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: start; }
+}
+/* Laptop: drie kolommen. Kolom 3 heeft Wat houdt je tegen met daaronder
+   Vastgepind; die lijst mag zo lang worden als nodig. */
+@media (min-width: 1100px) {
+  .ov-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .ov-stack { grid-column: auto; grid-template-columns: minmax(0, 1fr); }
+}
 .ov-card { padding: 14px 16px 6px; display: grid; gap: 4px; }
 .ov-title { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 1rem; }
 .ov-title .muted { font-weight: 400; font-size: 0.8rem; }

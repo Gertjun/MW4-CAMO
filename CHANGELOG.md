@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.23.0
+
+**Gewijzigd**
+- Laptop: het **Overzicht** is rustiger ingedeeld. Het blok **Mastery-camo's** staat nu direct onder **Camo's vrijgespeeld**. Daaronder staan drie kolommen: **Per klasse**, **Bijna klaar**, en **Wat houdt je tegen** met daaronder **📌 Vastgepind**. Die laatste lijst groeit gewoon mee naar beneden als je meer wapens vastpint.
+- Op een smaller scherm (tablet) staan Per klasse en Bijna klaar naast elkaar, met Wat houdt je tegen en Vastgepind daaronder naast elkaar.
+- Op de telefoon blijft alles zoals het was.
+
+Je gegevens veranderen niet.
+
 ## 1.22.1
 
 **Gewijzigd**

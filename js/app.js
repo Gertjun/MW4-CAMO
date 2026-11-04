@@ -363,7 +363,7 @@ function masteryCard(ctx, done) {
         onChange: (cb) => onMasteryToggle(ctx, done, c, cb),
       });
     }))));
-  return foldCard(MASTERY_ID, `mastery-card${got === MASTERY_CAMOS.length ? ' is-complete' : ''}`, headParts, bodyParts);
+  return foldCard(MASTERY_ID, `mastery-card ov-mastery${got === MASTERY_CAMOS.length ? ' is-complete' : ''}`, headParts, bodyParts);
 }
 
 function summary(done) {
@@ -422,7 +422,7 @@ function goToCamos(rerender, { cls = null, weapon = null } = {}) {
 const chevron = () => h('span', { class: 'ov-chev', 'aria-hidden': 'true' }, '›');
 
 function ovCard(id, title, extra, items) {
-  return h('section', { class: 'card ov-card', 'aria-labelledby': id },
+  return h('section', { class: `card ov-card ${id}`, 'aria-labelledby': id },
     h('h3', { class: 'ov-title', id }, h('span', {}, title), extra ? h('span', { class: 'muted' }, extra) : null),
     h('ul', { class: 'ov-list' }, items.map((it) => h('li', {}, it))));
 }
@@ -469,7 +469,7 @@ function weaponRow(done, weapon, rerender, note) {
 function pinnedCard(done, pinned, rerender) {
   const weapons = WEAPONS.filter((w) => pinned.has(w.id));
   if (!weapons.length) {
-    return h('section', { class: 'card ov-card', 'aria-labelledby': 'ov-pinned' },
+    return h('section', { class: 'card ov-card ov-pinned', 'aria-labelledby': 'ov-pinned' },
       h('h3', { class: 'ov-title', id: 'ov-pinned' }, h('span', {}, '📌 Vastgepind')),
       h('p', { class: 'muted ov-empty' }, 'Pin een wapen op het Camo\'s-scherm (klap het open en tik op Vastpinnen) om het hier te zien.'));
   }
@@ -785,13 +785,17 @@ export const app = {
       root.replaceChildren(...[
         pageTitle(),
         summary(done),
-        h('div', { class: 'ov-grid' }, ...[
-          pinnedCard(done, pinned, rerender),
-          nearlyCard(done, rerender),
-          blockersCard(done, rerender),
-          classCard(done, rerender),
-        ].filter(Boolean)),
+        // Op de laptop: mastery direct onder de totalen, daaronder drie kolommen
+        // (Per klasse | Bijna klaar | Wat houdt je tegen + Vastgepind).
+        // Op de telefoon zet de CSS alles in de oude volgorde onder elkaar.
         masteryCard(ctx, done),
+        h('div', { class: 'ov-grid' },
+          classCard(done, rerender),
+          nearlyCard(done, rerender),
+          h('div', { class: 'ov-stack' }, ...[
+            blockersCard(done, rerender),
+            pinnedCard(done, pinned, rerender),
+          ].filter(Boolean))),
         tabBar(rerender),
       ]);
       return;
