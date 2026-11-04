@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.16.0
+
+**Toegevoegd**
+- Bij alle wapens staat nu op welk wapenlevel elke militaire camo (Shed t/m Mausoleum) vrijkomt. Voorheen wist de app dat alleen bij een paar wapens.
+- Ontbrekende opdrachten aangevuld: Iron (PPSh-41), Outcrop en Foxtrail (Type 73), Mineral en Tiger Swipe (APOC-338) en Wallpaper (Mojave .357).
+- Platinum en Harmonic Break hebben nu een volledige opdracht voor Assault rifles en Launchers (met aantal) en voor Melee.
+- Bij het mes (Raster Lite, Stockpile, Deathbed) is de DMZ-opdracht bekend. De MP-opdracht is nog onbekend.
+
+**Gewijzigd**
+- Is alleen de DMZ-opdracht bekend, dan toont de wapenkaart die ("Opdracht (DMZ): …") in plaats van "nog onbekend". In het opengeklapte wapen staat dan "MP: nog onbekend" met de DMZ-opdracht eronder.
+
+**Bron**
+- gamerant.com (oktober 2026). Alleen ontbrekende gegevens zijn aangevuld; bestaande opdrachten zijn niet gewijzigd.
+
 ## 1.15.0
 
 **Toegevoegd**

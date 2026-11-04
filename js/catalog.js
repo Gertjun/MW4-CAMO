@@ -6,6 +6,7 @@
 // voortgang in de kluis verwijst ernaar (record-id = "<wapen-id>:<camo-id>").
 //
 // Bronnen (okt. 2026): codmunity.gg, mw4camos.com, bosslobbies.com, mw4.gg.
+// Aangevuld (nov. 2026): gamerant.com (militaire levels, ontbrekende opdrachten).
 // `null` betekent: nog niet bekend, de app toont dan "nog onbekend".
 
 export const CLASSES = [
@@ -27,15 +28,15 @@ export const GOLD_TASK = { mp: '15 kills in één potje', dmz: '100 kills in é�
 
 // Platinum en Harmonic Break hebben per klasse dezelfde opdracht.
 export const CLASS_MASTERY = {
-  ar: { platinum: { mp: 'Headshot-kills (aantal: zie het spel)', dmz: null }, harmonic: { mp: 'Double kills (aantal: zie het spel)', dmz: null } },
+  ar: { platinum: { mp: '50 headshots', dmz: '100 headshots' }, harmonic: { mp: '25 double kills', dmz: '50 double kills' } },
   smg: { platinum: { mp: '25 kills van achteren', dmz: '75 kills van achteren' }, harmonic: { mp: '50 hipfire-kills', dmz: '100 hipfire-kills' } },
   shotgun: { platinum: { mp: '50 hipfire-kills', dmz: '125 hipfire-kills' }, harmonic: { mp: '2 kills zonder herladen, 25 keer', dmz: '2 kills zonder herladen, 50 keer' } },
   lmg: { platinum: { mp: '3 kills zonder te sterven, 15 keer', dmz: '3 kills zonder schade, 50 keer' }, harmonic: { mp: '2 kills zonder de trekker los te laten, 25 keer', dmz: '2 kills zonder de trekker los te laten, 75 keer' } },
   marksman: { platinum: { mp: '75 kills liggend', dmz: '150 kills liggend' }, harmonic: { mp: '75 one-shot-kills', dmz: '150 one-shot-kills' } },
   sniper: { platinum: { mp: '75 kills liggend', dmz: '150 kills liggend' }, harmonic: { mp: '75 one-shot-kills', dmz: '150 one-shot-kills' } },
   pistol: { platinum: { mp: '20 kills van achteren', dmz: '75 kills van achteren' }, harmonic: { mp: '40 hipfire-kills', dmz: '100 hipfire-kills' } },
-  launcher: { platinum: { mp: 'Kills zonder schade op te lopen (aantal: zie het spel)', dmz: null }, harmonic: { mp: 'Kills tegen spelers (aantal: zie het spel)', dmz: null } },
-  melee: { platinum: { mp: null, dmz: null }, harmonic: { mp: null, dmz: null } },
+  launcher: { platinum: { mp: '2 kills zonder schade, 15 keer', dmz: '2 kills zonder schade, 50 keer' }, harmonic: { mp: '10 kills in één potje, 7 keer', dmz: '10 kills in één potje, 15 keer' } },
+  melee: { platinum: { mp: '3 kills zonder te sterven, 15 keer', dmz: '3 kills zonder schade, 50 keer' }, harmonic: { mp: '25 kills van achteren', dmz: '75 kills van achteren' } },
 };
 
 // sp: [naam, vanaf wapenlevel, opdracht MP, opdracht DMZ]
@@ -49,37 +50,37 @@ export const WEAPONS = [
     ['Stormwave', 46, '50 kills met een demper', '125 kills met een demper'],
     ['Red', 72, '3 kills zonder te sterven, 15 keer', '3 kills zonder schade, 50 keer'],
   ]),
-  W('m4', 'M4', 'ar', null, [
+  W('m4', 'M4', 'ar', [10, 18, 26, 35, 39, 44, 51, 59], [
     ['Myriad', 26, '20 point-blank-kills', '75 point-blank-kills'],
     ['Night Ops', 51, '20 mounted kills', '75 mounted kills'],
     ['Green', 72, '25 kills van achteren', '100 kills van achteren'],
   ]),
-  W('hyeon-burst', 'Hyeon Burst', 'ar', null, [
+  W('hyeon-burst', 'Hyeon Burst', 'ar', [10, 17, 26, 32, 40, 49, 55, 63], [
     ['Ponderosa', 23, '2 kills zonder herladen, 10 keer', '2 kills zonder herladen, 30 keer'],
     ['Red Rain', 46, '20 longshot-kills', '75 longshot-kills'],
     ['Kitty Kaos', 68, '100 kills met volautomatisch vuur', '250 kills met een demper'],
   ]),
-  W('patriot-xmr', 'Patriot XMR', 'ar', null, [
+  W('patriot-xmr', 'Patriot XMR', 'ar', [11, 20, 28, 36, 43, 52, 59, 66], [
     ['Dune Sea', 24, '20 hipfire-kills', '75 hipfire-kills'],
     ['Scorch', 49, '30 longshot-kills', '100 longshot-kills'],
     ['Disperse', 72, '50 kills met een demper', '125 kills met een demper'],
   ]),
-  W('kastov-762', 'Kastov 762', 'ar', null, [
+  W('kastov-762', 'Kastov 762', 'ar', [10, 19, 27, 37, 45, 54, 61, 67], [
     ['Samnim', 24, '3 kills zonder te sterven, 10 keer', '5 kills zonder schade, 25 keer'],
     ['Raster Aux', 48, '20 longshot-kills', '75 longshot-kills'],
     ['Yellow', 71, '30 hipfire-kills', '100 hipfire-kills'],
   ]),
-  W('oden', 'Oden', 'ar', null, [
+  W('oden', 'Oden', 'ar', [12, 21, 25, 33, 39, 46, 53, 59], [
     ['Dark Moss', 25, '25 kills met de Miri 40MM-granaatwerper', '75 kills met de Miri 40MM-granaatwerper'],
     ['Shale', 44, '2 kills zonder herladen, 10 keer', '2 kills zonder herladen, 30 keer'],
     ['Hot Rod', 65, '100 ADS-kills', '250 ADS-kills'],
   ]),
-  W('axion', 'Axion', 'ar', null, [
+  W('axion', 'Axion', 'ar', [10, 19, 26, 34, 41, 48, 55, 62], [
     ['Splinter Rock', 23, '20 longshot-kills', '75 longshot-kills'],
     ['Sunset Tropic', 45, '25 kills met de Miri 40MM-granaatwerper', '75 kills met de Miri 40MM-granaatwerper'],
     ['Cyan', 69, '2 kills zonder herladen, 25 keer', '2 kills zonder herladen, 50 keer'],
   ]),
-  W('cronen-squall', 'Cronen Squall', 'ar', null, [
+  W('cronen-squall', 'Cronen Squall', 'ar', [10, 17, 24, 31, 39, 45, 54, 60], [
     ['Oni', 24, '20 point-blank-kills', '75 point-blank-kills'],
     ['Urban Smoke', 45, '20 mounted kills', '20 mounted kills'],
     ['Optical Reverb', 67, '3 kills zonder te sterven, 15 keer', '50 ADS-kills'],
@@ -91,22 +92,22 @@ export const WEAPONS = [
     ['Black Topo', 44, '10 double kills', '30 double kills'],
     ['Brown', 64, '3 kills zonder te sterven, 15 keer', '3 kills zonder schade, 50 keer'],
   ]),
-  W('vel-46', 'VEL 46', 'smg', null, [
+  W('vel-46', 'VEL 46', 'smg', [9, 15, 22, 28, 33, 40, 47, 54], [
     ['Jungle Shadow', 20, '20 kills liggend', '125 ADS-kills'],
     ['Ghast', 40, '20 kills liggend', '100 kills liggend'],
     ['Gunmetal', 60, '20 headshots', '75 headshots'],
   ]),
-  W('wz-55-striga', 'WZ.55 Striga', 'smg', null, [
+  W('wz-55-striga', 'WZ.55 Striga', 'smg', [12, 18, 23, 29, 36, 41, 47, 54], [
     ['Stellation', 20, '50 kills met een demper', '125 kills met een demper'],
     ['Rattlesnake', 41, '20 kills tijdens het springen', '50 kills tijdens het springen'],
     ['Dark Tan', 60, '40 point-blank-kills', '100 point-blank-kills'],
   ]),
-  W('ppsh-41', 'PPSh-41', 'smg', null, [
+  W('ppsh-41', 'PPSh-41', 'smg', [11, 17, 23, 31, 38, 44, 51, 57], [
     ['Blackwell', 20, '10 double kills', '30 double kills'],
-    ['Iron', 41, null, null],
+    ['Iron', 41, '20 longshot-kills', '75 longshot-kills'],
     ['Currents', 62, '100 ADS-kills', '250 ADS-kills'],
   ]),
-  W('x-58-nyx', 'X-58 Nyx', 'smg', null, [
+  W('x-58-nyx', 'X-58 Nyx', 'smg', [9, 15, 20, 25, 29, 35, 42, 47], [
     ['Sniper Veil', 17, '20 kills in beweging', '75 kills in beweging'],
     ['Carbonated', 35, '20 longshot-kills', '75 longshot-kills'],
     ['Lime', 53, '40 headshots', '100 longshot-kills'],
@@ -118,7 +119,7 @@ export const WEAPONS = [
     ['Brushstroke', 42, '10 longshot-kills', '50 longshot-kills'],
     ['White Pine', 60, '40 kills tijdens het springen', '100 kills tijdens het springen'],
   ]),
-  W('warlord', 'Warlord', 'shotgun', null, [
+  W('warlord', 'Warlord', 'shotgun', [13, 19, 25, 30, 37, 43, 49, 55], [
     ['Redshift', 21, '20 kills in beweging', '75 kills in beweging'],
     ['Corrupted Clay', 41, '10 double kills', '30 double kills'],
     ['Magma Ire', 60, '50 kills liggend', '125 kills liggend'],
@@ -130,15 +131,15 @@ export const WEAPONS = [
     ['Green Tiger', 39, '2 kills zonder herladen, 10 keer', '2 kills zonder herladen, 30 keer'],
     ['Thunderhead', 60, '30 longshot-kills', '100 longshot-kills'],
   ]),
-  W('type-73', 'Type 73', 'lmg', null, [
+  W('type-73', 'Type 73', 'lmg', [12, 19, 26, 34, 41, 48, 55, 61], [
     ['Ash Pine', 23, '20 mounted kills', '75 mounted kills'],
-    ['Outcrop', 45, null, null],
-    ['Foxtrail', 65, null, null],
+    ['Outcrop', 45, '10 double kills', '30 double kills'],
+    ['Foxtrail', 65, '40 headshots', '100 headshots'],
   ]),
-  W('apoc-338', 'APOC-338', 'lmg', null, [
+  W('apoc-338', 'APOC-338', 'lmg', [9, 15, 22, 26, 33, 40, 44, 51], [
     ['Phantom Flux', 15, '20 hipfire-kills', '75 hipfire-kills'],
-    ['Mineral', 36, null, null],
-    ['Tiger Swipe', 56, null, null],
+    ['Mineral', 36, '20 longshot-kills', '75 longshot-kills'],
+    ['Tiger Swipe', 56, '100 kills liggend', '250 kills liggend'],
   ]),
 
   // Marksman rifles
@@ -147,12 +148,12 @@ export const WEAPONS = [
     ['Fungal Grid', 49, '25 kills gehurkt', '75 kills gehurkt'],
     ['White', 73, '30 longshot-kills', '100 longshot-kills'],
   ]),
-  W('oris-8-6', 'Oris 8.6', 'marksman', null, [
+  W('oris-8-6', 'Oris 8.6', 'marksman', [11, 18, 27, 33, 42, 49, 55, 61], [
     ['Hibiscus', 27, '10 quickscope-kills', '50 quickscope-kills'],
     ['Fire Topo', 49, '20 double kills', '50 double kills'],
     ['Deep Space', 70, '3 kills zonder te sterven, 15 keer', '3 kills zonder schade, 50 keer'],
   ]),
-  W('mosin-nagant', 'Mosin-Nagant', 'marksman', null, [
+  W('mosin-nagant', 'Mosin-Nagant', 'marksman', [10, 17, 25, 31, 38, 47, 55, 61], [
     ['Ice Sheer', 25, '25 headshots', '75 headshots'],
     ['Fractal Snow', null, '3 kills zonder te sterven, 15 keer', '2 kills zonder te sterven, 30 keer'],
     ['Sticker Shock', null, '20 headshots', '250 kills met Focus'],
@@ -164,12 +165,12 @@ export const WEAPONS = [
     ['Spidersilk', 47, '20 headshots', '75 headshots'],
     ['Tension', 75, '2 kills zonder schade, 20 keer', '2 kills zonder schade, 30 keer'],
   ]),
-  W('astaroth-57', 'Astaroth .57', 'sniper', null, [
+  W('astaroth-57', 'Astaroth .57', 'sniper', [10, 15, 20, 26, 32, 37, 42, 48], [
     ['Dry Brush', 20, '3 kills zonder te sterven, 10 keer', '3 kills zonder schade, 25 keer'],
     ['Backcountry', 37, '20 mounted kills', '75 mounted kills'],
     ['Dread Plague', 54, '2 kills binnen 5 seconden, 20 keer', '2 kills binnen 5 seconden, 50 keer'],
   ]),
-  W('signal-50', 'Signal 50', 'sniper', null, [
+  W('signal-50', 'Signal 50', 'sniper', [10, 18, 28, 35, 43, 52, 57, 67], [
     ['Anaconda', 28, '2 kills binnen 5 seconden, 10 keer', '2 kills binnen 5 seconden, 25 keer'],
     ['Ripplewave', 52, '20 quickscope-kills', '30 quickscope-kills'],
     ['Sunburn', 74, '40 longshot-kills', '100 one-shot-kills'],
@@ -181,49 +182,49 @@ export const WEAPONS = [
     ['Snakeskin', 25, '3 kills zonder te sterven, 5 keer', '3 kills zonder schade, 15 keer'],
     ['Space Time', 38, '50 kills met akimbo', '125 kills met akimbo'],
   ]),
-  W('krait-p68', 'Krait P68', 'pistol', null, [
+  W('krait-p68', 'Krait P68', 'pistol', [10, 14, 18, 22, 25, 28, 32, 35], [
     ['Off Grid', 13, '15 kills terwijl je aan een richel hangt', '50 kills terwijl je aan een richel hangt'],
     ['Urban Flamingo', 25, '15 point-blank-kills', '50 point-blank-kills'],
     ['Smokescreen', 38, '50 kills met een demper', '125 kills met een demper'],
   ]),
-  W('50-gs', '.50 GS', 'pistol', null, [
+  W('50-gs', '.50 GS', 'pistol', [10, 16, 22, 28, 32, 36, 40, 46], [
     ['Frosted', 18, '20 headshots', '75 headshots'],
     ['Splatter Ops', 34, '7 double kills', '20 double kills'],
     ['Red Tiger', 50, '30 point-blank-kills', '75 point-blank-kills'],
   ]),
-  W('mojave-357', 'Mojave .357', 'pistol', null, [
+  W('mojave-357', 'Mojave .357', 'pistol', [9, 13, 18, 22, 26, 30, 35, 40], [
     ['Miami', 16, '20 headshots', '50 one-shot-kills'],
-    ['Wallpaper', 30, null, null],
+    ['Wallpaper', 30, '7 double kills', '2 kills zonder herladen, 20 keer'],
     ['Garland', 44, '30 point-blank-kills', '75 point-blank-kills'],
   ]),
 
   // Launchers
-  W('pila', 'PILA', 'launcher', null, [
+  W('pila', 'PILA', 'launcher', [6, 11, 16, 21, 26, 31, 36, 41], [
     ['Frontier', 16, '10 kills met een voltreffer', '25 kills met een voltreffer'],
     ['Sandwash', 31, '5 double kills', '100 double kills'],
     ['Digital Fall', 46, '30 killstreaks of voertuigen vernietigen', '50 killstreaks of voertuigen vernietigen'],
   ]),
-  W('rpg-8', 'RPG-8', 'launcher', null, [
+  W('rpg-8', 'RPG-8', 'launcher', [6, 11, 16, 21, 26, 31, 36, 41], [
     ['Digi Bark', 16, '10 kills met een voltreffer', '25 kills liggend'],
     ['Stone Bits', 31, '5 double kills', '25 longshot-kills'],
     ['Bubblegum Ops', 46, '30 killstreaks of voertuigen vernietigen', '50 killstreaks of voertuigen vernietigen'],
   ]),
-  W('jokr', 'JOKR', 'launcher', null, [
+  W('jokr', 'JOKR', 'launcher', [6, 11, 16, 21, 26, 31, 36, 41], [
     ['Thicket', 16, '10 kills met een voltreffer', '15 double kills'],
     ['Tectonic', 31, '5 double kills', '25 longshot-kills'],
     ['Blue Tiger', 46, '30 killstreaks of voertuigen vernietigen', '50 killstreaks of voertuigen vernietigen'],
   ]),
-  W('pm-40-anvil', 'PM-40 Anvil', 'launcher', null, [
+  W('pm-40-anvil', 'PM-40 Anvil', 'launcher', [6, 11, 16, 21, 26, 31, 36, 41], [
     ['Night Snow', 16, '10 kills met een voltreffer', '25 kills met een voltreffer'],
     ['Recursive', 31, '5 double kills', '2 kills zonder herladen, 20 keer'],
     ['Urban Standard', 46, '30 killstreaks of voertuigen vernietigen', '100 kills in beweging'],
   ]),
 
   // Melee
-  W('fss-carbon-edge-1095', 'FSS Carbon Edge 1095', 'melee', null, [
-    ['Raster Lite', 16, null, null],
-    ['Stockpile', 31, null, null],
-    ['Deathbed', 46, null, null],
+  W('fss-carbon-edge-1095', 'FSS Carbon Edge 1095', 'melee', [6, 11, 16, 21, 26, 31, 36, 41], [
+    ['Raster Lite', 16, null, '100 kills tijdens het springen'],
+    ['Stockpile', 31, null, '75 kills met de Heavy Melee Finisher'],
+    ['Deathbed', 46, null, '2 kills binnen 5 seconden, 50 keer'],
   ]),
 ];
 

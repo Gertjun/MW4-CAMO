@@ -251,7 +251,7 @@ function camoItem({ inputId, camo, isDone, locked, onChange }) {
       h('span', { class: 'camo-name' }, camo.name,
         camo.level ? h('span', { class: 'camo-level' }, ` · vanaf level ${camo.level}`) : null,
         locked ? h('span', { class: 'lock', 'aria-label': 'vergrendeld', role: 'img' }, ' 🔒') : null),
-      h('span', { class: 'camo-task' }, camo.mp ? (camo.dmz ? `MP: ${camo.mp}` : camo.mp) : 'Opdracht nog onbekend'),
+      h('span', { class: 'camo-task' }, camo.mp ? (camo.dmz ? `MP: ${camo.mp}` : camo.mp) : (camo.dmz ? 'MP: nog onbekend' : 'Opdracht nog onbekend')),
       camo.dmz ? h('span', { class: 'camo-task muted' }, `DMZ: ${camo.dmz}`) : null));
 }
 
@@ -302,7 +302,7 @@ function weaponCard(ctx, done, pinned, weapon) {
       prestige ? ` · Prestige ${frac(prestige, PRESTIGE_CAMOS.length, '/')}` : ''),
     complete
       ? h('span', { class: 'weapon-task', 'aria-hidden': 'true' })
-      : h('span', { class: 'weapon-task' }, `Opdracht: ${next.mp || 'nog onbekend'}`),
+      : h('span', { class: 'weapon-task' }, next.mp ? `Opdracht: ${next.mp}` : next.dmz ? `Opdracht (DMZ): ${next.dmz}` : 'Opdracht: nog onbekend'),
   ];
 
   const camos = ALL_CAMOS.get(weapon.id);
