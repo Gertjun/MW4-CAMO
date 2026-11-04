@@ -345,3 +345,24 @@ tbody tr + tr > * { border-top: 1px solid var(--border); }
 .lc.is-done .lc-mark { background: var(--ok); color: #fff; }
 .lc.is-locked .lc-mark { font-size: 0.6rem; }
 .lc input:focus-visible + label { outline: 2px solid var(--accent-text); outline-offset: -2px; border-radius: 6px; }
+
+/* Lijstweergave op bredere schermen: vakjes, plaatjes en tekst groeien mee
+   met de schermbreedte, zodat de tabel de beschikbare ruimte vult. */
+@media (min-width: 760px) {
+  .list-wrap {
+    --lw: clamp(130px, 12vw, 210px);
+    --lc: clamp(44px, calc((min(100vw, 1600px) - 72px - var(--lw)) / 18), 86px);
+    --li: calc(var(--lc) * 0.74);
+  }
+  .list-table { font-size: clamp(0.85rem, 0.55rem + 0.5vw, 1.05rem); }
+  .list-table .lw { min-width: var(--lw); max-width: var(--lw); padding: 6px 12px 6px 16px; }
+  .lw-count { font-size: 0.85em; }
+  .lt-groups th { font-size: 0.8em; padding-top: 12px; }
+  .lt-cols th { height: calc(var(--lc) * 2.4); font-size: 0.85em; }
+  .lt-cols th > span { max-height: calc(var(--lc) * 2.3); }
+  .lt-section-inner { font-size: 1.05em; padding: 10px 16px; }
+  .lt-section-inner .muted { font-size: 0.85em; }
+  .lc, .lc label { width: var(--lc); min-width: var(--lc); height: calc(var(--lc) + 4px); }
+  .lc img, .lc-empty { width: var(--li); height: var(--li); border-radius: 8px; }
+  .lc-mark { min-width: 20px; height: 20px; line-height: 20px; font-size: 0.75rem; right: 3px; bottom: 3px; }
+}

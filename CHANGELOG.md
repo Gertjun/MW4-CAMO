@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.17.1
+
+**Gewijzigd**
+- Lijst-weergave op laptop en tablet: de camo-plaatjes, vakjes en tekst worden groter naarmate het scherm breder is, zodat de tabel de ruimte vult in plaats van een lege strook rechts over te laten. Op de telefoon blijft alles zoals het was.
+
 ## 1.17.0
 
 **Toegevoegd**
