@@ -31,7 +31,7 @@ export const GOLD_TASK = { mp: '15 kills in één potje', dmz: '100 kills in é�
 export const CLASS_MASTERY = {
   ar: { platinum: { mp: '50 headshots', dmz: '100 headshots' }, harmonic: { mp: '25 double kills', dmz: '50 double kills' } },
   smg: { platinum: { mp: '25 kills van achteren', dmz: '75 kills van achteren' }, harmonic: { mp: '50 hipfire-kills', dmz: '100 hipfire-kills' } },
-  shotgun: { platinum: { mp: '50 hipfire-kills', dmz: '125 hipfire-kills' }, harmonic: { mp: '2 kills zonder herladen, 25 keer', dmz: '2 kills zonder herladen, 50 keer' } },
+  shotgun: { platinum: { mp: '125 hipfire-kills', dmz: '125 hipfire-kills' }, harmonic: { mp: '2 kills zonder herladen, 25 keer', dmz: '2 kills zonder herladen, 50 keer' } },
   lmg: { platinum: { mp: '3 kills zonder te sterven, 15 keer', dmz: '3 kills zonder schade, 50 keer' }, harmonic: { mp: '2 kills zonder de trekker los te laten, 25 keer', dmz: '2 kills zonder de trekker los te laten, 75 keer' } },
   marksman: { platinum: { mp: '75 kills liggend', dmz: '150 kills liggend' }, harmonic: { mp: '75 one-shot-kills', dmz: '150 one-shot-kills' } },
   sniper: { platinum: { mp: '75 kills liggend', dmz: '150 kills liggend' }, harmonic: { mp: '75 one-shot-kills', dmz: '150 one-shot-kills' } },
@@ -63,8 +63,8 @@ export const WEAPONS = [
   ]),
   W('patriot-xmr', 'Patriot XMR', 'ar', [11, 20, 28, 36, 43, 52, 59, 66], [
     ['Dune Sea', 24, '20 hipfire-kills', '75 hipfire-kills'],
-    ['Scorch', 49, '30 longshot-kills', '100 longshot-kills'],
-    ['Disperse', 72, '50 kills met een demper', '125 kills met een demper'],
+    ['Scorch', 49, '50 kills met een demper', '125 kills met een demper'],
+    ['Disperse', 72, '30 longshot-kills', '100 longshot-kills'],
   ]),
   W('kastov-762', 'Kastov 762', 'ar', [10, 19, 27, 37, 45, 54, 61, 67], [
     ['Samnim', 24, '3 kills zonder te sterven, 10 keer', '5 kills zonder schade, 25 keer'],
@@ -134,8 +134,8 @@ export const WEAPONS = [
   ]),
   W('type-73', 'Type 73', 'lmg', [12, 19, 26, 34, 41, 48, 55, 61], [
     ['Ash Pine', 23, '20 mounted kills', '75 mounted kills'],
-    ['Outcrop', 45, '10 double kills', '30 double kills'],
-    ['Foxtrail', 65, '40 headshots', '100 headshots'],
+    ['Mineral', 45, '10 double kills', '30 double kills'],
+    ['Tiger Swipe', 65, '40 headshots', '100 headshots'],
   ]),
   W('apoc-338', 'APOC-338', 'lmg', [9, 15, 22, 26, 33, 40, 44, 51], [
     ['Phantom Flux', 15, '20 hipfire-kills', '75 hipfire-kills'],
@@ -163,7 +163,7 @@ export const WEAPONS = [
   // Sniper rifles
   W('kg-7-vulcan', 'KG-7 Vulcan', 'sniper', [13, 22, 31, 38, 47, 54, 61, 69], [
     ['Treeline', 22, '10 hipfire-kills', '25 hipfire-kills'],
-    ['Spidersilk', 47, '20 headshots', '75 headshots'],
+    ['Spidersilk', 47, '20 headshots', '75 kills met Focus'],
     ['Tension', 75, '2 kills zonder schade, 20 keer', '2 kills zonder schade, 30 keer'],
   ]),
   W('astaroth-57', 'Astaroth .57', 'sniper', [10, 15, 20, 26, 32, 37, 42, 48], [
@@ -180,8 +180,8 @@ export const WEAPONS = [
   // Pistolen
   W('sang-9mm', 'SANG 9mm', 'pistol', [9, 13, 17, 21, 25, 28, 31, 35], [
     ['Autumn', 13, '25 ADS-kills', '75 ADS-kills'],
-    ['Snakeskin', 25, '3 kills zonder te sterven, 5 keer', '3 kills zonder schade, 15 keer'],
-    ['Space Time', 38, '50 kills met akimbo', '125 kills met akimbo'],
+    ['Snakeskin', 25, '50 kills met akimbo', '3 kills zonder schade, 15 keer'],
+    ['Space Time', 38, '3 kills zonder te sterven, 5 keer', '125 kills met akimbo'],
   ]),
   W('krait-p68', 'Krait P68', 'pistol', [10, 14, 18, 22, 25, 28, 32, 35], [
     ['Off Grid', 13, '15 kills terwijl je aan een richel hangt', '50 kills terwijl je aan een richel hangt'],
@@ -216,7 +216,7 @@ export const WEAPONS = [
     ['Blue Tiger', 46, '30 killstreaks of voertuigen vernietigen', '50 killstreaks of voertuigen vernietigen'],
   ]),
   W('pm-40-anvil', 'PM-40 Anvil', 'launcher', [6, 11, 16, 21, 26, 31, 36, 41], [
-    ['Night Snow', 16, '10 kills met een voltreffer', '25 kills met een voltreffer'],
+    ['Night Snow', 16, '10 kills met een voltreffer', '10 kills met een voltreffer'],
     ['Recursive', 31, '5 double kills', '2 kills zonder herladen, 20 keer'],
     ['Urban Standard', 46, '30 killstreaks of voertuigen vernietigen', '100 kills in beweging'],
   ]),
@@ -258,8 +258,8 @@ export const CAMOS_PER_WEAPON = 14;
 // Record-id in de kluis: "<wapen-id>:<camo-id>" (net als de gewone camo's).
 export const PRESTIGE_CAMOS = [
   { id: 'pres1', group: 'prestige', n: 1, name: 'Pyroclast', mp: 'Bereik Weapon Prestige 1' },
-  { id: 'pres2', group: 'prestige', n: 2, name: 'Pyroclast Terminus', mp: 'Bereik het maximale level van Weapon Prestige 1' },
-  { id: 'pres3', group: 'prestige', n: 3, name: 'Pyroclast Scatter', mp: 'Bereik Weapon Prestige Master Level 160' },
+  { id: 'pres2', group: 'prestige', n: 2, name: 'Pyroclast Terminus', mp: 'Bereik het maximale level van het wapen (verschilt per wapen)' },
+  { id: 'pres3', group: 'prestige', n: 3, name: 'Pyroclast Scatter', mp: 'Bereik Weapon Prestige Master Level 150' },
   { id: 'pres4', group: 'prestige', n: 4, name: 'Pyroclast Cascade', mp: 'Bereik Weapon Prestige Master Level 250' },
 ];
 

@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.16.2
+
+**Opgelost** (gecontroleerd in het spel)
+- Type 73: de tweede en derde camo heten Mineral en Tiger Swipe (was Outcrop en Foxtrail).
+- Platinum bij shotguns: 125 hipfire-kills in MP (was 50).
+- Pyroclast Terminus: bereik het maximale level van het wapen; dat verschilt per wapen.
+- Pyroclast Scatter: Master Level 150 (was 160).
+- Patriot XMR: Scorch is kills met een demper, Disperse is longshot-kills (waren omgewisseld).
+- SANG 9mm: Snakeskin is 50 kills met akimbo en Space Time is 3 kills zonder te sterven, 5 keer (MP-opdrachten waren omgewisseld).
+- PM-40 Anvil, Night Snow: 10 kills met een voltreffer in DMZ (was 25).
+- KG-7 Vulcan, Spidersilk: 75 kills met Focus in DMZ (was 75 headshots).
+
+Je afgevinkte voortgang blijft gewoon staan.
+
 ## 1.16.1
 
 **Toegevoegd**
