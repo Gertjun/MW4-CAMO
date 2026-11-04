@@ -492,17 +492,21 @@ tbody tr + tr > * { border-top: 1px solid var(--border); }
 }
 
 /* ---------- Overzicht: vastgepind, bijna klaar, blokkades, per klasse ---------- */
-/* Telefoon: één kolom in de vertrouwde volgorde (Vastgepind, Bijna klaar,
-   Wat houdt je tegen, Per klasse) en het mastery-blok onderaan. */
+/* Telefoon: alle blokken onder elkaar, in de volgorde die je zelf kiest
+   (knop Volgorde aanpassen). Elk blok krijgt zijn plek via --ov-order. */
 .ov-grid { display: grid; gap: 12px; align-items: start; }
 @media (max-width: 759px) {
-  .ov-stack { display: contents; }
-  .ov-stack > .ov-pinned { order: 1; }
-  .ov-grid > .ov-nearly { order: 2; }
-  .ov-stack > .ov-blockers { order: 3; }
-  .ov-grid > .ov-classes { order: 4; }
-  .ov-mastery { order: 1; } /* na de kaarten (in .app-root) */
+  .ov-grid, .ov-stack { display: contents; }
+  .ov-movable { order: var(--ov-order, 0); }
+  .ov-order-open { order: 99; }
 }
+@media (min-width: 760px) { .ov-order-open { display: none; } }
+.ov-order-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: var(--tap); padding: 4px 0; }
+.ov-order-btns { display: flex; gap: 4px; }
+.ov-order-btns .icon-btn { width: var(--tap); height: var(--tap); font-size: 0.9rem; color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+.ov-order-btns .icon-btn:disabled { opacity: 0.3; }
+.ov-order-actions { display: flex; gap: 8px; justify-content: flex-end; padding: 8px 0 10px; }
+.ov-order-actions .btn { min-height: var(--tap); }
 /* Tablet: mastery direct onder de totalen; Per klasse en Bijna klaar naast
    elkaar, daaronder Wat houdt je tegen en Vastgepind naast elkaar. */
 @media (min-width: 760px) {

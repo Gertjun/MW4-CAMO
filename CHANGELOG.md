@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.24.0
+
+**Toegevoegd**
+- Telefoon: onderaan het **Overzicht** staat de knop **↕ Volgorde aanpassen**. Daarmee zet je de blokken (Camo's vrijgespeeld, Vastgepind, Bijna klaar, Wat houdt je tegen, Per klasse en Mastery-camo's) in de volgorde die jij wilt, met de pijltjes ▲ ▼. Met **Standaardvolgorde** ga je terug naar de oorspronkelijke volgorde.
+- De volgorde wordt in je kluis bewaard en synchroniseert mee naar je andere apparaten.
+- Op tablet en laptop blijft de vaste indeling in kolommen.
+
+**Gegevens**
+- Je kluis krijgt er één onderdeel bij: de volgorde van het Overzicht (schema 4). Je bestaande voortgang, pins en loadouts blijven ongewijzigd. Een apparaat met een oudere versie vraagt na de sync om eerst bij te werken.
+
 ## 1.23.0
 
 **Gewijzigd**

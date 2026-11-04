@@ -7,6 +7,8 @@
 //     id = 'mastery:<camo>' voor de 6 mastery-camo's (weaponId 'mastery').
 //   pins:     [{ id: '<wapen>', pinned, createdAt, updatedAt }] (sinds schema 3)
 //   loadouts: zie js/loadouts.js (sinds schema 2)
+//   overviewOrder: { order: ['summary', …], updatedAt } of null (sinds schema 4)
+//     volgorde van de blokken in het Overzicht op de telefoon; bij sync wint de nieuwste.
 // Eén record per camo met een vaste id. Uitvinken zet done op false
 // (niets wordt verwijderd), zodat sync per camo de nieuwste wijziging kiest.
 // De wapen- en camolijst zelf staat in js/catalog.js.
@@ -22,12 +24,12 @@ import { APP } from './config.js';
 
 // 1 = alleen camo-voortgang; 2 = ook loadouts; 3 = ook vastgepinde wapens,
 // prestige- en mastery-camo's.
-const SCHEMA = 3;
+const SCHEMA = 4;
 const TOMBSTONE_DAYS = 180;
 
 // Schermkeuzes (alleen tijdens gebruik, niet in de kluis).
 // layout: 'grid' (kaarten) of 'list' (tabel met alle camo's naast elkaar).
-const ui = { view: 'overview', layout: 'grid', filter: 'all', group: 'class', sort: 'default', open: new Set(), listScroll: 0, sideCollapsed: false };
+const ui = { ovEdit: false, view: 'overview', layout: 'grid', filter: 'all', group: 'class', sort: 'default', open: new Set(), listScroll: 0, sideCollapsed: false };
 
 // Schermen in de tabbalk onderin. icon = SVG-paden (24×24, lijnen).
 const VIEWS = [
@@ -363,7 +365,7 @@ function masteryCard(ctx, done) {
         onChange: (cb) => onMasteryToggle(ctx, done, c, cb),
       });
     }))));
-  return foldCard(MASTERY_ID, `mastery-card ov-mastery${got === MASTERY_CAMOS.length ? ' is-complete' : ''}`, headParts, bodyParts);
+  return foldCard(MASTERY_ID, `mastery-card${got === MASTERY_CAMOS.length ? ' is-complete' : ''}`, headParts, bodyParts);
 }
 
 function summary(done) {
@@ -417,6 +419,73 @@ function goToCamos(rerender, { cls = null, weapon = null } = {}) {
   const target = weapon && document.getElementById(`card-${weapon.id}`);
   if (target) target.scrollIntoView({ block: 'start' });
   else window.scrollTo(0, 0);
+}
+
+// Blokken van het Overzicht. De volgorde is op de telefoon aan te passen;
+// op tablet en laptop staat een vaste indeling (zie css/app.css).
+const OV_BLOCKS = [
+  { id: 'summary', label: "Camo's vrijgespeeld" },
+  { id: 'pinned', label: '📌 Vastgepind' },
+  { id: 'nearly', label: 'Bijna klaar' },
+  { id: 'blockers', label: 'Wat houdt je tegen' },
+  { id: 'classes', label: 'Per klasse' },
+  { id: 'mastery', label: "Mastery-camo's" },
+];
+const OV_DEFAULT = OV_BLOCKS.map((b) => b.id);
+
+/** Opgeslagen volgorde, aangevuld met blokken die er (nog) niet in staan. */
+function ovOrder(data) {
+  const saved = (data.overviewOrder?.order || []).filter((id) => OV_DEFAULT.includes(id));
+  return [...new Set([...saved, ...OV_DEFAULT])];
+}
+
+async function saveOvOrder(ctx, order) {
+  await ctx.update((d) => { d.overviewOrder = { order, updatedAt: Date.now() }; });
+}
+
+/** Lijst om de blokken te verschuiven (alleen op de telefoon). */
+function orderEditor(ctx, rerender) {
+  const order = ovOrder(ctx.data);
+  const move = (i, dir) => {
+    const next = [...order];
+    [next[i], next[i + dir]] = [next[i + dir], next[i]];
+    saveOvOrder(ctx, next);
+  };
+  const isDefault = order.every((id, i) => id === OV_DEFAULT[i]);
+  return h('section', { class: 'card ov-card ov-order', 'aria-labelledby': 'ov-order' },
+    h('h3', { class: 'ov-title', id: 'ov-order' }, h('span', {}, 'Volgorde van de blokken')),
+    h('p', { class: 'muted ov-empty' }, 'Schuif een blok met de pijltjes omhoog of omlaag. Dit geldt voor het Overzicht op je telefoon.'),
+    h('ol', { class: 'ov-list' }, order.map((id, i) => {
+      const label = OV_BLOCKS.find((b) => b.id === id).label;
+      return h('li', { class: 'ov-order-row' },
+        h('span', { class: 'ov-name' }, label),
+        h('span', { class: 'ov-order-btns' },
+          h('button', {
+            type: 'button', class: 'icon-btn', 'aria-label': `${label} omhoog`, disabled: i === 0,
+            onClick: () => move(i, -1),
+          }, '▲'),
+          h('button', {
+            type: 'button', class: 'icon-btn', 'aria-label': `${label} omlaag`, disabled: i === order.length - 1,
+            onClick: () => move(i, 1),
+          }, '▼')));
+    })),
+    h('div', { class: 'ov-order-actions' },
+      h('button', {
+        type: 'button', class: 'btn btn-ghost', disabled: isDefault,
+        onClick: () => saveOvOrder(ctx, [...OV_DEFAULT]),
+      }, 'Standaardvolgorde'),
+      h('button', {
+        type: 'button', class: 'btn btn-primary',
+        onClick: () => { ui.ovEdit = false; rerender(); window.scrollTo(0, 0); },
+      }, 'Klaar')));
+}
+
+/** Knop onderaan het Overzicht om de volgorde aan te passen (alleen op de telefoon). */
+function orderButton(rerender) {
+  return h('button', {
+    type: 'button', class: 'btn btn-ghost ov-order-open',
+    onClick: () => { ui.ovEdit = true; rerender(); window.scrollTo(0, 0); },
+  }, '↕ Volgorde aanpassen');
 }
 
 const chevron = () => h('span', { class: 'ov-chev', 'aria-hidden': 'true' }, '›');
@@ -653,6 +722,7 @@ function tabBar(rerender) {
         onClick: () => {
           if (ui.view === v.id) { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
           ui.view = v.id;
+          ui.ovEdit = false;
           rerender();
           window.scrollTo(0, 0);
         },
@@ -742,11 +812,18 @@ function listTable(ctx, done, pinned, sections) {
   return card;
 }
 
+/** Van twee instellingen-objecten met updatedAt de nieuwste (of de enige). */
+function newest(a, b) {
+  if (!a) return b ?? null;
+  if (!b) return a;
+  return (b.updatedAt || 0) > (a.updatedAt || 0) ? b : a;
+}
+
 export const app = {
   schemaVersion: SCHEMA,
 
   initialData() {
-    return { schema: SCHEMA, progress: [], loadouts: [], pins: [] };
+    return { schema: SCHEMA, progress: [], loadouts: [], pins: [], overviewOrder: null };
   },
 
   migrate(data) {
@@ -755,6 +832,8 @@ export const app = {
     data.progress ??= [];
     data.loadouts ??= [];
     data.pins ??= [];
+    // Schema 3 → 4: volgorde van het Overzicht erbij (null = standaardvolgorde).
+    data.overviewOrder ??= null;
     data.schema = Math.max(data.schema || 0, SCHEMA);
     data.progress = purgeTombstones(data.progress, TOMBSTONE_DAYS);
     data.loadouts = purgeTombstones(data.loadouts, TOMBSTONE_DAYS);
@@ -770,6 +849,7 @@ export const app = {
       progress: mergeCollections(local.progress, remote.progress),
       loadouts: mergeCollections(local.loadouts, remote.loadouts),
       pins: mergeCollections(local.pins, remote.pins),
+      overviewOrder: newest(local.overviewOrder, remote.overviewOrder),
     };
   },
 
@@ -782,20 +862,33 @@ export const app = {
     const done = progressIndex(ctx.data);
     if (ui.view === 'overview') {
       const pinned = pinnedSet(ctx.data);
+      if (ui.ovEdit) {
+        root.replaceChildren(pageTitle(), orderEditor(ctx, rerender), tabBar(rerender));
+        return;
+      }
+      // Volgorde voor de telefoon: elk blok krijgt zijn plek via --ov-order.
+      const order = ovOrder(ctx.data);
+      const place = (id, el) => {
+        if (!el) return null;
+        el.classList.add('ov-movable');
+        el.style.setProperty('--ov-order', String(order.indexOf(id) + 1));
+        return el;
+      };
       root.replaceChildren(...[
         pageTitle(),
-        summary(done),
+        place('summary', summary(done)),
         // Op de laptop: mastery direct onder de totalen, daaronder drie kolommen
         // (Per klasse | Bijna klaar | Wat houdt je tegen + Vastgepind).
         // Op de telefoon zet de CSS alles in de oude volgorde onder elkaar.
-        masteryCard(ctx, done),
+        place('mastery', masteryCard(ctx, done)),
         h('div', { class: 'ov-grid' },
-          classCard(done, rerender),
-          nearlyCard(done, rerender),
+          place('classes', classCard(done, rerender)),
+          place('nearly', nearlyCard(done, rerender)),
           h('div', { class: 'ov-stack' }, ...[
-            blockersCard(done, rerender),
-            pinnedCard(done, pinned, rerender),
+            place('blockers', blockersCard(done, rerender)),
+            place('pinned', pinnedCard(done, pinned, rerender)),
           ].filter(Boolean))),
+        orderButton(rerender),
         tabBar(rerender),
       ]);
       return;
