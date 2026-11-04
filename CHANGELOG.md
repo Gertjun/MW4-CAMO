@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.20.0
+
+**Gewijzigd**
+- Op de laptop (en een brede tablet) staan de knoppen **Overzicht**, **Camo's** en **Loadouts** nu als zijbalk links, net als in Crypto Portfolio. Bovenin de zijbalk staan het logo en het versienummer; boven de inhoud staat de naam van het scherm.
+- Op de telefoon blijft de tabbalk onderin zoals hij was.
+
+Je gegevens veranderen niet.
+
 ## 1.19.0
 
 **Gewijzigd**

@@ -225,6 +225,41 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 /* Meldingen (toast) boven de tabbalk tonen */
 body:has(.tabbar) .toast { bottom: calc(var(--tabbar-h) + 12px + var(--safe-bottom)); }
 
+.side-brand, .page-title { display: none; } /* alleen naast de zijbalk */
+
+/* Laptop/brede tablet: de knoppen staan als zijbalk links, zoals in Crypto Portfolio.
+   --side-w telt mee in de breedte van de lijstweergave (zie onderaan). */
+:root { --side-w: 0px; }
+@media (min-width: 900px) {
+  :root { --side-w: 232px; }
+  #screen-app:has(.tabbar) { padding-left: calc(var(--side-w) + var(--safe-left)); }
+  .app-root { padding-bottom: 0; }
+  #screen-app:has(.tabbar) .app-title { display: none; } /* logo staat in de zijbalk */
+  #screen-app:has(.tabbar) .header-actions { margin-left: auto; }
+  .tabbar {
+    top: 0; right: auto; width: calc(var(--side-w) + var(--safe-left));
+    padding: calc(20px + var(--safe-top)) 12px calc(16px + var(--safe-bottom)) calc(12px + var(--safe-left));
+    display: flex; flex-direction: column; gap: 20px; overflow-y: auto;
+    background: var(--surface); border-top: 0; border-right: 1px solid var(--border);
+    -webkit-backdrop-filter: none; backdrop-filter: none;
+  }
+  .side-brand { display: grid; justify-items: start; gap: 6px; padding: 0 8px; }
+  .side-brand img { display: block; height: 32px; width: auto; }
+  .side-name { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+  .side-version { font-size: 0.75rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .tabbar-inner { max-width: none; margin: 0; display: grid; grid-template-columns: none; gap: 4px; }
+  .tabbar-btn {
+    min-height: var(--tap); padding: 0 12px; flex-direction: row; justify-content: flex-start; gap: 12px;
+    font-size: 0.95rem; color: var(--muted); border-radius: var(--radius-sm); text-align: left;
+  }
+  .tabbar-btn svg { width: 20px; height: 20px; }
+  .tabbar-btn:hover { background: var(--surface-2); color: var(--text); }
+  .tabbar-btn[aria-current="page"] { background: var(--surface-2); color: var(--text); }
+  .tabbar-btn[aria-current="page"] svg { color: var(--accent); }
+  body:has(.tabbar) .toast { bottom: calc(20px + var(--safe-bottom)); left: calc(50% + var(--side-w) / 2); }
+  .page-title { display: block; margin: 0; font-size: 1.5rem; }
+}
+
 /* ---------- Loadouts ---------- */
 .lo-add { min-height: var(--tap); }
 .loadout-list { display: grid; gap: 10px; }
@@ -417,7 +452,7 @@ tbody tr + tr > * { border-top: 1px solid var(--border); }
 @media (min-width: 760px) {
   .list-card {
     --lw: clamp(130px, 12vw, 210px);
-    --lc: clamp(44px, calc((min(100vw, 1600px) - 72px - var(--lw)) / 18), 86px);
+    --lc: clamp(44px, calc((min(100vw - var(--side-w), 1600px) - 72px - var(--lw)) / 18), 86px);
     --li: calc(var(--lc) * 0.74);
   }
   .list-table { font-size: clamp(0.85rem, 0.55rem + 0.5vw, 1.05rem); }

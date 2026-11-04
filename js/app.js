@@ -18,6 +18,7 @@ import {
   PRESTIGE_CAMOS, MASTERY_CAMOS, MASTERY_MODES,
 } from './catalog.js';
 import { renderLoadouts, closeOnLock } from './loadouts.js';
+import { APP } from './config.js';
 
 // 1 = alleen camo-voortgang; 2 = ook loadouts; 3 = ook vastgepinde wapens,
 // prestige- en mastery-camo's.
@@ -437,9 +438,25 @@ function icon(paths) {
   return svg;
 }
 
-/** Tabbalk onderin het scherm (zoals in een iPhone-app). */
+/** Logo met appnaam en versie: alleen zichtbaar bovenin de zijbalk (laptop). */
+function sideBrand() {
+  return h('div', { class: 'side-brand' },
+    h('picture', {},
+      h('source', { srcset: 'img/logo-white.webp', media: '(prefers-color-scheme: dark)' }),
+      h('img', { src: 'img/logo-black.webp', alt: 'Call of Duty Modern Warfare 4', width: 127, height: 36 })),
+    h('span', { class: 'side-name' }, 'Camo Tracker'),
+    h('span', { class: 'side-version' }, `v${APP.version}`));
+}
+
+/** Schermtitel bovenaan de inhoud: alleen zichtbaar naast de zijbalk (laptop). */
+function pageTitle() {
+  return h('h2', { class: 'page-title' }, VIEWS.find((v) => v.id === ui.view).label);
+}
+
+/** Tabbalk onderin het scherm (telefoon) of zijbalk links (laptop). */
 function tabBar(rerender) {
   return h('nav', { class: 'tabbar', 'aria-label': 'Schermen' },
+    sideBrand(),
     h('div', { class: 'tabbar-inner' },
       VIEWS.map((v) => h('button', {
         type: 'button', class: 'tabbar-btn', 'aria-current': ui.view === v.id ? 'page' : null,
@@ -568,12 +585,12 @@ export const app = {
   render(root, ctx) {
     const rerender = () => app.render(root, ctx);
     if (ui.view === 'loadouts') {
-      root.replaceChildren(...renderLoadouts(ctx), tabBar(rerender));
+      root.replaceChildren(pageTitle(), ...renderLoadouts(ctx), tabBar(rerender));
       return;
     }
     const done = progressIndex(ctx.data);
     if (ui.view === 'overview') {
-      root.replaceChildren(summary(done), masteryCard(ctx, done), tabBar(rerender));
+      root.replaceChildren(pageTitle(), summary(done), masteryCard(ctx, done), tabBar(rerender));
       return;
     }
     const pinned = pinnedSet(ctx.data);
@@ -617,6 +634,7 @@ export const app = {
     }
 
     root.replaceChildren(...[
+      pageTitle(),
       controls(ctx, rerender),
       h('p', { class: 'muted shown-count' }, `${weapons.length} van ${WEAPONS.length} wapens`),
       ...list,
