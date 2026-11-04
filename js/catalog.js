@@ -42,7 +42,9 @@ export const CLASS_MASTERY = {
 
 // sp: [naam, vanaf wapenlevel, opdracht MP, opdracht DMZ]
 // mil: wapenlevels voor militaire camo 1–8 (null = onbekend)
-const W = (id, name, cls, mil, sp) => ({ id, name, cls, mil, sp });
+// ov (optioneel): afwijkende mastery-opdracht voor dit wapen, bijv.
+//   { platinum: { mp: '…' } }. Wat ontbreekt, komt uit CLASS_MASTERY.
+const W = (id, name, cls, mil, sp, ov) => ({ id, name, cls, mil, sp, ov });
 
 export const WEAPONS = [
   // Assault rifles
@@ -124,7 +126,7 @@ export const WEAPONS = [
     ['Redshift', 21, '20 kills in beweging', '75 kills in beweging'],
     ['Corrupted Clay', 41, '10 double kills', '30 double kills'],
     ['Magma Ire', 60, '50 kills liggend', '125 kills liggend'],
-  ]),
+  ], { platinum: { mp: '50 hipfire-kills' } }),
 
   // LMG's
   W('finn-lmg', 'FiNN LMG', 'lmg', [12, 18, 24, 31, 37, 42, 48, 53], [
@@ -246,9 +248,10 @@ export function camosOf(weapon) {
     list.push({ id: `sp${i + 1}`, group: 'special', name, level, mp, dmz });
   });
   const cm = CLASS_MASTERY[weapon.cls];
-  list.push({ id: 'gold', group: 'mastery', name: 'Gold', ...GOLD_TASK });
-  list.push({ id: 'platinum', group: 'mastery', name: 'Platinum', ...cm.platinum });
-  list.push({ id: 'harmonic', group: 'mastery', name: 'Harmonic Break', ...cm.harmonic });
+  const ov = weapon.ov || {};
+  list.push({ id: 'gold', group: 'mastery', name: 'Gold', ...GOLD_TASK, ...ov.gold });
+  list.push({ id: 'platinum', group: 'mastery', name: 'Platinum', ...cm.platinum, ...ov.platinum });
+  list.push({ id: 'harmonic', group: 'mastery', name: 'Harmonic Break', ...cm.harmonic, ...ov.harmonic });
   return list;
 }
 

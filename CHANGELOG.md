@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.25.1
+
+**Opgelost**
+- De Platinum-opdracht van de **Warlord** in MP klopte niet: dat is **50 hipfire-kills** (niet 125 zoals bij de andere shotguns).
+
+Je gegevens veranderen niet.
+
 ## 1.25.0
 
 **Toegevoegd**
