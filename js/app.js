@@ -290,7 +290,7 @@ function foldCard(openId, cls, headParts, bodyParts) {
     },
   }, ...headParts);
   const body = h('div', { class: 'weapon-body', id: bodyId, hidden: !open }, ...bodyParts);
-  return h('article', { class: `card weapon${open ? ' is-open' : ''} ${cls}` }, head, body);
+  return h('article', { class: `card weapon${open ? ' is-open' : ''} ${cls}`, id: `card-${openId}` }, head, body);
 }
 
 function weaponCard(ctx, done, pinned, weapon) {
@@ -400,6 +400,174 @@ function summary(done) {
       tile('Harmonic', hb, WEAPONS.length, 'm-hb'),
       tile('Divergence', div, WEAPONS.length, 'm-div'),
       tile('Prestige', prestigeTotal, WEAPONS.length * PRESTIGE_CAMOS.length, 'm-pres')));
+}
+
+// ---------- Overzicht: vastgepind, bijna klaar, blokkades, per klasse ----------
+
+/** Naar het Camo's-scherm, eventueel met een klasse-filter of één wapen opengeklapt. */
+function goToCamos(rerender, { cls = null, weapon = null } = {}) {
+  ui.view = 'camos';
+  if (cls) ui.filter = cls;
+  if (weapon) {
+    ui.layout = 'grid';
+    if (ui.filter !== 'all' && ui.filter !== weapon.cls) ui.filter = 'all';
+    ui.open.add(weapon.id);
+  }
+  rerender();
+  const target = weapon && document.getElementById(`card-${weapon.id}`);
+  if (target) target.scrollIntoView({ block: 'start' });
+  else window.scrollTo(0, 0);
+}
+
+const chevron = () => h('span', { class: 'ov-chev', 'aria-hidden': 'true' }, '›');
+
+function ovCard(id, title, extra, items) {
+  return h('section', { class: 'card ov-card', 'aria-labelledby': id },
+    h('h3', { class: 'ov-title', id }, h('span', {}, title), extra ? h('span', { class: 'muted' }, extra) : null),
+    h('ul', { class: 'ov-list' }, items.map((it) => h('li', {}, it))));
+}
+
+/** Namen achter elkaar, ingekort na een paar stuks. */
+function nameList(names, max = 5) {
+  const shown = names.slice(0, max).join(', ');
+  return names.length > max ? `${shown} en nog ${names.length - max}` : shown;
+}
+
+function nextTask(camo) {
+  return camo.mp ? camo.mp : camo.dmz ? `DMZ: ${camo.dmz}` : 'Opdracht nog onbekend';
+}
+
+/** "Gold: 15 kills …", of bij een vergrendelde camo waar hij op wacht. */
+function nextLine(done, weapon, next) {
+  const missing = missingFor(done, weapon, next).length;
+  if (!missing) return `${next.name}: ${nextTask(next)}`;
+  const need = next.id === 'platinum' ? 'Gold' : 'Platinum';
+  return `🔒 ${next.name}: wacht op ${need} bij ${missing} ${missing === 1 ? 'ander wapen' : 'andere wapens'}`;
+}
+
+/** Rij met wapen: afbeelding, naam, telling, balk en wat er nu te doen is. */
+function weaponRow(done, weapon, rerender, note) {
+  const { count, next } = weaponStats(done, weapon);
+  const complete = count === CAMOS_PER_WEAPON;
+  return h('button', {
+    class: `ov-row ov-weapon${complete ? ' is-complete' : ''}`, type: 'button',
+    onClick: () => goToCamos(rerender, { weapon }),
+  },
+  weaponPic(weapon),
+  h('span', { class: 'ov-main' },
+    h('span', { class: 'ov-line' },
+      h('span', { class: 'ov-name' }, weapon.name),
+      h('span', { class: 'ov-count' }, `${count}/${CAMOS_PER_WEAPON}`)),
+    bar(count, CAMOS_PER_WEAPON, `Voortgang ${weapon.name}`),
+    note ? h('span', { class: 'ov-note' }, note) : null,
+    complete
+      ? h('span', { class: 'ov-sub muted' }, 'Alles vrijgespeeld ✓')
+      : h('span', { class: 'ov-sub muted' }, nextSwatch(next), nextLine(done, weapon, next))),
+  chevron());
+}
+
+function pinnedCard(done, pinned, rerender) {
+  const weapons = WEAPONS.filter((w) => pinned.has(w.id));
+  if (!weapons.length) {
+    return h('section', { class: 'card ov-card', 'aria-labelledby': 'ov-pinned' },
+      h('h3', { class: 'ov-title', id: 'ov-pinned' }, h('span', {}, '📌 Vastgepind')),
+      h('p', { class: 'muted ov-empty' }, 'Pin een wapen op het Camo\'s-scherm (klap het open en tik op Vastpinnen) om het hier te zien.'));
+  }
+  return ovCard('ov-pinned', '📌 Vastgepind', `${weapons.length} ${weapons.length === 1 ? 'wapen' : 'wapens'}`,
+    weapons.map((w) => weaponRow(done, w, rerender)));
+}
+
+/**
+ * Hoe ver is een wapen van zijn volgende mastery-camo (Gold, Platinum,
+ * Harmonic Break)? null = klaar, of wacht op andere wapens (zie blokkades).
+ */
+function nextMilestone(done, weapon) {
+  const has = (id) => done.has(key(weapon.id, id));
+  const camos = CAMOS.get(weapon.id);
+  if (!has('gold')) {
+    const left = camos.filter((c) => (c.group === 'military' || c.group === 'special') && !has(c.id)).length;
+    return { left, text: left ? `Nog ${left} ${left === 1 ? 'camo' : "camo's"} tot Gold` : 'Gold kan nu' };
+  }
+  const tier = !has('platinum') ? 'platinum' : !has('harmonic') ? 'harmonic' : null;
+  if (!tier) return null;
+  const camo = camos.find((c) => c.id === tier);
+  if (missingFor(done, weapon, camo).length) return null;
+  return { left: 0, text: `${camo.name} kan nu` };
+}
+
+function nearlyCard(done, rerender) {
+  const items = WEAPONS
+    .map((w) => ({ w, m: nextMilestone(done, w), count: weaponStats(done, w).count }))
+    .filter((x) => x.m && x.count > 0) // alleen wapens waar je al mee bezig bent
+    .sort((a, b) => a.m.left - b.m.left || b.count - a.count || a.w.name.localeCompare(b.w.name, 'nl'))
+    .slice(0, 5);
+  if (!items.length) return null;
+  return ovCard('ov-nearly', 'Bijna klaar', 'volgende mijlpaal',
+    items.map(({ w, m }) => weaponRow(done, w, rerender, m.text)));
+}
+
+/** Wat wacht er op andere wapens? Platinum per klasse, Harmonic Break, Divergence. */
+function blockers(done) {
+  const has = (w, id) => done.has(key(w.id, id));
+  const list = [];
+  for (const c of CLASSES) {
+    const ws = WEAPONS.filter((w) => w.cls === c.id);
+    const waiting = ws.some((w) => has(w, 'gold') && !has(w, 'platinum'));
+    const missing = ws.filter((w) => !has(w, 'gold'));
+    if (waiting && missing.length) {
+      list.push({ title: `Platinum ${c.name}`, missing, need: 'Gold', cls: c.id });
+    }
+  }
+  const noPlat = WEAPONS.filter((w) => !has(w, 'platinum'));
+  if (noPlat.length && WEAPONS.some((w) => has(w, 'platinum') && !has(w, 'harmonic'))) {
+    list.push({ title: 'Harmonic Break', missing: noPlat, need: 'Platinum' });
+  }
+  const noHb = WEAPONS.filter((w) => !has(w, 'harmonic'));
+  if (noHb.length && noHb.length < WEAPONS.length) {
+    list.push({ title: "Divergence en mastery-camo's", missing: noHb, need: 'Harmonic Break' });
+  }
+  return list.sort((a, b) => a.missing.length - b.missing.length);
+}
+
+function blockersCard(done, rerender) {
+  const list = blockers(done);
+  if (!list.length) return null;
+  return ovCard('ov-blockers', 'Wat houdt je tegen', null, list.map((b) => {
+    const n = b.missing.length;
+    return h('button', {
+      class: 'ov-row ov-block', type: 'button',
+      onClick: () => (n === 1 ? goToCamos(rerender, { weapon: b.missing[0] }) : goToCamos(rerender, { cls: b.cls || 'all' })),
+    },
+    h('span', { class: 'ov-main' },
+      h('span', { class: 'ov-line' },
+        h('span', { class: 'ov-name' }, b.title),
+        h('span', { class: 'ov-count' }, `nog ${n} ${n === 1 ? 'wapen' : 'wapens'}`)),
+      h('span', { class: 'ov-sub muted' }, `Zonder ${b.need}: ${nameList(b.missing.map((w) => w.name))}`)),
+    chevron());
+  }));
+}
+
+function classCard(done, rerender) {
+  return ovCard('ov-classes', 'Per klasse', null, CLASSES.map((c) => {
+    const ws = WEAPONS.filter((w) => w.cls === c.id);
+    const max = ws.length * CAMOS_PER_WEAPON;
+    const got = ws.reduce((n, w) => n + weaponStats(done, w).count, 0);
+    const tier = (id) => ws.filter((w) => done.has(key(w.id, id))).length;
+    return h('button', {
+      class: `ov-row ov-class${got === max ? ' is-complete' : ''}`, type: 'button',
+      onClick: () => goToCamos(rerender, { cls: c.id }),
+    },
+    h('span', { class: 'ov-main' },
+      h('span', { class: 'ov-line' },
+        h('span', { class: 'ov-name' }, c.full),
+        h('span', { class: 'ov-count' }, frac(got, max, '/'))),
+      bar(got, max, `Voortgang ${c.full}`),
+      h('span', { class: 'ov-tiers' },
+        h('span', { class: 't-gold' }, `Gold ${tier('gold')}/${ws.length}`),
+        h('span', { class: 't-plat' }, `Platinum ${tier('platinum')}/${ws.length}`),
+        h('span', { class: 't-hb' }, `Harmonic ${tier('harmonic')}/${ws.length}`))),
+    chevron());
+  }));
 }
 
 function controls(ctx, rerender) {
@@ -613,7 +781,19 @@ export const app = {
     }
     const done = progressIndex(ctx.data);
     if (ui.view === 'overview') {
-      root.replaceChildren(pageTitle(), summary(done), masteryCard(ctx, done), tabBar(rerender));
+      const pinned = pinnedSet(ctx.data);
+      root.replaceChildren(...[
+        pageTitle(),
+        summary(done),
+        h('div', { class: 'ov-grid' }, ...[
+          pinnedCard(done, pinned, rerender),
+          nearlyCard(done, rerender),
+          blockersCard(done, rerender),
+          classCard(done, rerender),
+        ].filter(Boolean)),
+        masteryCard(ctx, done),
+        tabBar(rerender),
+      ]);
       return;
     }
     const pinned = pinnedSet(ctx.data);

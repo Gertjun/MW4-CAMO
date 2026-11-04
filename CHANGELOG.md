@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.22.0
+
+**Toegevoegd**
+- Het **Overzicht** heeft vier nieuwe blokken:
+  - **📌 Vastgepind**: je vastgepinde wapens met hun voortgang en de volgende camo. Staat die camo nog op slot, dan zie je waarop hij wacht.
+  - **Bijna klaar**: de wapens waar je mee bezig bent en die het dichtst bij hun volgende Gold, Platinum of Harmonic Break zitten.
+  - **Wat houdt je tegen**: welke wapens nog Gold missen voor Platinum in een klasse, welke nog Platinum missen voor Harmonic Break, en welke nog Harmonic Break missen voor Divergence en de mastery-camo's.
+  - **Per klasse**: voortgang per klasse, met hoeveel wapens Gold, Platinum en Harmonic Break hebben.
+- Tik op een wapen in deze blokken en het Camo's-scherm opent met dat wapen opengeklapt. Tik op een klasse en het Camo's-scherm opent gefilterd op die klasse.
+
+Je gegevens veranderen niet.
+
 ## 1.21.0
 
 **Gewijzigd**
