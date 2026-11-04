@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.25.2
+
+**Opgelost**
+- De MP-opdracht van **Fractal Snow** op de **Mosin-Nagant** klopte niet: dat is **2 kills zonder herladen, 10 keer**.
+
+Je gegevens veranderen niet.
+
 ## 1.25.1
 
 **Opgelost**
