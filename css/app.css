@@ -545,10 +545,14 @@ tbody tr + tr > * { border-top: 1px solid var(--border); }
 .ov-block .ov-count { color: var(--warn); }
 .ov-chev { font-size: 1.4rem; line-height: 1; color: var(--muted); }
 .ov-tiers { display: flex; flex-wrap: wrap; gap: 2px 12px; font-size: 0.8rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.t-mil { color: #4d7c0f; }
+.t-sp { color: #2563eb; }
 .t-gold { color: #b8860b; }
 .t-plat { color: #7d8a99; }
 .t-hb { color: #7b4fd6; }
 @media (prefers-color-scheme: dark) {
+  .t-mil { color: #a3d16a; }
+  .t-sp { color: #93b8fd; }
   .t-gold { color: #e8c15a; }
   .t-plat { color: #c7d0db; }
   .t-hb { color: #b39af0; }

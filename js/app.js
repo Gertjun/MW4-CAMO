@@ -622,6 +622,15 @@ function classCard(done, rerender) {
     const max = ws.length * CAMOS_PER_WEAPON;
     const got = ws.reduce((n, w) => n + weaponStats(done, w).count, 0);
     const tier = (id) => ws.filter((w) => done.has(key(w.id, id))).length;
+    // Militaire en speciale camo's: aantal camo's (kan per wapen verschillen).
+    const group = (g) => ws.reduce((acc, w) => {
+      const list = CAMOS.get(w.id).filter((cm) => cm.group === g);
+      acc.max += list.length;
+      acc.got += list.filter((cm) => done.has(key(w.id, cm.id))).length;
+      return acc;
+    }, { got: 0, max: 0 });
+    const mil = group('military');
+    const sp = group('special');
     return h('button', {
       class: `ov-row ov-class${got === max ? ' is-complete' : ''}`, type: 'button',
       onClick: () => goToCamos(rerender, { cls: c.id }),
@@ -632,6 +641,8 @@ function classCard(done, rerender) {
         h('span', { class: 'ov-count' }, frac(got, max, '/'))),
       bar(got, max, `Voortgang ${c.full}`),
       h('span', { class: 'ov-tiers' },
+        h('span', { class: 't-mil' }, `Militair ${mil.got}/${mil.max}`),
+        h('span', { class: 't-sp' }, `Speciaal ${sp.got}/${sp.max}`),
         h('span', { class: 't-gold' }, `Gold ${tier('gold')}/${ws.length}`),
         h('span', { class: 't-plat' }, `Platinum ${tier('platinum')}/${ws.length}`),
         h('span', { class: 't-hb' }, `Harmonic ${tier('harmonic')}/${ws.length}`))),

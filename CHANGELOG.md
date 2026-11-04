@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.25.0
+
+**Toegevoegd**
+- **Per klasse** in het Overzicht toont nu ook hoeveel **militaire** en **speciale** camo's je in die klasse hebt vrijgespeeld (bijvoorbeeld "Militair 8/64"), in dezelfde kleuren als bovenaan. Let op: dit telt camo's, terwijl Gold, Platinum en Harmonic het aantal wapens tellen.
+
+Je gegevens veranderen niet.
+
 ## 1.24.0
 
 **Toegevoegd**
