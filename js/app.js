@@ -27,7 +27,7 @@ const TOMBSTONE_DAYS = 180;
 
 // Schermkeuzes (alleen tijdens gebruik, niet in de kluis).
 // layout: 'grid' (kaarten) of 'list' (tabel met alle camo's naast elkaar).
-const ui = { view: 'overview', layout: 'grid', filter: 'all', group: 'class', sort: 'default', open: new Set(), listScroll: 0 };
+const ui = { view: 'overview', layout: 'grid', filter: 'all', group: 'class', sort: 'default', open: new Set(), listScroll: 0, sideCollapsed: false };
 
 // Schermen in de tabbalk onderin. icon = SVG-paden (24×24, lijnen).
 const VIEWS = [
@@ -441,11 +441,32 @@ function icon(paths) {
 /** Logo met appnaam en versie: alleen zichtbaar bovenin de zijbalk (laptop). */
 function sideBrand() {
   return h('div', { class: 'side-brand' },
-    h('picture', {},
+    h('picture', { class: 'side-logo' },
       h('source', { srcset: 'img/logo-white.webp', media: '(prefers-color-scheme: dark)' }),
       h('img', { src: 'img/logo-black.webp', alt: 'Call of Duty Modern Warfare 4', width: 127, height: 36 })),
-    h('span', { class: 'side-name' }, 'Camo Tracker'),
-    h('span', { class: 'side-version' }, `v${APP.version}`));
+    h('img', { class: 'side-icon', src: 'icons/icon-192.png', alt: 'MW4 Camo Tracker', width: 40, height: 40 }),
+    h('div', { class: 'side-title' },
+      h('span', { class: 'side-name' }, 'Camo Tracker'),
+      h('span', { class: 'side-version' }, `v${APP.version}`)));
+}
+
+/** Knop onderin de zijbalk om hem in of uit te klappen (alleen op de laptop). */
+function sideToggle(nav) {
+  const label = () => (ui.sideCollapsed ? 'Zijbalk uitklappen' : 'Zijbalk inklappen');
+  const btn = h('button', {
+    type: 'button', class: 'side-toggle', 'aria-label': label(), title: label(),
+    'aria-expanded': String(!ui.sideCollapsed),
+    onClick: () => {
+      ui.sideCollapsed = !ui.sideCollapsed;
+      nav.classList.toggle('is-collapsed', ui.sideCollapsed);
+      btn.setAttribute('aria-label', label());
+      btn.setAttribute('title', label());
+      btn.setAttribute('aria-expanded', String(!ui.sideCollapsed));
+      // Breedte van de lijstweergave (schaduw rechts) opnieuw bepalen.
+      setTimeout(() => document.querySelector('.list-card')?.restoreScroll(), 250);
+    },
+  }, icon(['M15 6l-6 6l6 6']));
+  return btn;
 }
 
 /** Schermtitel bovenaan de inhoud: alleen zichtbaar naast de zijbalk (laptop). */
@@ -455,18 +476,20 @@ function pageTitle() {
 
 /** Tabbalk onderin het scherm (telefoon) of zijbalk links (laptop). */
 function tabBar(rerender) {
-  return h('nav', { class: 'tabbar', 'aria-label': 'Schermen' },
+  const nav = h('nav', { class: `tabbar${ui.sideCollapsed ? ' is-collapsed' : ''}`, 'aria-label': 'Schermen' },
     sideBrand(),
     h('div', { class: 'tabbar-inner' },
       VIEWS.map((v) => h('button', {
-        type: 'button', class: 'tabbar-btn', 'aria-current': ui.view === v.id ? 'page' : null,
+        type: 'button', class: 'tabbar-btn', title: v.label, 'aria-current': ui.view === v.id ? 'page' : null,
         onClick: () => {
           if (ui.view === v.id) { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
           ui.view = v.id;
           rerender();
           window.scrollTo(0, 0);
         },
-      }, icon(v.icon), h('span', {}, v.label)))));
+      }, icon(v.icon), h('span', { class: 'tabbar-label' }, v.label)))));
+  nav.append(sideToggle(nav));
+  return nav;
 }
 
 // ---------- Lijstweergave ----------

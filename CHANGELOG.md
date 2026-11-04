@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.21.0
+
+**Gewijzigd**
+- Zijbalk op de laptop: het logo is groter en vult nu de hele breedte. "Camo Tracker" en het versienummer staan op één regel.
+
+**Toegevoegd**
+- De zijbalk is in te klappen met de pijlknop onderin. Ingeklapt zie je alleen de iconen en krijgt de inhoud meer ruimte. Met dezelfde knop klap je hem weer uit. Je keuze geldt zolang de app open is.
+
+Je gegevens veranderen niet.
+
 ## 1.20.0
 
 **Gewijzigd**
