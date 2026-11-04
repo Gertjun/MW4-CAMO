@@ -266,3 +266,82 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   display: inline-block; width: 18px; height: 18px; margin-right: 6px; vertical-align: -4px;
   border-radius: 4px; object-fit: cover; box-shadow: 0 0 0 1px var(--border);
 }
+
+/* ---------- Weergavekeuze (Grid / Lijst) ---------- */
+.layout-tabs button { min-height: var(--tap); font-size: 1rem; }
+.layout-tabs button[aria-pressed="true"] { color: var(--text); background: var(--surface); box-shadow: var(--shadow); }
+.layout-tabs button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+@media (min-width: 760px) { .layout-tabs { max-width: 320px; } }
+
+/* ---------- Lijstweergave: wapens onder elkaar, camo's naast elkaar ----------
+   De tabel scrollt zijwaarts; de kolom met de wapennaam blijft links staan. */
+.list-wrap {
+  position: relative; padding: 0; overflow-x: auto; -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+.list-wrap:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.list-table { border-collapse: separate; border-spacing: 0; font-size: 0.85rem; }
+.list-table th, .list-table td { padding: 0; }
+
+/* Vaste eerste kolom */
+.list-table .lw {
+  position: sticky; left: 0; z-index: 2;
+  min-width: 118px; max-width: 118px; padding: 4px 8px 4px 12px;
+  background: var(--surface); text-align: left;
+  border-right: 1px solid var(--border);
+}
+.lw-name { display: block; font-weight: 600; line-height: 1.2; overflow-wrap: anywhere; }
+.lw-count { display: block; font-size: 0.75rem; font-weight: 400; font-variant-numeric: tabular-nums; }
+tr.is-complete .lw-count { color: var(--ok); font-weight: 600; }
+
+/* Koppen */
+.lt-groups th {
+  padding: 8px 4px 2px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--muted); text-align: left; white-space: nowrap;
+}
+.lt-groups th:not(.lw) { border-left: 1px solid var(--border); padding-left: 6px; }
+.lt-groups .lw { vertical-align: bottom; }
+.lt-cols th {
+  height: 104px; vertical-align: bottom; padding: 0 0 6px;
+  font-size: 0.72rem; font-weight: 500; color: var(--muted);
+}
+.lt-cols th > span {
+  display: inline-block; writing-mode: vertical-rl; transform: rotate(180deg);
+  white-space: nowrap; max-height: 98px; overflow: hidden; text-overflow: ellipsis;
+}
+.lt-cols th.lg-special > span { writing-mode: horizontal-tb; transform: none; }
+.lt-cols th, .lt-groups th { border-bottom: 1px solid var(--border); }
+/* Lijntje tussen de groepen (militair | speciaal | mastery | prestige) */
+.list-table .g-start { border-left: 1px solid var(--border); }
+
+/* Sectiekop (klasse / voortgang) over de hele breedte; tekst blijft links staan */
+.lt-section th { background: var(--surface-2); text-align: left; border-bottom: 1px solid var(--border); }
+.lt-section-inner {
+  position: sticky; left: 0; display: inline-flex; gap: 12px; align-items: baseline;
+  padding: 8px 12px; font-size: 0.9rem; white-space: nowrap;
+}
+.lt-section-inner .muted { font-weight: 400; font-size: 0.8rem; font-variant-numeric: tabular-nums; }
+
+tbody tr + tr > * { border-top: 1px solid var(--border); }
+
+/* Eén vakje per camo: 44×44 om op te tikken */
+.lc { position: relative; width: 44px; min-width: 44px; height: 48px; text-align: center; }
+.lc label {
+  position: relative; display: grid; place-items: center;
+  width: 44px; height: 48px; cursor: pointer;
+}
+.lc img, .lc-empty {
+  display: block; width: 32px; height: 32px; border-radius: 6px; object-fit: cover;
+  outline: 1px solid var(--border); outline-offset: -1px;
+  filter: grayscale(1); opacity: 0.4; transition: opacity 0.15s, filter 0.15s;
+}
+@media (prefers-color-scheme: dark) { .lc img, .lc-empty { opacity: 0.55; } }
+.lc-empty { border: 1px dashed var(--border); }
+.lc.is-done img, .lc.is-done .lc-empty { filter: none; opacity: 1; outline: 2px solid var(--ok); outline-offset: 0; }
+.lc-mark {
+  position: absolute; right: 2px; bottom: 3px; min-width: 16px; height: 16px; line-height: 16px;
+  border-radius: 99px; font-size: 0.65rem; font-weight: 700; text-align: center;
+}
+.lc.is-done .lc-mark { background: var(--ok); color: #fff; }
+.lc.is-locked .lc-mark { font-size: 0.6rem; }
+.lc input:focus-visible + label { outline: 2px solid var(--accent-text); outline-offset: -2px; border-radius: 6px; }

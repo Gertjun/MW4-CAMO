@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.17.0
+
+**Toegevoegd**
+- Op het camo-scherm kies je nu tussen **Grid** en **Lijst**. Grid is de bekende weergave met wapenkaarten.
+- In de Lijst-weergave staan alle wapens onder elkaar (met dezelfde filters, groepering, sortering en vastgepinde wapens) en staan per wapen alle camo's naast elkaar: militair, speciaal, Gold/Platinum/Harmonic Break en prestige. Tik op een camo om hem aan of uit te vinken; dezelfde regels en pop-ups gelden als in Grid.
+- De tabel scrolt zijwaarts; de wapennaam blijft links staan. Afgevinkte camo's zijn in kleur met een groen vinkje, de rest is grijs, vergrendelde camo's hebben een slotje.
+
+Je keuze geldt zolang de app open is; bij opnieuw openen start hij in Grid. Je gegevens veranderen niet.
+
 ## 1.16.2
 
 **Opgelost** (gecontroleerd in het spel)

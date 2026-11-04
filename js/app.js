@@ -25,11 +25,17 @@ const SCHEMA = 3;
 const TOMBSTONE_DAYS = 180;
 
 // Schermkeuzes (alleen tijdens gebruik, niet in de kluis).
-const ui = { view: 'camos', filter: 'all', group: 'class', sort: 'default', open: new Set() };
+// layout: 'grid' (kaarten) of 'list' (tabel met alle camo's naast elkaar).
+const ui = { view: 'camos', layout: 'grid', filter: 'all', group: 'class', sort: 'default', open: new Set(), listScroll: 0 };
 
 const VIEWS = [
   { id: 'camos', label: "Camo's" },
   { id: 'loadouts', label: 'Loadouts' },
+];
+
+const LAYOUTS = [
+  { id: 'grid', label: 'Grid' },
+  { id: 'list', label: 'Lijst' },
 ];
 
 const GROUPINGS = [
@@ -391,7 +397,13 @@ function controls(ctx, rerender) {
   const select = (id, options, prop) => h('select', {
     id, onChange: (e) => { ui[prop] = e.target.value; rerender(); },
   }, options.map((o) => h('option', { value: o.id, selected: ui[prop] === o.id }, o.label)));
+  const layout = h('div', { class: 'segmented layout-tabs', role: 'group', 'aria-label': 'Weergave' },
+    LAYOUTS.map((l) => h('button', {
+      type: 'button', 'aria-pressed': String(ui.layout === l.id),
+      onClick: () => { if (ui.layout !== l.id) { ui.layout = l.id; ui.listScroll = 0; rerender(); } },
+    }, l.label)));
   return h('div', { class: 'controls' },
+    layout,
     h('div', { class: 'chips', role: 'group', 'aria-label': 'Filter op klasse' },
       chip('all', 'Alle'), CLASSES.map((c) => chip(c.id, c.name))),
     h('div', { class: 'sort-lines' },
@@ -410,6 +422,65 @@ function viewTabs(rerender) {
         window.scrollTo(0, 0);
       },
     }, v.label)));
+}
+
+// ---------- Lijstweergave ----------
+// Alle wapens onder elkaar, per wapen alle camo's naast elkaar als vinkje.
+// De tabel scrollt zijwaarts; de wapennaam blijft links staan.
+
+// Kolommen: dezelfde volgorde als in het opengeklapte wapen.
+const LIST_COLUMNS = GROUPS.flatMap((g) => ALL_CAMOS.get(WEAPONS[0].id)
+  .filter((c) => c.group === g.id)
+  .map((c, i) => ({ id: c.id, group: g.id, start: i === 0, label: g.id === 'special' ? `${i + 1}` : c.name })));
+
+function camoTitle(camo, weapon) {
+  const task = camo.mp ? (camo.dmz ? `MP: ${camo.mp} · DMZ: ${camo.dmz}` : camo.mp) : (camo.dmz ? `DMZ: ${camo.dmz}` : 'Opdracht nog onbekend');
+  return `${camo.name} (${weapon.name})${camo.level ? ` · vanaf level ${camo.level}` : ''} — ${task}`;
+}
+
+function listCell(ctx, done, weapon, camo, groupStart) {
+  const isDone = done.has(key(weapon.id, camo.id));
+  const locked = !isDone && missingFor(done, weapon, camo).length > 0;
+  const id = `l-${weapon.id}-${camo.id}`;
+  const checkbox = h('input', { type: 'checkbox', id, checked: isDone, class: 'visually-hidden' });
+  checkbox.addEventListener('change', () => onToggle(ctx, done, weapon, camo, checkbox));
+  const src = imageOf(camo.name);
+  return h('td', { class: `lc${groupStart ? ' g-start' : ''}${isDone ? ' is-done' : ''}${locked ? ' is-locked' : ''}` },
+    checkbox,
+    h('label', { for: id, title: camoTitle(camo, weapon) },
+      h('span', { class: 'visually-hidden' }, `${camo.name}${locked ? ' (vergrendeld)' : ''}`),
+      src ? h('img', { src, alt: '', width: 36, height: 36, loading: 'lazy', decoding: 'async' }) : h('span', { class: 'lc-empty', 'aria-hidden': 'true' }),
+      h('span', { class: 'lc-mark', 'aria-hidden': 'true' }, isDone ? '✓' : locked ? '🔒' : '')));
+}
+
+function listRow(ctx, done, pinned, weapon) {
+  const { count } = weaponStats(done, weapon);
+  const camos = new Map(ALL_CAMOS.get(weapon.id).map((c) => [c.id, c]));
+  return h('tr', { class: count === CAMOS_PER_WEAPON ? 'is-complete' : '' },
+    h('th', { scope: 'row', class: 'lw' },
+      h('span', { class: 'lw-name' }, pinned.has(weapon.id) ? h('span', { class: 'pin-mark', 'aria-label': 'vastgepind', role: 'img' }, '📌 ') : null, weapon.name),
+      h('span', { class: 'lw-count muted' }, `${count}/${CAMOS_PER_WEAPON}`)),
+    LIST_COLUMNS.map((col) => listCell(ctx, done, weapon, camos.get(col.id), col.start)));
+}
+
+function listTable(ctx, done, pinned, sections) {
+  const groupHead = h('tr', { class: 'lt-groups' },
+    h('th', { class: 'lw', scope: 'col' }, 'Wapen'),
+    GROUPS.map((g) => h('th', { scope: 'colgroup', colspan: LIST_COLUMNS.filter((c) => c.group === g.id).length, class: `lg-${g.id}` }, g.label)));
+  const colHead = h('tr', { class: 'lt-cols' },
+    h('td', { class: 'lw' }),
+    LIST_COLUMNS.map((c) => h('th', { scope: 'col', class: `lg-${c.group}${c.start ? ' g-start' : ''}` }, h('span', {}, c.label))));
+  const span = LIST_COLUMNS.length + 1;
+  const bodies = sections.filter((s) => s.weapons.length).map((s) => h('tbody', {},
+    s.title ? h('tr', { class: 'lt-section' },
+      h('th', { colspan: span, scope: 'colgroup' },
+        h('span', { class: 'lt-section-inner' }, h('span', {}, s.title), h('span', { class: 'muted' }, s.total)))) : null,
+    s.weapons.map((w) => listRow(ctx, done, pinned, w))));
+  const wrap = h('div', { class: 'list-wrap card', tabindex: '0', role: 'region', 'aria-label': "Camo's per wapen" },
+    h('table', { class: 'list-table' }, h('thead', {}, groupHead, colHead), ...bodies));
+  // Zijwaartse scrollpositie bewaren: na elk vinkje wordt het scherm opnieuw opgebouwd.
+  wrap.addEventListener('scroll', () => { ui.listScroll = wrap.scrollLeft; }, { passive: true });
+  return wrap;
 }
 
 export const app = {
@@ -461,26 +532,33 @@ export const app = {
 
     const pinnedWeapons = weapons.filter((w) => pinned.has(w.id));
     const rest = weapons.filter((w) => !pinned.has(w.id));
-    const section = (title, ws, total) => (ws.length
-      ? h('section', { class: 'class-group' },
-        h('h2', { class: 'class-head' }, h('span', {}, title), h('span', { class: 'muted' }, total)),
-        ws.map(card))
-      : null);
     const sum = (ws) => frac(ws.reduce((n, w) => n + cnt(w), 0), ws.length * CAMOS_PER_WEAPON);
 
-    let list;
+    // Secties: vastgepind bovenaan, daarna volgens de gekozen groepering.
+    const sections = [{ title: '📌 Vastgepind', weapons: pinnedWeapons, total: sum(pinnedWeapons) }];
     if (ui.group === 'class') {
-      list = CLASSES.map((c) => {
+      for (const c of CLASSES) {
         const ws = rest.filter((w) => w.cls === c.id);
-        return section(c.full, ws, sum(ws));
-      });
+        sections.push({ title: c.full, weapons: ws, total: sum(ws) });
+      }
     } else if (ui.group === 'status') {
-      list = STATUSES.map((s) => {
-        const ws = rest.filter((w) => statusOf(cnt(w)) === s.id);
-        return section(s.label, ws, `${ws.length} ${ws.length === 1 ? 'wapen' : 'wapens'}`);
-      });
+      for (const st of STATUSES) {
+        const ws = rest.filter((w) => statusOf(cnt(w)) === st.id);
+        sections.push({ title: st.label, weapons: ws, total: `${ws.length} ${ws.length === 1 ? 'wapen' : 'wapens'}` });
+      }
     } else {
-      list = [rest.length ? h('section', { class: 'class-group' }, rest.map(card)) : null];
+      sections.push({ title: null, weapons: rest, total: '' });
+    }
+
+    let list;
+    if (ui.layout === 'list') {
+      list = [listTable(ctx, done, pinned, sections)];
+    } else {
+      list = sections.map((sec) => (sec.weapons.length
+        ? h('section', { class: 'class-group' },
+          sec.title ? h('h2', { class: 'class-head' }, h('span', {}, sec.title), h('span', { class: 'muted' }, sec.total)) : null,
+          sec.weapons.map(card))
+        : null));
     }
 
     root.replaceChildren(...[
@@ -489,8 +567,9 @@ export const app = {
       masteryCard(ctx, done),
       controls(ctx, rerender),
       h('p', { class: 'muted shown-count' }, `${weapons.length} van ${WEAPONS.length} wapens`),
-      section('📌 Vastgepind', pinnedWeapons, sum(pinnedWeapons)),
       ...list,
     ].filter(Boolean));
+    const wrap = root.querySelector('.list-wrap');
+    if (wrap && ui.listScroll) wrap.scrollLeft = ui.listScroll;
   },
 };
