@@ -71,8 +71,14 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 .bar { height: 8px; border-radius: 99px; background: var(--surface-2); overflow: hidden; }
 .bar > span { display: block; height: 100%; background: var(--accent); border-radius: inherit; transition: width 0.2s; }
 
-.mastery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-@media (min-width: 560px) { .mastery { grid-template-columns: repeat(6, 1fr); } }
+.mastery { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+@media (max-width: 559px) { /* telefoon: 7 tegels in twee volle rijen van 4, percentage onder het aantal */
+  .mastery .m-pres { grid-column: span 2; }
+  .mastery-value, .mastery-pct { flex-basis: 100%; text-align: center; }
+  .mastery-pct { line-height: 1.2; }
+}
+@media (max-width: 360px) { .mastery-value { font-size: 0.875rem; } .mastery-label { font-size: 0.7rem; } } /* heel smal scherm */
+@media (min-width: 560px) { .mastery { grid-template-columns: repeat(7, minmax(0, 1fr)); } }
 .mastery-tile { /* aantal en percentage op één regel, label eronder */
   display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline;
   column-gap: 5px; padding: 6px 4px;
@@ -81,19 +87,21 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 .mastery-value { font-weight: 700; font-variant-numeric: tabular-nums; }
 .mastery-pct { font-size: 0.75rem; font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; }
 .mastery-label { flex-basis: 100%; text-align: center; font-size: 0.75rem; color: var(--muted); }
+.m-mil .mastery-value { color: #4d7c0f; }
+.m-sp .mastery-value { color: #2563eb; }
 .m-gold .mastery-value { color: #b8860b; }
 .m-plat .mastery-value { color: #7d8a99; }
 .m-hb .mastery-value { color: #7b4fd6; }
 .m-div .mastery-value { color: #c2185b; }
 .m-pres .mastery-value { color: #c2410c; }
-.m-mast .mastery-value { color: #0e7490; }
 @media (prefers-color-scheme: dark) {
+  .m-mil .mastery-value { color: #a3d16a; }
+  .m-sp .mastery-value { color: #93b8fd; }
   .m-gold .mastery-value { color: #e8c15a; }
   .m-plat .mastery-value { color: #c7d0db; }
   .m-hb .mastery-value { color: #b39af0; }
   .m-div .mastery-value { color: #f48fb1; }
   .m-pres .mastery-value { color: #fb923c; }
-  .m-mast .mastery-value { color: #67e8f9; }
 }
 
 /* ---------- Filters en sorteren ---------- */

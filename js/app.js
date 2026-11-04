@@ -368,7 +368,15 @@ function summary(done) {
   const count = (camoId) => WEAPONS.filter((w) => done.has(key(w.id, camoId))).length;
   const doneTotal = WEAPONS.reduce((n, w) => n + CAMOS.get(w.id).filter((c) => done.has(key(w.id, c.id))).length, 0);
   const prestigeTotal = WEAPONS.reduce((n, w) => n + PRESTIGE_CAMOS.filter((c) => done.has(key(w.id, c.id))).length, 0);
-  const masteryTotal = MASTERY_CAMOS.filter((c) => done.has(key(MASTERY_ID, c.id))).length;
+  // Militaire en speciale camo's: alle wapens samen (aantal kan per wapen verschillen).
+  const groupTotals = (group) => WEAPONS.reduce((acc, w) => {
+    const list = CAMOS.get(w.id).filter((c) => c.group === group);
+    acc.max += list.length;
+    acc.got += list.filter((c) => done.has(key(w.id, c.id))).length;
+    return acc;
+  }, { got: 0, max: 0 });
+  const mil = groupTotals('military');
+  const sp = groupTotals('special');
   const hb = count('harmonic');
   // Divergence komt in één keer vrij op alle wapens zodra ze allemaal Harmonic Break hebben.
   const div = hb === WEAPONS.length ? WEAPONS.length : 0;
@@ -382,12 +390,13 @@ function summary(done) {
       h('span', { class: 'summary-value' }, frac(doneTotal, total))),
     bar(doneTotal, total, 'Totale voortgang'),
     h('div', { class: 'mastery' },
+      tile('Militair', mil.got, mil.max, 'm-mil'),
+      tile('Speciaal', sp.got, sp.max, 'm-sp'),
       tile('Gold', count('gold'), WEAPONS.length, 'm-gold'),
       tile('Platinum', count('platinum'), WEAPONS.length, 'm-plat'),
       tile('Harmonic', hb, WEAPONS.length, 'm-hb'),
       tile('Divergence', div, WEAPONS.length, 'm-div'),
-      tile('Prestige', prestigeTotal, WEAPONS.length * PRESTIGE_CAMOS.length, 'm-pres'),
-      tile('Mastery', masteryTotal, MASTERY_CAMOS.length, 'm-mast')));
+      tile('Prestige', prestigeTotal, WEAPONS.length * PRESTIGE_CAMOS.length, 'm-pres')));
 }
 
 function controls(ctx, rerender) {

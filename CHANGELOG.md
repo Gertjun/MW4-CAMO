@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.18.1
+
+**Gewijzigd**
+- Het overzicht bovenaan toont nu ook je voortgang voor **Militair** en **Speciaal** over alle wapens.
+- De Mastery-tegel is uit dat overzicht gehaald, omdat de mastery-camo's al een eigen blok eronder hebben.
+
+Je gegevens veranderen niet.
+
 ## 1.18.0
 
 **Gewijzigd**
