@@ -159,7 +159,7 @@ export const WEAPONS = [
   W('mosin-nagant', 'Mosin-Nagant', 'marksman', [10, 17, 25, 31, 38, 47, 55, 61], [
     ['Ice Sheer', 25, '25 headshots', '75 headshots'],
     ['Fractal Snow', null, '2 kills zonder herladen, 10 keer', '2 kills zonder te sterven, 30 keer'],
-    ['Sticker Shock', null, '20 headshots', '250 kills met Focus'],
+    ['Sticker Shock', null, '100 kills met Focus', '250 kills met Focus'],
   ]),
 
   // Sniper rifles

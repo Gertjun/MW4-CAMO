@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.25.3
+
+**Opgelost**
+- De MP-opdracht van **Sticker Shock** op de **Mosin-Nagant** klopte niet: dat is **100 kills met Focus**.
+
+Je gegevens veranderen niet.
+
 ## 1.25.2
 
 **Opgelost**
