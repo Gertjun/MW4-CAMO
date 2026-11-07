@@ -8,6 +8,7 @@
 // Bronnen (okt. 2026): codmunity.gg, mw4camos.com, bosslobbies.com, mw4.gg.
 // Aangevuld (nov. 2026): gamerant.com (militaire levels, ontbrekende opdrachten),
 // playerauctions.com (MP-opdrachten mes).
+// Season 1 (nov. 2026): codmunity.gg (Cronen Osprey, CSG-35), mw4.gg (afbeeldingen).
 // `null` betekent: nog niet bekend, de app toont dan "nog onbekend".
 
 export const CLASSES = [
@@ -45,6 +46,9 @@ export const CLASS_MASTERY = {
 // ov (optioneel): afwijkende mastery-opdracht voor dit wapen, bijv.
 //   { platinum: { mp: '…' } }. Wat ontbreekt, komt uit CLASS_MASTERY.
 const W = (id, name, cls, mil, sp, ov) => ({ id, name, cls, mil, sp, ov });
+// Seizoenswapen (na de lancering toegevoegd). season = nummer van het seizoen.
+// Zie LAUNCH_* hieronder: seizoenswapens verhogen de benodigde aantallen niet.
+const S = (season, ...args) => ({ ...W(...args), season });
 
 export const WEAPONS = [
   // Assault rifles
@@ -88,6 +92,11 @@ export const WEAPONS = [
     ['Urban Smoke', 45, '20 mounted kills', '20 mounted kills'],
     ['Optical Reverb', 67, '3 kills zonder te sterven, 15 keer', '50 ADS-kills'],
   ]),
+  S(1, 'cronen-osprey', 'Cronen Osprey', 'ar', [9, 13, 16, 20, 23, 26, 29, 33], [
+    ['In the Weeds', null, '20 hipfire-kills', '75 hipfire-kills'],
+    ['Dark Ichor', null, '50 ADS-kills', '125 ADS-kills'],
+    ['Chained', null, '2 kills zonder herladen, 25 keer', null],
+  ]),
 
   // SMG's
   W('iso-nightshade', 'ISO Nightshade', 'smg', [12, 19, 25, 31, 38, 44, 50, 57], [
@@ -114,6 +123,11 @@ export const WEAPONS = [
     ['Sniper Veil', 17, '20 kills in beweging', '75 kills in beweging'],
     ['Carbonated', 35, '20 longshot-kills', '75 longshot-kills'],
     ['Lime', 53, '40 headshots', '100 longshot-kills'],
+  ]),
+  S(1, 'csg-35', 'CSG-35', 'smg', [8, 10, 14, 17, 19, 23, 27, 29], [
+    ['Polyhedron', null, '3 kills zonder te sterven, 20 keer', '3 kills zonder schade, 30 keer'],
+    ['Rind', null, '50 kills met een demper', '125 kills met een demper'],
+    ['Black Grip', null, '50 kills in beweging', '100 kills in beweging'],
   ]),
 
   // Shotguns
@@ -231,6 +245,17 @@ export const WEAPONS = [
   ]),
 ];
 
+// ---------- Vrijspeelregels: benodigde aantallen ----------
+// Het spel telt met de aantallen van de lancering (33 wapens). Seizoenswapens
+// tellen wél mee om die aantallen te halen, maar verhogen ze niet.
+//   Platinum:       Gold op LAUNCH_IN_CLASS[klasse] wapens van die klasse (bijv. 8 assault rifles)
+//   Harmonic Break: Platinum op LAUNCH_COUNT wapens (33)
+//   Divergence en mastery-camo's: Harmonic Break op LAUNCH_COUNT wapens (33)
+const LAUNCH = WEAPONS.filter((w) => !w.season);
+export const LAUNCH_COUNT = LAUNCH.length;
+export const LAUNCH_IN_CLASS = Object.fromEntries(
+  CLASSES.map((c) => [c.id, LAUNCH.filter((w) => w.cls === c.id).length]));
+
 // ---------- Afgeleide lijsten ----------
 
 /** Alle camo's van een wapen, in vaste volgorde (14 stuks). */
@@ -266,7 +291,7 @@ export const PRESTIGE_CAMOS = [
   { id: 'pres4', group: 'prestige', n: 4, name: 'Pyroclast Cascade', mp: 'Bereik Weapon Prestige Master Level 250' },
 ];
 
-// Mastery-camo's na Divergence (Harmonic Break op alle 33 wapens). Eén keer
+// Mastery-camo's na Divergence (Harmonic Break op 33 wapens). Eén keer
 // vrij te spelen, niet per wapen. Record-id in de kluis: "mastery:<camo-id>".
 // Bron: codmunity.gg (okt. 2026).
 export const MASTERY_MODES = [

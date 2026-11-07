@@ -259,6 +259,13 @@ export const OWN_ATTACHMENTS = {
     "Comb": ["Bryson N40 Comb", "EXP FCO-44", "FJX C-Band"],
     "Apex": ["Cronen Maelstrom"],
   },
+  // Season 1: alleen de Apex is bekend (bron: mw4.gg, nov. 2026).
+  'cronen-osprey': {
+    "Apex": ["Cronen Helix MK 2"],
+  },
+  'csg-35': {
+    "Apex": ["CSG Crossfire"],
+  },
   'mojave-357': {
     "Muzzle": ["Matuzek H357-M Comp", "XRK .357 Comp", "Mojave Flash", "TA Dom-35", ".357 Blackeye"],
     "Barrel": ["XRK Greywolf 7.5", "Bryson Snub 2", "Matuzek Deputy 3.5"],

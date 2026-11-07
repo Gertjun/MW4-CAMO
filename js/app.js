@@ -17,7 +17,7 @@ import { h, today } from './core/dom.js';
 import { newRecord, updateById, mergeCollections, purgeTombstones } from './core/records.js';
 import {
   CLASSES, WEAPONS, camosOf, classById, CAMOS_PER_WEAPON, imageOf, weaponImageOf,
-  PRESTIGE_CAMOS, MASTERY_CAMOS, MASTERY_MODES,
+  PRESTIGE_CAMOS, MASTERY_CAMOS, MASTERY_MODES, LAUNCH_COUNT, LAUNCH_IN_CLASS,
 } from './catalog.js';
 import { renderLoadouts, closeOnLock } from './loadouts.js';
 import { APP } from './config.js';
@@ -93,6 +93,9 @@ const key = (weaponId, camoId) => `${weaponId}:${camoId}`;
 // hetzelfde wapen ook aan; uitvinken haalt alleen die ene camo weg.
 // Wat van ándere wapens afhangt (Platinum, Harmonic Break, mastery-camo's)
 // kan niet automatisch; dan volgt een pop-up met wat er mist.
+// Het spel telt met de aantallen van de lancering (zie LAUNCH_* in catalog.js):
+// Platinum = Gold op 8 assault rifles enz., Harmonic Break = 33 × Platinum.
+// Seizoenswapens tellen mee om dat aantal te halen.
 
 /** Camo's van hetzelfde wapen die vóór deze camo komen (worden mee aangevinkt). */
 function earlierOnWeapon(weapon, camo) {
@@ -107,22 +110,40 @@ function earlierOnWeapon(weapon, camo) {
   return [];
 }
 
-/** Wat ontbreekt er op ándere wapens om deze camo aan te vinken? Lege lijst = mag. */
+/**
+ * Wat ontbreekt er nog om deze camo aan te vinken? null = mag.
+ * Anders: { short, need, have, tier, candidates } — short = hoeveel wapens nog
+ * `tier` nodig hebben; candidates = wapens die dat nog niet hebben.
+ * Het eigen wapen telt mee (het krijgt Gold/Platinum automatisch erbij).
+ */
 function missingFor(done, weapon, camo) {
-  const has = (wId, cId) => done.has(key(wId, cId));
-  const missing = [];
+  let tier; let pool; let need;
   if (camo.id === 'platinum') {
-    for (const w of WEAPONS) if (w.id !== weapon.id && w.cls === weapon.cls && !has(w.id, 'gold')) missing.push(`${w.name}: Gold`);
-  }
-  if (camo.id === 'harmonic') {
-    for (const w of WEAPONS) if (w.id !== weapon.id && !has(w.id, 'platinum')) missing.push(`${w.name}: Platinum`);
-  }
-  return missing;
+    tier = 'gold'; need = LAUNCH_IN_CLASS[weapon.cls];
+    pool = WEAPONS.filter((w) => w.cls === weapon.cls);
+  } else if (camo.id === 'harmonic') {
+    tier = 'platinum'; need = LAUNCH_COUNT; pool = WEAPONS;
+  } else return null;
+  const ok = (w) => w.id === weapon.id || done.has(key(w.id, tier));
+  const have = pool.filter(ok).length;
+  const short = need - have;
+  return short > 0 ? { short, need, have, tier, candidates: pool.filter((w) => !ok(w)) } : null;
 }
 
-/** Mastery-camo's komen vrij na Harmonic Break op alle wapens. */
+/** Mastery-camo's (en Divergence) komen vrij na Harmonic Break op 33 wapens. null = vrij. */
 function masteryMissing(done) {
-  return WEAPONS.filter((w) => !done.has(key(w.id, 'harmonic'))).map((w) => `${w.name}: Harmonic Break`);
+  const have = WEAPONS.filter((w) => done.has(key(w.id, 'harmonic'))).length;
+  const short = LAUNCH_COUNT - have;
+  return short > 0
+    ? { short, need: LAUNCH_COUNT, have, tier: 'harmonic', candidates: WEAPONS.filter((w) => !done.has(key(w.id, 'harmonic'))) }
+    : null;
+}
+
+const TIER_NAMES = { gold: 'Gold', platinum: 'Platinum', harmonic: 'Harmonic Break' };
+
+/** Tekst voor de pop-up: "Je hebt Gold nodig op 8 assault rifles. Je hebt er 6; nog 2 nodig." */
+function shortText(m, what) {
+  return `Je hebt ${TIER_NAMES[m.tier]} nodig op ${m.need} ${what}. Je hebt er nu ${m.have}, dus nog ${m.short} nodig. Wapens zonder ${TIER_NAMES[m.tier]}:`;
 }
 
 // ---------- Pop-up ----------
@@ -177,9 +198,12 @@ function onToggle(ctx, done, weapon, camo, checkbox) {
     return;
   }
   const missing = missingFor(done, weapon, camo);
-  if (missing.length) {
+  if (missing) {
     checkbox.checked = false;
-    showBlocked(`${camo.name} is nog niet vrij`, `Voor ${camo.name} op de ${weapon.name} heb je eerst nodig:`, missing);
+    const what = camo.id === 'platinum' ? `wapens in de klasse ${classById(weapon.cls).full}` : 'wapens';
+    showBlocked(`${camo.name} is nog niet vrij`,
+      `Voor ${camo.name} op de ${weapon.name}: ${shortText(missing, what)}`,
+      missing.candidates.map((w) => w.name));
     return;
   }
   const extra = earlierOnWeapon(weapon, camo).filter((id) => !done.has(key(weapon.id, id)));
@@ -190,9 +214,11 @@ function onMasteryToggle(ctx, done, camo, checkbox) {
   const isDone = done.has(key(MASTERY_ID, camo.id));
   if (!isDone) {
     const missing = masteryMissing(done);
-    if (missing.length) {
+    if (missing) {
       checkbox.checked = false;
-      showBlocked(`${camo.name} is nog niet vrij`, 'Mastery-camo\'s komen vrij na Harmonic Break op alle 33 wapens. Nog nodig:', missing);
+      showBlocked(`${camo.name} is nog niet vrij`,
+        `Mastery-camo's komen vrij na Harmonic Break op ${LAUNCH_COUNT} wapens. ${shortText(missing, 'wapens')}`,
+        missing.candidates.map((w) => w.name));
       return;
     }
   }
@@ -222,7 +248,7 @@ function weaponStats(done, weapon) {
   const camos = CAMOS.get(weapon.id);
   const count = camos.filter((c) => done.has(key(weapon.id, c.id))).length;
   const prestige = PRESTIGE_CAMOS.filter((c) => done.has(key(weapon.id, c.id))).length;
-  const next = camos.find((c) => !done.has(key(weapon.id, c.id)) && !missingFor(done, weapon, c).length)
+  const next = camos.find((c) => !done.has(key(weapon.id, c.id)) && !missingFor(done, weapon, c))
     || camos.find((c) => !done.has(key(weapon.id, c.id)));
   return { count, prestige, next };
 }
@@ -271,7 +297,7 @@ function camoRow(ctx, done, weapon, camo) {
   const isDone = done.has(key(weapon.id, camo.id));
   return camoItem({
     inputId: `c-${weapon.id}-${camo.id}`, camo, isDone,
-    locked: !isDone && missingFor(done, weapon, camo).length > 0,
+    locked: !isDone && !!missingFor(done, weapon, camo),
     onChange: (cb) => onToggle(ctx, done, weapon, camo, cb),
   });
 }
@@ -344,7 +370,7 @@ function weaponCard(ctx, done, pinned, weapon) {
 function masteryCard(ctx, done) {
   const got = MASTERY_CAMOS.filter((c) => done.has(key(MASTERY_ID, c.id))).length;
   const missing = masteryMissing(done);
-  const locked = missing.length > 0;
+  const locked = !!missing;
   const next = MASTERY_CAMOS.find((c) => !done.has(key(MASTERY_ID, c.id)));
   const headParts = [
     h('span', { class: 'weapon-title' },
@@ -353,7 +379,7 @@ function masteryCard(ctx, done) {
     bar(got, MASTERY_CAMOS.length, "Voortgang mastery-camo's"),
     h('span', { class: 'weapon-next muted' },
       locked
-        ? `Vrij na Harmonic Break op alle wapens (nog ${missing.length})`
+        ? `Vrij na Harmonic Break op ${LAUNCH_COUNT} wapens (nog ${missing.short})`
         : (next ? [nextSwatch(next), `Volgende: ${next.name}`] : 'Alles vrijgespeeld ✓')),
   ];
   const bodyParts = MASTERY_MODES.map((m) => h('section', { class: 'camo-group' },
@@ -383,8 +409,8 @@ function summary(done) {
   const mil = groupTotals('military');
   const sp = groupTotals('special');
   const hb = count('harmonic');
-  // Divergence komt in één keer vrij op alle wapens zodra ze allemaal Harmonic Break hebben.
-  const div = hb === WEAPONS.length ? WEAPONS.length : 0;
+  // Divergence komt in één keer vrij op alle wapens zodra 33 wapens Harmonic Break hebben.
+  const div = hb >= LAUNCH_COUNT ? WEAPONS.length : 0;
   const tile = (label, value, max, cls = '') => h('div', { class: `mastery-tile ${cls}` },
     h('span', { class: 'mastery-value' }, `${value}/${max}`),
     h('span', { class: 'mastery-pct' }, `${pct(value, max)}%`),
@@ -508,10 +534,9 @@ function nextTask(camo) {
 
 /** "Gold: 15 kills …", of bij een vergrendelde camo waar hij op wacht. */
 function nextLine(done, weapon, next) {
-  const missing = missingFor(done, weapon, next).length;
-  if (!missing) return `${next.name}: ${nextTask(next)}`;
-  const need = next.id === 'platinum' ? 'Gold' : 'Platinum';
-  return `🔒 ${next.name}: wacht op ${need} bij ${missing} ${missing === 1 ? 'ander wapen' : 'andere wapens'}`;
+  const m = missingFor(done, weapon, next);
+  if (!m) return `${next.name}: ${nextTask(next)}`;
+  return `🔒 ${next.name}: nog ${TIER_NAMES[m.tier]} nodig op ${m.short} ${m.short === 1 ? 'ander wapen' : 'andere wapens'}`;
 }
 
 /** Rij met wapen: afbeelding, naam, telling, balk en wat er nu te doen is. */
@@ -560,7 +585,7 @@ function nextMilestone(done, weapon) {
   const tier = !has('platinum') ? 'platinum' : !has('harmonic') ? 'harmonic' : null;
   if (!tier) return null;
   const camo = camos.find((c) => c.id === tier);
-  if (missingFor(done, weapon, camo).length) return null;
+  if (missingFor(done, weapon, camo)) return null;
   return { left: 0, text: `${camo.name} kan nu` };
 }
 
@@ -575,37 +600,42 @@ function nearlyCard(done, rerender) {
     items.map(({ w, m }) => weaponRow(done, w, rerender, m.text)));
 }
 
-/** Wat wacht er op andere wapens? Platinum per klasse, Harmonic Break, Divergence. */
+/**
+ * Wat wacht er op andere wapens? Platinum per klasse, Harmonic Break, Divergence.
+ * short = hoeveel wapens nog nodig zijn (het spel telt met de aantallen van de
+ * lancering); missing = de wapens die het nog niet hebben.
+ */
 function blockers(done) {
   const has = (w, id) => done.has(key(w.id, id));
+  const count = (ws, id) => ws.filter((w) => has(w, id)).length;
   const list = [];
   for (const c of CLASSES) {
     const ws = WEAPONS.filter((w) => w.cls === c.id);
     const waiting = ws.some((w) => has(w, 'gold') && !has(w, 'platinum'));
-    const missing = ws.filter((w) => !has(w, 'gold'));
-    if (waiting && missing.length) {
-      list.push({ title: `Platinum ${c.name}`, missing, need: 'Gold', cls: c.id });
+    const short = LAUNCH_IN_CLASS[c.id] - count(ws, 'gold');
+    if (waiting && short > 0) {
+      list.push({ title: `Platinum ${c.name}`, short, missing: ws.filter((w) => !has(w, 'gold')), need: 'Gold', cls: c.id });
     }
   }
-  const noPlat = WEAPONS.filter((w) => !has(w, 'platinum'));
-  if (noPlat.length && WEAPONS.some((w) => has(w, 'platinum') && !has(w, 'harmonic'))) {
-    list.push({ title: 'Harmonic Break', missing: noPlat, need: 'Platinum' });
+  const platShort = LAUNCH_COUNT - count(WEAPONS, 'platinum');
+  if (platShort > 0 && WEAPONS.some((w) => has(w, 'platinum') && !has(w, 'harmonic'))) {
+    list.push({ title: 'Harmonic Break', short: platShort, missing: WEAPONS.filter((w) => !has(w, 'platinum')), need: 'Platinum' });
   }
-  const noHb = WEAPONS.filter((w) => !has(w, 'harmonic'));
-  if (noHb.length && noHb.length < WEAPONS.length) {
-    list.push({ title: "Divergence en mastery-camo's", missing: noHb, need: 'Harmonic Break' });
+  const hb = count(WEAPONS, 'harmonic');
+  if (hb > 0 && hb < LAUNCH_COUNT) {
+    list.push({ title: "Divergence en mastery-camo's", short: LAUNCH_COUNT - hb, missing: WEAPONS.filter((w) => !has(w, 'harmonic')), need: 'Harmonic Break' });
   }
-  return list.sort((a, b) => a.missing.length - b.missing.length);
+  return list.sort((a, b) => a.short - b.short);
 }
 
 function blockersCard(done, rerender) {
   const list = blockers(done);
   if (!list.length) return null;
   return ovCard('ov-blockers', 'Wat houdt je tegen', null, list.map((b) => {
-    const n = b.missing.length;
+    const n = b.short;
     return h('button', {
       class: 'ov-row ov-block', type: 'button',
-      onClick: () => (n === 1 ? goToCamos(rerender, { weapon: b.missing[0] }) : goToCamos(rerender, { cls: b.cls || 'all' })),
+      onClick: () => (b.missing.length === 1 ? goToCamos(rerender, { weapon: b.missing[0] }) : goToCamos(rerender, { cls: b.cls || 'all' })),
     },
     h('span', { class: 'ov-main' },
       h('span', { class: 'ov-line' },
@@ -757,7 +787,7 @@ function camoTitle(camo, weapon) {
 
 function listCell(ctx, done, weapon, camo, groupStart) {
   const isDone = done.has(key(weapon.id, camo.id));
-  const locked = !isDone && missingFor(done, weapon, camo).length > 0;
+  const locked = !isDone && !!missingFor(done, weapon, camo);
   const id = `l-${weapon.id}-${camo.id}`;
   const checkbox = h('input', { type: 'checkbox', id, checked: isDone, class: 'visually-hidden' });
   checkbox.addEventListener('change', () => onToggle(ctx, done, weapon, camo, checkbox));

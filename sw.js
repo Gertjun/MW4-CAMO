@@ -3,7 +3,7 @@
 // BIJ ELKE RELEASE: VERSION ophogen (gelijk aan js/config.js).
 // NIEUW BESTAND?    Toevoegen aan PRECACHE.
 
-const VERSION = '1.25.3';
+const VERSION = '1.26.0';
 
 // De cache-naam bevat het pad van de app, zodat meerdere apps onder
 // <gebruiker>.github.io elkaars cache niet opruimen.
@@ -151,7 +151,9 @@ const PRECACHE = [
   './img/weapons/apoc-338.webp',
   './img/weapons/astaroth-57.webp',
   './img/weapons/axion.webp',
+  './img/weapons/cronen-osprey.webp',
   './img/weapons/cronen-squall.webp',
+  './img/weapons/csg-35.webp',
   './img/weapons/finn-lmg.webp',
   './img/weapons/fss-carbon-edge-1095.webp',
   './img/weapons/han-86.webp',

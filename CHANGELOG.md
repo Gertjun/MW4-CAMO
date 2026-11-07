@@ -1,5 +1,29 @@
 # Changelog
 
+## 1.26.0
+
+**Toegevoegd** (Season 1)
+- Twee nieuwe wapens: de **Cronen Osprey** (assault rifle) en de **CSG-35** (SMG), met afbeelding, militaire camo's (met wapenlevels), speciale camo's (In the Weeds, Dark Ichor en Chained; Polyhedron, Rind en Black Grip) en Gold, Platinum en Harmonic Break.
+- Bij een loadout staat voor deze wapens de Apex-attachment in de lijst (Cronen Helix MK 2 en CSG Crossfire). De andere onderdelen komen voorlopig van verwante wapens.
+
+**Gewijzigd**
+- De vrijspeelregels tellen nu zoals in het spel, met de aantallen van de lancering. Nieuwe wapens tellen mee, maar verhogen het aantal niet:
+  - **Platinum**: Gold op 8 assault rifles, 5 SMG's, 2 shotguns, 3 LMG's, 3 marksman rifles, 3 sniper rifles, 4 pistolen, 4 launchers of 1 melee-wapen. Je hoeft dus niet meer álle wapens van de klasse Gold te hebben.
+  - **Harmonic Break**: Platinum op 33 wapens (welke maakt niet uit).
+  - **Divergence en de mastery-camo's**: Harmonic Break op 33 wapens.
+- De pop-up zegt nu hoeveel je er nodig hebt, hoeveel je er al hebt en welke wapens nog ontbreken.
+- **Wat houdt je tegen** toont hoeveel wapens je nog nodig hebt.
+
+**Nog niet compleet**
+- De zes nieuwe speciale camo's hebben nog geen afbeelding (leeg vakje), en het level waarop ze vrijkomen is nog onbekend.
+- Bij Chained (Cronen Osprey) is de DMZ-opdracht nog onbekend.
+- De JAK 12 (shotgun) en ZLR Talonhawk (melee) komen later in het seizoen via events en worden dan toegevoegd.
+
+**Bron**
+- codmunity.gg (camo's), mw4.gg (afbeeldingen en Apex), november 2026.
+
+Je gegevens veranderen niet.
+
 ## 1.25.3
 
 **Opgelost**
