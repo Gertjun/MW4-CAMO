@@ -654,3 +654,11 @@ tbody tr + tr > * { border-top: 1px solid var(--border); }
   #app-root .settings-section::before { content: attr(data-title); font-size: 1.1rem; font-weight: 700; }
   #app-root .settings-section.danger-zone::before { color: var(--danger); }
 }
+
+/* iPad (app op het beginscherm, zijbalk): iPadOS legt bovenin een vervaagde
+   band in de achtergrondkleur over de statusbalk. Een lichtere zijbalk lijkt
+   daardoor pas onder die band te beginnen. Met de achtergrondkleur loopt de
+   zijbalk naadloos door tot boven; het lijntje rechts blijft de scheiding. */
+@media (display-mode: standalone) and (any-pointer: coarse) and (min-width: 900px) and (min-height: 600px) {
+  .tabbar { background: var(--bg); }
+}

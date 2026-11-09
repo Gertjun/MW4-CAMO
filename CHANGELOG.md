@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.28.2
+
+**Opgelost** (iPad liggend)
+- De zijbalk heeft op de iPad nu dezelfde kleur als de achtergrond. Daardoor loopt hij naadloos door tot onder de statusbalk, in plaats van pas onder de vervaagde band van iPadOS te beginnen. Het lijntje rechts blijft de scheiding met de inhoud.
+
+Op de iPhone en de laptop verandert er niets. Je gegevens veranderen niet.
+
 ## 1.28.1
 
 **Opgelost** (iPad)
