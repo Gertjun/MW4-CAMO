@@ -21,6 +21,7 @@ import {
 } from './catalog.js';
 import { renderLoadouts, closeOnLock } from './loadouts.js';
 import { APP } from './config.js';
+import { DESKTOP, leaveSettings, renderSettings, sideSync, sideLock } from './settings-view.js';
 
 // 1 = alleen camo-voortgang; 2 = ook loadouts; 3 = ook vastgepinde wapens,
 // prestige- en mastery-camo's.
@@ -36,6 +37,8 @@ const VIEWS = [
   { id: 'overview', label: 'Overzicht', icon: ['M4 20V10', 'M10 20V4', 'M16 20v-7', 'M22 20H2'] },
   { id: 'camos', label: "Camo's", icon: ['M4 4h7v7H4z', 'M13 4h7v7h-7z', 'M4 13h7v7H4z', 'M13 13h7v7h-7z'] },
   { id: 'loadouts', label: 'Loadouts', icon: ['M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18', 'M12 1v6', 'M12 17v6', 'M1 12h6', 'M17 12h6'] },
+  // Alleen op de laptop (zijbalk); op de telefoon staat het tandwiel bovenin.
+  { id: 'settings', label: 'Instellingen', desktop: true, icon: ['M4 7h9', 'M19 7h1', 'M4 17h3', 'M13 17h7', 'M16 4.5a2.5 2.5 0 1 0 0 5a2.5 2.5 0 1 0 0-5', 'M10 14.5a2.5 2.5 0 1 0 0 5a2.5 2.5 0 1 0 0-5'] },
 ];
 
 const LAYOUTS = [
@@ -71,6 +74,7 @@ const GROUPS = [
 
 const MASTERY_ID = 'mastery';
 let resizeHooked = false;
+let desktopHooked = false;
 const CAMOS = new Map(WEAPONS.map((w) => [w.id, camosOf(w)]));
 const ALL_CAMOS = new Map(WEAPONS.map((w) => [w.id, [...CAMOS.get(w.id), ...PRESTIGE_CAMOS]]));
 
@@ -716,8 +720,8 @@ function icon(paths) {
   return svg;
 }
 
-/** Logo met appnaam en versie: alleen zichtbaar bovenin de zijbalk (laptop). */
-function sideBrand() {
+/** Logo met appnaam, versie en sync-status: alleen zichtbaar bovenin de zijbalk (laptop). */
+function sideBrand(rerender) {
   return h('div', { class: 'side-brand' },
     h('picture', { class: 'side-logo' },
       h('source', { srcset: 'img/logo-white.webp', media: '(prefers-color-scheme: dark)' }),
@@ -726,7 +730,8 @@ function sideBrand() {
     sideToggle(),
     h('div', { class: 'side-title' },
       h('span', { class: 'side-name' }, 'Camo Tracker'),
-      h('span', { class: 'side-version' }, `v${APP.version}`)));
+      h('span', { class: 'side-version' }, `v${APP.version}`)),
+    sideSync(() => { ui.view = 'settings'; rerender(); }));
 }
 
 /** Knop bovenin de zijbalk, naast het logo, om hem in of uit te klappen (alleen op de laptop). */
@@ -756,10 +761,10 @@ function pageTitle() {
 /** Tabbalk onderin het scherm (telefoon) of zijbalk links (laptop). */
 function tabBar(rerender) {
   const nav = h('nav', { class: `tabbar${ui.sideCollapsed ? ' is-collapsed' : ''}`, 'aria-label': 'Schermen' },
-    sideBrand(),
+    sideBrand(rerender),
     h('div', { class: 'tabbar-inner' },
       VIEWS.map((v) => h('button', {
-        type: 'button', class: 'tabbar-btn', title: v.label, 'aria-current': ui.view === v.id ? 'page' : null,
+        type: 'button', class: `tabbar-btn${v.desktop ? ' tabbar-desk' : ''}`, title: v.label, 'aria-current': ui.view === v.id ? 'page' : null,
         onClick: () => {
           if (ui.view === v.id) { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
           ui.view = v.id;
@@ -767,7 +772,8 @@ function tabBar(rerender) {
           rerender();
           window.scrollTo(0, 0);
         },
-      }, icon(v.icon), h('span', { class: 'tabbar-label' }, v.label)))));
+      }, icon(v.icon), h('span', { class: 'tabbar-label' }, v.label)))),
+    sideLock(icon));
   return nav;
 }
 
@@ -896,6 +902,18 @@ export const app = {
 
   render(root, ctx) {
     const rerender = () => app.render(root, ctx);
+    if (!desktopHooked) { // venster smaller dan laptop: instellingen weer als pop-up via het tandwiel
+      desktopHooked = true;
+      DESKTOP.addEventListener('change', () => {
+        if (!DESKTOP.matches && ui.view === 'settings') { ui.view = 'overview'; rerender(); }
+      });
+    }
+    if (ui.view === 'settings' && !DESKTOP.matches) ui.view = 'overview';
+    if (ui.view === 'settings') {
+      renderSettings(root, [pageTitle()], [tabBar(rerender)]);
+      return;
+    }
+    leaveSettings();
     if (ui.view === 'loadouts') {
       root.replaceChildren(pageTitle(), ...renderLoadouts(ctx), tabBar(rerender));
       return;

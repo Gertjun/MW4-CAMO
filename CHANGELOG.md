@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.27.0
+
+**Gewijzigd** (laptop)
+- De knoppen rechtsboven staan nu in de zijbalk links. De balk bovenin is op de laptop verdwenen.
+  - De **sync-status** staat onder Camo Tracker en het versienummer. Klik erop om nu te synchroniseren (of om sync in te stellen als dat nog niet is gebeurd).
+  - **Instellingen** is een eigen knop, net als Overzicht, Camo's en Loadouts.
+  - **Vergrendelen** staat onderaan de zijbalk.
+- **Instellingen** is op de laptop een eigen scherm in plaats van een pop-up: links de onderdelen met een korte uitleg, rechts het gekozen onderdeel. Bij openen staat Synchronisatie klaar.
+
+Op de telefoon verandert er niets. Je gegevens veranderen niet.
+
 ## 1.26.1
 
 **Opgeruimd**
