@@ -14,7 +14,7 @@ export const DESKTOP = window.matchMedia('(min-width: 900px)');
 // Extra uitleg onder elk onderdeel in de lijst (alleen zichtbaar op de laptop).
 const DESCRIPTIONS = {
   sync: 'Koppeling met GitHub en nu synchroniseren',
-  security: 'Face ID / passkey en wachtwoord',
+  security: 'Face ID / passkey, wachtwoord en vergrendelen',
   backup: 'Back-up downloaden of terugzetten',
   about: 'Versie en updates',
   danger: 'Kluis en token van dit apparaat verwijderen',

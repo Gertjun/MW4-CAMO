@@ -199,6 +199,22 @@
           </div>
           <button id="btn-bio-toggle" class="btn" type="button">Inschakelen</button>
         </div>
+        <div class="setting-line">
+          <div>
+            <label for="auto-lock"><strong>Automatisch vergrendelen</strong></label>
+            <p class="hint">Als je de app zo lang niet gebruikt of hij zo lang op de achtergrond staat. Geldt alleen op dit apparaat.</p>
+          </div>
+          <select id="auto-lock" class="auto-lock-select">
+            <option value="1">Na 1 minuut</option>
+            <option value="2">Na 2 minuten</option>
+            <option value="5">Na 5 minuten</option>
+            <option value="10">Na 10 minuten</option>
+            <option value="15">Na 15 minuten</option>
+            <option value="30">Na 30 minuten</option>
+            <option value="60">Na 1 uur</option>
+            <option value="0">Nooit</option>
+          </select>
+        </div>
         <details class="disclosure">
           <summary>Wachtwoord wijzigen</summary>
           <form id="form-password" class="stack">

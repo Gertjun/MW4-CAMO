@@ -21,7 +21,7 @@ const SYNC_MESSAGES = {
 const BIO_OFFER_KEY = `${APP.storagePrefix}:bio-offer-dismissed`;
 const SCHEMA_VERSION = app.schemaVersion ?? Infinity;
 
-let settings = null;     // apparaatinstellingen: { github, autoSync }
+let settings = null;     // apparaatinstellingen: { github, autoSync, autoLockMinutes }
 let blocked = false;     // gegevens zijn nieuwer dan deze app-versie
 let session = 0;         // telt ontgrendelingen (voor veilig vergrendelen)
 let syncTimer = null;
@@ -425,10 +425,17 @@ async function lockNow() {
   }
 }
 
+/** Minuten tot automatisch vergrendelen: keuze op dit apparaat, anders APP.autoLockMinutes. 0 = uit. */
+function autoLockMinutes() {
+  const m = settings?.autoLockMinutes;
+  return Number.isFinite(m) && m >= 0 ? m : APP.autoLockMinutes;
+}
+
 function resetIdle() {
   clearTimeout(idleTimer);
-  if (!vault.isUnlocked() || !APP.autoLockMinutes) return;
-  idleTimer = setTimeout(lockNow, APP.autoLockMinutes * 60_000);
+  const minutes = autoLockMinutes();
+  if (!vault.isUnlocked() || !minutes) return;
+  idleTimer = setTimeout(lockNow, minutes * 60_000);
 }
 
 // ---------- Synchronisatie ----------
@@ -549,12 +556,24 @@ function fillSettings() {
   f.elements.token.value = '';
   f.elements.token.placeholder = gh?.token ? '•••••••• (opgeslagen, leeg laten om te behouden)' : 'github_pat_…';
   f.elements.autoSync.checked = settings?.autoSync !== false;
+  fillAutoLock();
   $('#btn-github-remove').hidden = !gh;
   $('#btn-sync-now').hidden = !gh;
   $('#sum-about').textContent = `Versie ${APP.version}`;
   ['#github-error', '#password-error', '#restore-error'].forEach((s) => showError(s, ''));
   updateSyncIndicator();
   updateBioUI();
+}
+
+/** Keuzelijst "Automatisch vergrendelen"; voegt een afwijkende waarde (uit config of ander apparaat) zo nodig toe. */
+function fillAutoLock() {
+  const select = $('#auto-lock');
+  if (!select) return;
+  const value = String(autoLockMinutes());
+  if (![...select.options].some((o) => o.value === value)) {
+    select.append(h('option', { value }, `Na ${value} minuten`));
+  }
+  select.value = value;
 }
 
 async function updateBioUI() {
@@ -632,6 +651,16 @@ function wireSettings() {
   });
 
   $('#btn-sync-now').addEventListener('click', () => runSync({ quiet: false }));
+
+  // Automatisch vergrendelen (per apparaat)
+  $('#auto-lock')?.addEventListener('change', async (e) => {
+    const minutes = Number(e.target.value);
+    if (!Number.isFinite(minutes) || minutes < 0) return;
+    settings = { ...settings, autoLockMinutes: minutes };
+    await vault.setDeviceSettings(settings);
+    resetIdle();
+    toast(minutes ? `Vergrendelt na ${minutes} ${minutes === 1 ? 'minuut' : 'minuten'} zonder gebruik.` : 'Automatisch vergrendelen staat uit.', 'ok');
+  });
 
   // Biometrie / passkey
   $('#btn-bio-toggle').addEventListener('click', async (e) => {
@@ -731,8 +760,8 @@ function wireLifecycle() {
       return;
     }
     swRegistration?.update().catch(() => {});
-    if (vault.isUnlocked() && APP.autoLockMinutes && hiddenAt
-      && Date.now() - hiddenAt > APP.autoLockMinutes * 60_000) {
+    if (vault.isUnlocked() && autoLockMinutes() && hiddenAt
+      && Date.now() - hiddenAt > autoLockMinutes() * 60_000) {
       lockNow();
     } else if (vault.isUnlocked() && Date.now() - lastSyncAttempt > 30_000) {
       runSync({ quiet: true });

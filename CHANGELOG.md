@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.28.0
+
+**Toegevoegd**
+- Je kiest nu zelf na hoeveel tijd de app automatisch vergrendelt: in **Instellingen → Beveiliging → Automatisch vergrendelen**. Keuze uit 1, 2, 5, 10, 15 of 30 minuten, 1 uur of nooit. De standaard blijft 5 minuten.
+- De keuze geldt per apparaat (telefoon en laptop kunnen verschillen) en wordt versleuteld op dat apparaat bewaard.
+
+Je gegevens veranderen niet.
+
 ## 1.27.1
 
 **Opgelost** (laptop)

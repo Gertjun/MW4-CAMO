@@ -6,7 +6,7 @@ export const APP = {
 
   // Semver. Bij ELKE release ook VERSION in sw.js gelijk ophogen,
   // anders krijgen geïnstalleerde apps de update niet.
-  version: '1.27.1',
+  version: '1.28.0',
 
   // UNIEK PER APP. Alle GitHub Pages-sites onder <gebruiker>.github.io
   // delen dezelfde origin en dus dezelfde localStorage. Zonder unieke
@@ -19,7 +19,8 @@ export const APP = {
   defaultDataPath: 'mw4-camo/vault.json',
   defaultBranch: 'main',
 
-  // Automatisch vergrendelen na zoveel minuten inactiviteit of op de achtergrond. 0 = uit.
+  // Standaardtijd voor automatisch vergrendelen (minuten inactiviteit of op de
+  // achtergrond). 0 = uit. Per apparaat aan te passen in Instellingen > Beveiliging.
   autoLockMinutes: 5,
 
   // Face ID / passkey vanzelf starten als het vergrendelscherm verschijnt bij
