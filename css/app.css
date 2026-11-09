@@ -244,9 +244,12 @@ body:has(.tabbar) .toast { bottom: calc(var(--tabbar-h) + 12px + var(--safe-bott
     -webkit-backdrop-filter: none; backdrop-filter: none;
   }
   /* Bovenin: logo met rechts de inklapknop, daaronder naam en versie */
-  .side-brand { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 4px; row-gap: 8px; padding: 0 0 0 8px; }
+  /* Alles in de kop lijnt uit op dezelfde kolom als de knoppen eronder:
+     links op de iconen (12px binnen de knop), rechts op het pijltje. */
+  .side-brand { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 4px; row-gap: 8px; padding: 0; }
+  .side-logo { padding-left: 12px; }
   .side-logo img { display: block; width: 100%; height: auto; }
-  .side-title { grid-column: 1 / -1; padding-right: 8px; }
+  .side-title { grid-column: 1 / -1; padding: 0 16px 0 12px; }
   .side-icon { display: none; width: 40px; height: 40px; border-radius: 10px; }
   .side-title { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
   .side-name { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
@@ -571,23 +574,25 @@ tbody tr + tr > * { border-top: 1px solid var(--border); }
 
   /* Sync-status onder naam en versie */
   .side-sync {
-    grid-column: 1 / -1; justify-self: start; max-width: 100%;
-    display: inline-flex; align-items: center; gap: 8px;
-    min-height: 32px; padding: 4px 12px; margin-top: 2px;
+    /* Even breed als de knoppen eronder; het bolletje staat op de plek van een icoon. */
+    grid-column: 1 / -1; justify-self: stretch; min-width: 0;
+    display: flex; align-items: center; gap: 12px;
+    min-height: 36px; padding: 0 11px; margin-top: 4px;
     font: inherit; font-size: 0.8rem; font-weight: 600; color: var(--muted);
-    background: var(--bg); border: 1px solid var(--border); border-radius: 999px; cursor: pointer;
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); cursor: pointer;
   }
   .side-sync:hover { color: var(--text); border-color: color-mix(in srgb, var(--text) 25%, var(--border)); }
   .side-sync:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   .side-sync-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .side-sync-dot { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+  .side-sync-dot { flex: none; width: 8px; height: 8px; margin: 0 6px; border-radius: 50%; background: var(--muted); }
   .side-sync[data-state="ok"] .side-sync-dot { background: var(--ok); }
   .side-sync[data-state="pending"] .side-sync-dot { background: var(--warn); }
   .side-sync[data-state="error"] .side-sync-dot { background: var(--danger); }
   .side-sync[data-state="error"] { color: var(--danger); }
   .side-sync[data-state="syncing"] .side-sync-dot { background: var(--accent); animation: pulse 1s ease-in-out infinite; }
   .side-sync[data-state="off"] .side-sync-dot { opacity: 0.5; }
-  .tabbar.is-collapsed .side-sync { justify-self: center; justify-content: center; width: var(--tap); min-height: 28px; padding: 0; }
+  .tabbar.is-collapsed .side-sync { justify-self: stretch; justify-content: center; width: auto; min-height: 36px; padding: 0; }
+  .tabbar.is-collapsed .side-logo { padding: 0; }
   .tabbar.is-collapsed .side-sync-label { display: none; }
 
   /* Vergrendelen helemaal onderin */

@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.27.1
+
+**Opgelost** (laptop)
+- De bovenkant van de zijbalk is netter uitgelijnd. Logo, "Camo Tracker" en de sync-status beginnen nu op dezelfde lijn als de iconen van de knoppen eronder, en het versienummer staat recht onder het pijltje.
+- De sync-status is even breed als de knoppen eronder; het bolletje staat op de plek van een icoon en de tekst op de plek van de knopnamen.
+
+Op de telefoon verandert er niets. Je gegevens veranderen niet.
+
 ## 1.27.0
 
 **Gewijzigd** (laptop)
