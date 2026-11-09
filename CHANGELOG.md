@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.26.1
+
+**Opgeruimd**
+- Overgebleven bestanden uit de template verwijderd die de app niet gebruikt: het setup-script, de startdocumenten voor een nieuw project en het bronbestand van het app-icoon.
+- De README beschrijft nu deze app in plaats van de template.
+
+Er verandert niets aan hoe de app werkt. Je gegevens veranderen niet.
+
 ## 1.26.0
 
 **Toegevoegd** (Season 1)
