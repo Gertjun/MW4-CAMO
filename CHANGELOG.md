@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.29.0
+
+**Gewijzigd** (Camo's-scherm)
+- De knoppen Grid en Lijst bovenaan zijn vervangen door een keuzemenu **Weergave**. Het staat nu op dezelfde hoogte als Groeperen en Sorteren, zodat de bovenkant van het scherm rustiger is.
+- Op de telefoon staan de drie menu's naast elkaar met het label erboven; op de laptop staat het label ernaast, alle drie op één regel.
+
+Je gegevens veranderen niet.
+
 ## 1.28.2
 
 **Opgelost** (iPad liggend)

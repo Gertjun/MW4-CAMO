@@ -689,19 +689,14 @@ function controls(ctx, rerender) {
     class: `chip${ui.filter === id ? ' is-active' : ''}`, type: 'button', 'aria-pressed': String(ui.filter === id),
     onClick: () => { ui.filter = id; rerender(); },
   }, label);
-  const select = (id, options, prop) => h('select', {
-    id, onChange: (e) => { ui[prop] = e.target.value; rerender(); },
+  const select = (id, options, prop, before) => h('select', {
+    id, onChange: (e) => { before?.(); ui[prop] = e.target.value; rerender(); },
   }, options.map((o) => h('option', { value: o.id, selected: ui[prop] === o.id }, o.label)));
-  const layout = h('div', { class: 'segmented layout-tabs', role: 'group', 'aria-label': 'Weergave' },
-    LAYOUTS.map((l) => h('button', {
-      type: 'button', 'aria-pressed': String(ui.layout === l.id),
-      onClick: () => { if (ui.layout !== l.id) { ui.layout = l.id; ui.listScroll = 0; rerender(); } },
-    }, l.label)));
   return h('div', { class: 'controls' },
-    layout,
     h('div', { class: 'chips', role: 'group', 'aria-label': 'Filter op klasse' },
       chip('all', 'Alle'), CLASSES.map((c) => chip(c.id, c.name))),
     h('div', { class: 'sort-lines' },
+      h('div', { class: 'sort-line' }, h('label', { for: 'layout' }, 'Weergave'), select('layout', LAYOUTS, 'layout', () => { ui.listScroll = 0; })),
       h('div', { class: 'sort-line' }, h('label', { for: 'group' }, 'Groeperen'), select('group', GROUPINGS, 'group')),
       h('div', { class: 'sort-line' }, h('label', { for: 'sort' }, 'Sorteren'), select('sort', SORTS, 'sort'))));
 }

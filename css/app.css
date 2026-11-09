@@ -129,10 +129,11 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 .chip.is-active { background: var(--accent); border-color: var(--accent); color: var(--accent-contrast); font-weight: 600; }
 .chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 /* Telefoon: Groeperen en Sorteren naast elkaar, label boven de keuzelijst. */
-.sort-lines { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+/* Weergave, Groeperen en Sorteren naast elkaar. */
+.sort-lines { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
 .sort-line { display: grid; gap: 4px; min-width: 0; }
 .sort-line label { color: var(--muted); font-size: 0.85rem; }
-.sort-line select { width: 100%; min-height: var(--tap); font-size: 16px; }
+.sort-line select { width: 100%; min-width: 0; min-height: var(--tap); font-size: 16px; text-overflow: ellipsis; }
 .shown-count { font-size: 0.85rem; margin: 4px 0 0; }
 
 /* ---------- Wapens ---------- */
@@ -340,11 +341,7 @@ body:has(.tabbar) .toast { bottom: calc(var(--tabbar-h) + 12px + var(--safe-bott
   #screen-app .app-header-inner { max-width: 1552px; } /* = inhoudsbreedte (1600px min. 2× 24px marge) */
 
   .chips { flex-wrap: wrap; overflow: visible; margin: 0; padding: 0; }
-  /* Breder scherm: label direct naast de keuzelijst, beide op één regel. */
-  .sort-lines { grid-template-columns: none; grid-auto-flow: column; justify-content: start; gap: 24px; }
-  .sort-line { display: flex; align-items: center; gap: 10px; }
-  .sort-line label { font-size: 1rem; }
-  .sort-line select { width: 240px; }
+  .sort-lines { max-width: 720px; gap: 12px; }
 
   .class-group {
     grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
@@ -366,17 +363,19 @@ body:has(.tabbar) .toast { bottom: calc(var(--tabbar-h) + 12px + var(--safe-bott
   .loadout-list { grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); align-items: start; gap: 12px; }
 }
 
+/* Breed scherm: label direct naast de keuzelijst, alle drie op één regel. */
+@media (min-width: 1100px) {
+  .sort-lines { display: flex; max-width: none; gap: 24px; }
+  .sort-line { display: flex; align-items: center; gap: 10px; }
+  .sort-line label { font-size: 1rem; }
+  .sort-line select { width: 200px; }
+}
+
 /* Plaatje van de eerstvolgende camo vóór "Volgende: …" op de kaart. */
 .next-swatch {
   display: inline-block; width: 18px; height: 18px; margin-right: 6px; vertical-align: -4px;
   border-radius: 4px; object-fit: cover; box-shadow: 0 0 0 1px var(--swatch-edge);
 }
-
-/* ---------- Weergavekeuze (Grid / Lijst) ---------- */
-.layout-tabs button { min-height: var(--tap); font-size: 1rem; }
-.layout-tabs button[aria-pressed="true"] { color: var(--text); background: var(--surface); box-shadow: var(--shadow); }
-.layout-tabs button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
-@media (min-width: 760px) { .layout-tabs { max-width: 320px; } }
 
 /* ---------- Lijstweergave: wapens onder elkaar, camo's naast elkaar ----------
    De tabel scrollt zijwaarts; de kolom met de wapennaam blijft links staan. */
