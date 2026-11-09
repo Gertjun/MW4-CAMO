@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.28.1
+
+**Opgelost** (iPad)
+- In de app op het beginscherm van de iPad schoof de bovenkant (de kopbalk, en liggend de bovenkant van de zijbalk) onder de statusbalk met de klok en de batterij. Op een iPad krijgt de app nu bovenin altijd minstens 24px ruimte.
+
+**Opgelost** (laptop en iPad liggend)
+- In de lijstweergave plakte de kop met camonamen tijdens het scrollen een stuk onder de bovenrand, waardoor er wapenrijen boven de kop doorschoven. Hij plakt nu netjes bovenaan.
+
+Op de iPhone verandert er niets. Je gegevens veranderen niet.
+
 ## 1.28.0
 
 **Toegevoegd**

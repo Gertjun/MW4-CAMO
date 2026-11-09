@@ -2,6 +2,16 @@
    App-specifieke stijl — PAS DIT AAN PER APP
    ============================================================= */
 
+/* Veiligheidsmarge bovenin voor de iPad (app op het beginscherm).
+   Op de iPhone geeft iOS via env(safe-area-inset-top) zelf een ruime marge,
+   maar op de iPad is die vaak 0. Dan schuift de kopbalk (en de bovenkant van
+   de zijbalk) onder de statusbalk met de vervaging. Op een groot aanraakscherm
+   in standalone-modus nemen we daarom minstens 24px. Alle onderdelen gebruiken
+   var(--safe-top), dus dit is de enige plek om deze marge te regelen. */
+@media (display-mode: standalone) and (any-pointer: coarse) and (min-width: 700px) and (min-height: 600px) {
+  :root { --safe-top: max(env(safe-area-inset-top, 0px), 24px); }
+}
+
 /* Accentkleur. Wordt ingesteld door de workflow "Nieuwe app instellen"
    (tools/setup.mjs); handmatig wijzigen mag ook (dan ook theme_color in
    manifest.webmanifest aanpassen). */
@@ -570,6 +580,10 @@ tbody tr + tr > * { border-top: 1px solid var(--border); }
 @media (min-width: 900px) {
   /* De balk bovenin is niet meer nodig: alles staat in de zijbalk. */
   #screen-app:has(.tabbar) .app-header { display: none; }
+  /* Zonder kopbalk: de inhoud begint onder de statusbalk (iPad) en de
+     kop van de lijstweergave plakt helemaal bovenaan. */
+  #screen-app:has(.tabbar) .app-main { padding-top: calc(16px + var(--safe-top)); }
+  #screen-app:has(.tabbar) .list-head { top: var(--safe-top); }
   .tabbar-desk { display: flex; }
 
   /* Sync-status onder naam en versie */
