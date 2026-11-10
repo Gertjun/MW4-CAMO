@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.30.0
+
+**Toegevoegd** (Face ID / passkey)
+- Je kunt nu een **bestaande passkey** opnieuw gebruiken. Na het verwijderen en opnieuw installeren van de app (bijvoorbeeld voor een nieuw icoon) hoef je dus geen nieuwe passkey meer aan te maken. Kies bij "Sneller ontgrendelen?" of in Instellingen > Beveiliging voor **Bestaande gebruiken** en selecteer "MW4 Camo Tracker – ontgrendelen".
+- Kies je per ongeluk de passkey van een andere app, dan krijg je daar een melding van.
+
+Je huidige Face ID-instelling blijft werken. Je gegevens veranderen niet.
+
 ## 1.29.2
 
 **Opgelost** (iPhone)

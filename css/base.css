@@ -383,6 +383,7 @@ dialog.sheet::backdrop { background: rgb(0 0 0 / 0.4); }
 .settings-section { display: grid; gap: 16px; padding: 16px 0; }
 .setting-line { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .setting-line > select { width: auto; flex: none; }
+.bio-buttons { display: flex; flex-wrap: wrap; gap: 8px; flex: none; }
 
 /* Instellingen als volledig scherm op de telefoon, vaste kaart op brede schermen. */
 dialog.sheet.settings {
@@ -549,4 +550,5 @@ dialog.sheet.settings {
   .field-row { grid-template-columns: 1fr; }
   .setting-line { flex-direction: column; align-items: stretch; }
   .setting-line > select { width: 100%; }
+  .bio-buttons { flex-direction: column; }
 }

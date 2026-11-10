@@ -364,24 +364,31 @@ function requestPersistentStorage() {
     .catch(() => {});
 }
 
+/** Schakelt Face ID / passkey in, met een nieuwe of een bestaande passkey. */
+async function enrollBiometrics(button, { existing = false } = {}) {
+  await withBusy(button, async () => {
+    if (existing) await bio.enrollExisting(vault.getDataKey());
+    else await bio.enroll(vault.getDataKey());
+    hideNotice();
+    toast('Ontgrendelen met Face ID / passkey is ingeschakeld.', 'ok');
+  }).catch((err) => toast(bioMessage(err), 'error'));
+  updateBioUI();
+}
+
 async function offerBiometrics() {
   if (bio.isEnrolled() || localStorage.getItem(BIO_OFFER_KEY) || !(await bio.isSupported())) return;
-  const enable = h('button', { class: 'btn btn-primary btn-small', type: 'button' }, 'Inschakelen');
+  const enable = h('button', { class: 'btn btn-primary btn-small', type: 'button' }, 'Nieuwe passkey');
+  const existing = h('button', { class: 'btn btn-small', type: 'button' }, 'Bestaande gebruiken');
   const later = h('button', { class: 'btn btn-ghost btn-small', type: 'button' }, 'Niet nu');
-  enable.addEventListener('click', async () => {
-    await withBusy(enable, async () => {
-      await bio.enroll(vault.getDataKey());
-      hideNotice();
-      toast('Ontgrendelen met Face ID / passkey is ingeschakeld.', 'ok');
-    }).catch((err) => toast(bioMessage(err), 'error'));
-  });
+  enable.addEventListener('click', () => enrollBiometrics(enable));
+  existing.addEventListener('click', () => enrollBiometrics(existing, { existing: true }));
   later.addEventListener('click', () => {
     localStorage.setItem(BIO_OFFER_KEY, '1');
     hideNotice();
   });
   showNotice(
-    h('p', {}, h('strong', {}, 'Sneller ontgrendelen?'), ' Gebruik Face ID, Touch ID of een passkey in plaats van je wachtwoord.'),
-    h('div', { class: 'button-row' }, enable, later),
+    h('p', {}, h('strong', {}, 'Sneller ontgrendelen?'), ' Gebruik Face ID, Touch ID of een passkey in plaats van je wachtwoord. Had je de app al eerder geïnstalleerd? Kies dan je bestaande passkey.'),
+    h('div', { class: 'button-row' }, enable, existing, later),
   );
 }
 
@@ -585,6 +592,7 @@ async function updateBioUI() {
     summary.textContent = 'Face ID / passkey aan';
     btn.textContent = 'Uitschakelen';
     btn.disabled = false;
+    $('#btn-bio-existing').hidden = true;
     return;
   }
   const supported = await bio.isSupported();
@@ -592,8 +600,9 @@ async function updateBioUI() {
   status.textContent = supported
     ? 'Uit. Ontgrendel met Face ID, Touch ID, Windows Hello of een passkey.'
     : 'Niet beschikbaar in deze browser of op dit apparaat.';
-  btn.textContent = 'Inschakelen';
+  btn.textContent = 'Nieuwe passkey';
   btn.disabled = !supported;
+  $('#btn-bio-existing').hidden = !supported;
 }
 
 async function checkForUpdate(button) {
@@ -669,13 +678,9 @@ function wireSettings() {
       toast('Ontgrendelen met passkey uitgeschakeld. Je kunt de passkey zelf verwijderen in je wachtwoordbeheer.');
       return updateBioUI();
     }
-    await withBusy(e.currentTarget, async () => {
-      await bio.enroll(vault.getDataKey());
-      hideNotice();
-      toast('Ontgrendelen met Face ID / passkey is ingeschakeld.', 'ok');
-    }).catch((err) => toast(bioMessage(err), 'error'));
-    updateBioUI();
+    await enrollBiometrics(e.currentTarget);
   });
+  $('#btn-bio-existing').addEventListener('click', (e) => enrollBiometrics(e.currentTarget, { existing: true }));
 
   // Wachtwoord wijzigen
   const pwForm = $('#form-password');
