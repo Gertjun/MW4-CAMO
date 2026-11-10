@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.30.1 – 2026-11-10
+
+**Gewijzigd**
+- De gedeelde kern (kluis, sync, Face ID, instellingen) is weer gelijk aan de template (1.3.0) en aan Games Backlog en Energieverbruik. Voor jou verandert er niets zichtbaars.
+
 ## 1.30.0
 
 **Toegevoegd** (Face ID / passkey)

@@ -66,13 +66,32 @@ const ctx = {
   },
   toast,
   confirm: (msg) => window.confirm(msg),
+  /**
+   * Alleen bij een instellingenpaneel (#settings-panel) in de pagina: toont de
+   * secties met data-group="<group>" ('all' = alles), of verbergt het paneel (null).
+   */
+  showShellSettings: (group) => showSettingsPanel(group),
+  /** Is synchroniseren met de data-repo ingesteld (en niet gepauzeerd)? */
+  get syncConfigured() { return isSyncConfigured() && !blocked; },
+  /**
+   * Leest een ander (onversleuteld) bestand uit de data-repo, bijvoorbeeld iets
+   * wat een GitHub Action daar zet. Synchroniseert eerst de kluis, zodat wat een
+   * ander apparaat al verwerkt heeft hier ook is.
+   * @returns {Promise<{sha: string, text: string} | null>} null als sync niet is ingesteld of het bestand er niet is.
+   */
+  async readSyncFile(path) {
+    if (!isSyncConfigured() || blocked || !navigator.onLine) return null;
+    await runSync({ quiet: true });
+    return createClient({ ...settings.github, path }).getText();
+  },
 };
 
 export async function start() {
   document.title = APP.name;
   $$('[data-app-name]').forEach((el) => { el.textContent = APP.name; });
   $$('[data-min-length]').forEach((el) => { el.textContent = APP.minPasswordLength; });
-  $('#app-version').textContent = APP.version;
+  $$('#app-version').forEach((el) => { el.textContent = APP.version; });
+  $$('[data-app-version]').forEach((el) => { el.textContent = `v${APP.version}`; });
   // Helpt wachtwoordmanagers het wachtwoord aan deze app te koppelen.
   $$('input[name=username]').forEach((el) => el.setAttribute('value', APP.name));
 
@@ -414,8 +433,7 @@ async function lockNow() {
   const mySession = session;
   clearTimeout(idleTimer);
   clearTimeout(syncTimer);
-  const dlg = $('#dlg-settings');
-  if (dlg.open) dlg.close();
+  closeSettings();
   hideNotice();
   $('#app-root').replaceChildren();
   showLock();
@@ -455,7 +473,7 @@ function setSyncState(state, label) {
   btn.title = label;
   btn.setAttribute('aria-label', `Synchroniseren: ${label}`);
   $('#sync-status').textContent = label;
-  $('#sum-sync').textContent = state === 'off' ? 'Niet ingesteld' : label;
+  setText('#sum-sync', state === 'off' ? 'Niet ingesteld' : label);
 }
 
 function updateSyncIndicator() {
@@ -520,37 +538,97 @@ function scheduleSync() {
 function wireAppBar() {
   $('#btn-sync').addEventListener('click', () => runSync({ quiet: false }));
   $('#btn-lock').addEventListener('click', lockNow);
-  $('#btn-settings').addEventListener('click', () => openSettings());
+  // Elke knop met data-open-settings opent de instellingen (tandwiel in de
+  // balk, of een knop in de navigatie van de app).
+  $$('#btn-settings, [data-open-settings]').forEach((b) => b.addEventListener('click', () => openSettings()));
 }
 
 // ---------- Instellingen ----------
 
-// Het instellingenscherm toont eerst een overzicht. Een tik op een regel opent
-// dat onderdeel als eigen pagina met een Terug-knop (zoals Instellingen op iOS).
+// De instellingen kunnen op drie manieren in index.html staan:
+//  1. <dialog id="dlg-settings"> als venster (standaard);
+//  2. <dialog id="dlg-settings" data-mode="page"> als scherm in de app, zonder
+//     achtergrond. Openen meldt zich met het event "settings:open", zodat de
+//     navigatie van de app kan wisselen;
+//  3. <section id="settings-panel"> in de pagina, met secties met data-group.
+//     De app toont het paneel via ctx.showShellSettings(group); exporteert de app
+//     openSettings(section), dan bepaalt die waar en wanneer.
+// Staat er een #settings-menu in het venster, dan toont het eerst een overzicht
+// en opent een tik op een regel dat onderdeel als eigen pagina met een
+// Terug-knop (zoals Instellingen op iOS).
 let settingsPage = null;
 
+const settingsDialog = () => $('#dlg-settings');
+const settingsAsPage = () => settingsDialog()?.dataset.mode === 'page';
+const hasSettingsMenu = () => !!$('#settings-menu');
+
+/** Zet tekst in een element als dat in deze app bestaat. */
+function setText(selector, text) {
+  const el = $(selector);
+  if (el) el.textContent = text;
+}
+
+function settingsVisible() {
+  const panel = $('#settings-panel');
+  return settingsDialog()?.open || (panel && !panel.hidden);
+}
+
 function openSettings(page) {
+  const dlg = settingsDialog();
+  if (!dlg) {
+    if (app.openSettings) app.openSettings(page);
+    else showSettingsPanel('all');
+    if (page) $(`#settings-${page}`)?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    return;
+  }
   fillSettings();
-  const dlg = $('#dlg-settings');
-  if (!dlg.open) dlg.showModal();
-  showSettingsPage(page ?? null);
+  if (settingsAsPage()) {
+    if (!dlg.open) dlg.show();
+    document.dispatchEvent(new CustomEvent('settings:open', { detail: { section: page } }));
+  } else if (!dlg.open) dlg.showModal();
+  if (hasSettingsMenu()) showSettingsPage(page ?? null);
+  else if (page) $(`#settings-${page}`)?.scrollIntoView({ block: 'start' });
+}
+
+function closeSettings() {
+  const dlg = settingsDialog();
+  if (dlg?.open) dlg.close();
+  const panel = $('#settings-panel');
+  if (panel) panel.hidden = true;
+}
+
+/** Instellingenpaneel in de pagina: toont de secties van `group` ('all' = alles) of verbergt het (null). */
+function showSettingsPanel(group) {
+  const panel = $('#settings-panel');
+  if (!panel) return;
+  const wasHidden = panel.hidden;
+  panel.hidden = !group;
+  if (!group) return;
+  $$('#settings-panel [data-group]').forEach((sec) => {
+    sec.hidden = group !== 'all' && sec.dataset.group !== group;
+  });
+  if (wasHidden) fillSettings();
 }
 
 function showSettingsPage(page) {
+  if (!hasSettingsMenu()) return;
   const section = page && $(`#settings-${page}`);
   settingsPage = section ? page : null;
   $('#settings-menu').hidden = !!settingsPage;
   $$('#dlg-settings .settings-section').forEach((el) => { el.hidden = el !== section; });
-  $('#btn-settings-back').hidden = !settingsPage;
-  $('#settings-title').textContent = settingsPage ? section.dataset.title : 'Instellingen';
-  $('#dlg-settings .sheet-body').scrollTop = 0;
+  const back = $('#btn-settings-back');
+  if (back) back.hidden = !settingsPage;
+  setText('#settings-title', settingsPage ? section.dataset.title : 'Instellingen');
+  const body = $('#dlg-settings .sheet-body');
+  if (body) body.scrollTop = 0;
   // Zonder verbinding meteen het formulier tonen; anders blijft het dicht.
-  if (settingsPage === 'sync') $('#sync-connection').open = !isSyncConfigured();
+  const conn = $('#sync-connection');
+  if (settingsPage === 'sync' && conn) conn.open = !isSyncConfigured();
   if (!settingsPage) {
     $$('#dlg-settings details').forEach((d) => { d.open = false; });
   }
   // Focus naar de titel, zodat schermlezers de nieuwe pagina aankondigen.
-  $('#settings-title').focus({ preventScroll: true });
+  $('#settings-title')?.focus({ preventScroll: true });
 }
 
 function fillSettings() {
@@ -565,8 +643,9 @@ function fillSettings() {
   f.elements.autoSync.checked = settings?.autoSync !== false;
   fillAutoLock();
   $('#btn-github-remove').hidden = !gh;
-  $('#btn-sync-now').hidden = !gh;
-  $('#sum-about').textContent = `Versie ${APP.version}`;
+  const syncNowBtn = $('#btn-sync-now');
+  if (syncNowBtn) syncNowBtn.hidden = !gh;
+  setText('#sum-about', `Versie ${APP.version}`);
   ['#github-error', '#password-error', '#restore-error'].forEach((s) => showError(s, ''));
   updateSyncIndicator();
   updateBioUI();
@@ -586,23 +665,24 @@ function fillAutoLock() {
 async function updateBioUI() {
   const btn = $('#btn-bio-toggle');
   const status = $('#bio-status');
-  const summary = $('#sum-security');
+  const existing = $('#btn-bio-existing');
   if (bio.isEnrolled()) {
     status.textContent = 'Ingeschakeld op dit apparaat.';
-    summary.textContent = 'Face ID / passkey aan';
+    setText('#sum-security', 'Face ID / passkey aan');
     btn.textContent = 'Uitschakelen';
     btn.disabled = false;
-    $('#btn-bio-existing').hidden = true;
+    if (existing) existing.hidden = true;
     return;
   }
   const supported = await bio.isSupported();
-  summary.textContent = supported ? 'Face ID / passkey uit' : 'Alleen wachtwoord';
+  setText('#sum-security', supported ? 'Face ID / passkey uit' : 'Alleen wachtwoord');
   status.textContent = supported
     ? 'Uit. Ontgrendel met Face ID, Touch ID, Windows Hello of een passkey.'
     : 'Niet beschikbaar in deze browser of op dit apparaat.';
-  btn.textContent = 'Nieuwe passkey';
+  // Zonder knop "Bestaande gebruiken" in deze app: één knop die een nieuwe passkey maakt.
+  btn.textContent = existing ? 'Nieuwe passkey' : 'Inschakelen';
   btn.disabled = !supported;
-  $('#btn-bio-existing').hidden = !supported;
+  if (existing) existing.hidden = !supported;
 }
 
 async function checkForUpdate(button) {
@@ -616,17 +696,19 @@ async function checkForUpdate(button) {
 }
 
 function wireSettings() {
-  const dlg = $('#dlg-settings');
-  $('#btn-close-settings').addEventListener('click', () => dlg.close());
-  dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
-  dlg.addEventListener('close', () => showSettingsPage(null));
-  // Escape op een onderdeel gaat eerst terug naar het overzicht.
-  dlg.addEventListener('cancel', (e) => {
-    if (!settingsPage) return;
-    e.preventDefault();
-    showSettingsPage(null);
-  });
-  $('#btn-settings-back').addEventListener('click', () => showSettingsPage(null));
+  const dlg = settingsDialog();
+  if (dlg) {
+    $('#btn-close-settings')?.addEventListener('click', () => dlg.close());
+    dlg.addEventListener('click', (e) => { if (e.target === dlg && !settingsAsPage()) dlg.close(); });
+    dlg.addEventListener('close', () => showSettingsPage(null));
+    // Escape op een onderdeel gaat eerst terug naar het overzicht.
+    dlg.addEventListener('cancel', (e) => {
+      if (!settingsPage) return;
+      e.preventDefault();
+      showSettingsPage(null);
+    });
+  }
+  $('#btn-settings-back')?.addEventListener('click', () => showSettingsPage(null));
   $$('#settings-menu [data-page]').forEach((row) => {
     row.addEventListener('click', () => showSettingsPage(row.dataset.page));
   });
@@ -680,7 +762,7 @@ function wireSettings() {
     }
     await enrollBiometrics(e.currentTarget);
   });
-  $('#btn-bio-existing').addEventListener('click', (e) => enrollBiometrics(e.currentTarget, { existing: true }));
+  $('#btn-bio-existing')?.addEventListener('click', (e) => enrollBiometrics(e.currentTarget, { existing: true }));
 
   // Wachtwoord wijzigen
   const pwForm = $('#form-password');
@@ -814,7 +896,7 @@ function wireOtherTabs() {
     if (!vault.isUnlocked()) return;
     if (e.key === vault.KEYS.device) {
       settings = (await vault.getDeviceSettings()) ?? settings;
-      if ($('#dlg-settings').open) fillSettings();
+      if (settingsVisible()) fillSettings();
     }
     updateSyncIndicator();
   });
