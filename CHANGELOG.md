@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.29.2
+
+**Opgelost** (iPhone)
+- De tabbalk onderin (Overzicht, Camo's, Loadouts) kon midden op het scherm blijven hangen, met de inhoud er nog onder. Dat gebeurde vooral als je een camo afvinkte terwijl de pagina nog nascrollde. De balk wordt nu één keer neergezet en blijft staan; alleen de knoppen erin worden bijgewerkt.
+
+Je gegevens veranderen niet.
+
 ## 1.29.1
 
 **Gewijzigd**

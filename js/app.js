@@ -753,9 +753,16 @@ function pageTitle() {
   return h('h2', { class: 'page-title' }, VIEWS.find((v) => v.id === ui.view).label);
 }
 
-/** Tabbalk onderin het scherm (telefoon) of zijbalk links (laptop). */
-function tabBar(rerender) {
-  const nav = h('nav', { class: `tabbar${ui.sideCollapsed ? ' is-collapsed' : ''}`, 'aria-label': 'Schermen' },
+/** Tabbalk onderin het scherm (telefoon) of zijbalk links (laptop).
+ *  De balk zelf wordt maar één keer gemaakt en blijft staan; bij elke render
+ *  wordt alleen de inhoud vernieuwd. Zet je een vast (position: fixed) element
+ *  telkens opnieuw neer terwijl de pagina nog nascrollt, dan plaatst iOS het
+ *  soms midden op het scherm in plaats van onderin. */
+let tabNav = null;
+function mountTabBar(root, rerender) {
+  if (!tabNav) tabNav = h('nav', { class: 'tabbar', 'aria-label': 'Schermen' });
+  tabNav.classList.toggle('is-collapsed', ui.sideCollapsed);
+  tabNav.replaceChildren(
     sideBrand(rerender),
     h('div', { class: 'tabbar-inner' },
       VIEWS.map((v) => h('button', {
@@ -769,7 +776,9 @@ function tabBar(rerender) {
         },
       }, icon(v.icon), h('span', { class: 'tabbar-label' }, v.label)))),
     sideLock(icon));
-  return nav;
+  // Buiten #app-root, zodat root.replaceChildren() de balk niet weghaalt.
+  const host = root.closest('.screen') || document.body;
+  if (tabNav.parentElement !== host) host.append(tabNav);
 }
 
 // ---------- Lijstweergave ----------
@@ -904,20 +913,21 @@ export const app = {
       });
     }
     if (ui.view === 'settings' && !DESKTOP.matches) ui.view = 'overview';
+    mountTabBar(root, rerender);
     if (ui.view === 'settings') {
-      renderSettings(root, [pageTitle()], [tabBar(rerender)]);
+      renderSettings(root, [pageTitle()], []);
       return;
     }
     leaveSettings();
     if (ui.view === 'loadouts') {
-      root.replaceChildren(pageTitle(), ...renderLoadouts(ctx), tabBar(rerender));
+      root.replaceChildren(pageTitle(), ...renderLoadouts(ctx));
       return;
     }
     const done = progressIndex(ctx.data);
     if (ui.view === 'overview') {
       const pinned = pinnedSet(ctx.data);
       if (ui.ovEdit) {
-        root.replaceChildren(pageTitle(), orderEditor(ctx, rerender), tabBar(rerender));
+        root.replaceChildren(pageTitle(), orderEditor(ctx, rerender));
         return;
       }
       // Volgorde voor de telefoon: elk blok krijgt zijn plek via --ov-order.
@@ -943,7 +953,6 @@ export const app = {
             place('pinned', pinnedCard(done, pinned, rerender)),
           ].filter(Boolean))),
         orderButton(rerender),
-        tabBar(rerender),
       ]);
       return;
     }
@@ -992,7 +1001,6 @@ export const app = {
       controls(ctx, rerender),
       h('p', { class: 'muted shown-count' }, `${weapons.length} van ${WEAPONS.length} wapens`),
       ...list,
-      tabBar(rerender),
     ].filter(Boolean));
     root.querySelector('.list-card')?.restoreScroll();
     if (!resizeHooked) { // schaduw rechts opnieuw bepalen na draaien of venster aanpassen
