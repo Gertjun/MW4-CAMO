@@ -28,6 +28,7 @@
   --text: #14181d;
   --muted: #5f656d;
   --border: #dcdfe3;
+  --bar-fill: #d9b02a; /* voortgangsbalkjes: iets gedempter goud dan het felle logogeel */
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -41,6 +42,7 @@
     --text: #f3f4f6;
     --muted: #9ba1a9;
     --border: #2f343b;
+    --bar-fill: #c9a53a;
   }
 }
 /* @accent-end */
@@ -79,7 +81,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 .summary-value { font-variant-numeric: tabular-nums; font-weight: 600; }
 
 .bar { height: 8px; border-radius: 99px; background: var(--surface-2); overflow: hidden; }
-.bar > span { display: block; height: 100%; background: var(--accent); border-radius: inherit; transition: width 0.2s; }
+.bar > span { display: block; height: 100%; background: var(--bar-fill, var(--accent)); border-radius: inherit; transition: width 0.2s; }
 
 .mastery { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
 @media (max-width: 559px) { /* telefoon: 7 tegels in twee volle rijen van 4, percentage onder het aantal */

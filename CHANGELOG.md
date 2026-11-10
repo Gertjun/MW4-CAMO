@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.29.1
+
+**Gewijzigd**
+- De voortgangsbalkjes zijn iets gedempter goud in plaats van het felle logogeel, zowel in licht als donker. Knoppen, het actieve tabblad en andere accenten houden het logogeel.
+
+Je gegevens veranderen niet.
+
 ## 1.29.0
 
 **Gewijzigd** (Camo's-scherm)
