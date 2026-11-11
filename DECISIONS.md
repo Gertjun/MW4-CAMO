@@ -24,3 +24,7 @@ Besluiten die een volgende sessie moet kennen. Oude besluiten pas je niet aan; e
 ### D7 – Gedeelde kern van de PWA-template (10 nov 2026, template 1.3.0)
 - **Besluit:** `js/core/` en `css/base.css` zijn gelijk aan de PWA-template (1.3.0) en aan de andere template-apps. Passkeys gebruiken een vaste PRF-invoer per app, zodat een bestaande passkey na opnieuw installeren weer werkt (*Bestaande passkey*). Face ID start vanzelf (`autoBiometricUnlock`), vergrendeltijd per apparaat.
 - **Waarom:** Geert wil al zijn apps uniform. De MW4-aanpak voor passkeys is als standaard gekozen.
+
+### D8 – Navigatie en Instellingen uit de kern (11 nov 2026, 1.31.0)
+- **Besluit:** de app heeft geen eigen tabbalk, zijbalk of instellingenweergave meer; schermen staan in `app.screens` en de schil tekent ze (template D6). Vervangt D5 voor de vorm van de navigatie; de drie schermen blijven.
+- **Waarom:** Geert wil al zijn apps dezelfde indeling geven.

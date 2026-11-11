@@ -3,7 +3,7 @@
 // BIJ ELKE RELEASE: VERSION ophogen (gelijk aan js/config.js).
 // NIEUW BESTAND?    Toevoegen aan PRECACHE.
 
-const VERSION = '1.30.1';
+const VERSION = '1.31.0';
 
 // De cache-naam bevat het pad van de app, zodat meerdere apps onder
 // <gebruiker>.github.io elkaars cache niet opruimen.
@@ -22,7 +22,6 @@ const PRECACHE = [
   './js/app.js',
   './js/catalog.js',
   './js/loadouts.js',
-  './js/settings-view.js',
   './js/attachments.js',
   './js/attachments-data.js',
   './img/logo-white.webp',
@@ -191,6 +190,9 @@ const PRECACHE = [
   './js/core/sync.js',
   './js/core/records.js',
   './js/core/dom.js',
+  './js/core/ui.js',
+  './js/core/pair.js',
+  './js/core/nav.js',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon-maskable-512.png',

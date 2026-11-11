@@ -21,7 +21,6 @@ import {
 } from './catalog.js';
 import { renderLoadouts, closeOnLock } from './loadouts.js';
 import { APP } from './config.js';
-import { DESKTOP, leaveSettings, renderSettings, sideSync, sideLock } from './settings-view.js';
 
 // 1 = alleen camo-voortgang; 2 = ook loadouts; 3 = ook vastgepinde wapens,
 // prestige- en mastery-camo's.
@@ -30,15 +29,14 @@ const TOMBSTONE_DAYS = 180;
 
 // Schermkeuzes (alleen tijdens gebruik, niet in de kluis).
 // layout: 'grid' (kaarten) of 'list' (tabel met alle camo's naast elkaar).
-const ui = { ovEdit: false, view: 'overview', layout: 'grid', filter: 'all', group: 'class', sort: 'default', open: new Set(), listScroll: 0, sideCollapsed: false };
+const ui = { ovEdit: false, view: 'overview', layout: 'grid', filter: 'all', group: 'class', sort: 'default', open: new Set(), listScroll: 0 };
 
-// Schermen in de tabbalk onderin. icon = SVG-paden (24×24, lijnen).
+// Schermen in de navigatie van de schil (core/nav.js). icon = SVG-paden (24×24, lijnen).
+// Instellingen komt er vanzelf als laatste bij.
 const VIEWS = [
   { id: 'overview', label: 'Overzicht', icon: ['M4 20V10', 'M10 20V4', 'M16 20v-7', 'M22 20H2'] },
   { id: 'camos', label: "Camo's", icon: ['M4 4h7v7H4z', 'M13 4h7v7h-7z', 'M4 13h7v7H4z', 'M13 13h7v7h-7z'] },
   { id: 'loadouts', label: 'Loadouts', icon: ['M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18', 'M12 1v6', 'M12 17v6', 'M1 12h6', 'M17 12h6'] },
-  // Alleen op de laptop (zijbalk); op de telefoon staat het tandwiel bovenin.
-  { id: 'settings', label: 'Instellingen', desktop: true, icon: ['M4 7h9', 'M19 7h1', 'M4 17h3', 'M13 17h7', 'M16 4.5a2.5 2.5 0 1 0 0 5a2.5 2.5 0 1 0 0-5', 'M10 14.5a2.5 2.5 0 1 0 0 5a2.5 2.5 0 1 0 0-5'] },
 ];
 
 const LAYOUTS = [
@@ -74,7 +72,8 @@ const GROUPS = [
 
 const MASTERY_ID = 'mastery';
 let resizeHooked = false;
-let desktopHooked = false;
+// ctx.go van de schil: naar een ander scherm (gezet bij elke render).
+let go = () => {};
 const CAMOS = new Map(WEAPONS.map((w) => [w.id, camosOf(w)]));
 const ALL_CAMOS = new Map(WEAPONS.map((w) => [w.id, [...CAMOS.get(w.id), ...PRESTIGE_CAMOS]]));
 
@@ -439,6 +438,7 @@ function summary(done) {
 /** Naar het Camo's-scherm, eventueel met een klasse-filter of één wapen opengeklapt. */
 function goToCamos(rerender, { cls = null, weapon = null } = {}) {
   ui.view = 'camos';
+  go('camos');
   if (cls) ui.filter = cls;
   if (weapon) {
     ui.layout = 'grid';
@@ -715,72 +715,6 @@ function icon(paths) {
   return svg;
 }
 
-/** Logo met appnaam, versie en sync-status: alleen zichtbaar bovenin de zijbalk (laptop). */
-function sideBrand(rerender) {
-  return h('div', { class: 'side-brand' },
-    h('picture', { class: 'side-logo' },
-      h('source', { srcset: 'img/logo-white.webp', media: '(prefers-color-scheme: dark)' }),
-      h('img', { src: 'img/logo-black.webp', alt: 'Call of Duty Modern Warfare 4', width: 127, height: 36 })),
-    h('img', { class: 'side-icon', src: 'icons/icon-192.png', alt: 'MW4 Camo Tracker', width: 40, height: 40 }),
-    sideToggle(),
-    h('div', { class: 'side-title' },
-      h('span', { class: 'side-name' }, 'Camo Tracker'),
-      h('span', { class: 'side-version' }, `v${APP.version}`)),
-    sideSync(() => { ui.view = 'settings'; rerender(); }));
-}
-
-/** Knop bovenin de zijbalk, naast het logo, om hem in of uit te klappen (alleen op de laptop). */
-function sideToggle() {
-  const label = () => (ui.sideCollapsed ? 'Zijbalk uitklappen' : 'Zijbalk inklappen');
-  const btn = h('button', {
-    type: 'button', class: 'side-toggle', 'aria-label': label(), title: label(),
-    'aria-expanded': String(!ui.sideCollapsed),
-    onClick: () => {
-      ui.sideCollapsed = !ui.sideCollapsed;
-      btn.closest('.tabbar').classList.toggle('is-collapsed', ui.sideCollapsed);
-      btn.setAttribute('aria-label', label());
-      btn.setAttribute('title', label());
-      btn.setAttribute('aria-expanded', String(!ui.sideCollapsed));
-      // Breedte van de lijstweergave (schaduw rechts) opnieuw bepalen.
-      setTimeout(() => document.querySelector('.list-card')?.restoreScroll(), 250);
-    },
-  }, icon(['M15 6l-6 6l6 6']));
-  return btn;
-}
-
-/** Schermtitel bovenaan de inhoud: alleen zichtbaar naast de zijbalk (laptop). */
-function pageTitle() {
-  return h('h2', { class: 'page-title' }, VIEWS.find((v) => v.id === ui.view).label);
-}
-
-/** Tabbalk onderin het scherm (telefoon) of zijbalk links (laptop).
- *  De balk zelf wordt maar één keer gemaakt en blijft staan; bij elke render
- *  wordt alleen de inhoud vernieuwd. Zet je een vast (position: fixed) element
- *  telkens opnieuw neer terwijl de pagina nog nascrollt, dan plaatst iOS het
- *  soms midden op het scherm in plaats van onderin. */
-let tabNav = null;
-function mountTabBar(root, rerender) {
-  if (!tabNav) tabNav = h('nav', { class: 'tabbar', 'aria-label': 'Schermen' });
-  tabNav.classList.toggle('is-collapsed', ui.sideCollapsed);
-  tabNav.replaceChildren(
-    sideBrand(rerender),
-    h('div', { class: 'tabbar-inner' },
-      VIEWS.map((v) => h('button', {
-        type: 'button', class: `tabbar-btn${v.desktop ? ' tabbar-desk' : ''}`, title: v.label, 'aria-current': ui.view === v.id ? 'page' : null,
-        onClick: () => {
-          if (ui.view === v.id) { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
-          ui.view = v.id;
-          ui.ovEdit = false;
-          rerender();
-          window.scrollTo(0, 0);
-        },
-      }, icon(v.icon), h('span', { class: 'tabbar-label' }, v.label)))),
-    sideLock(icon));
-  // Buiten #app-root, zodat root.replaceChildren() de balk niet weghaalt.
-  const host = root.closest('.screen') || document.body;
-  if (tabNav.parentElement !== host) host.append(tabNav);
-}
-
 // ---------- Lijstweergave ----------
 // Alle wapens onder elkaar, per wapen alle camo's naast elkaar als vinkje.
 // De tabel scrollt zijwaarts; de wapennaam blijft links staan.
@@ -871,6 +805,8 @@ function newest(a, b) {
 }
 
 export const app = {
+  screens: VIEWS,
+
   schemaVersion: SCHEMA,
 
   initialData() {
@@ -906,28 +842,18 @@ export const app = {
 
   render(root, ctx) {
     const rerender = () => app.render(root, ctx);
-    if (!desktopHooked) { // venster smaller dan laptop: instellingen weer als pop-up via het tandwiel
-      desktopHooked = true;
-      DESKTOP.addEventListener('change', () => {
-        if (!DESKTOP.matches && ui.view === 'settings') { ui.view = 'overview'; rerender(); }
-      });
-    }
-    if (ui.view === 'settings' && !DESKTOP.matches) ui.view = 'overview';
-    mountTabBar(root, rerender);
-    if (ui.view === 'settings') {
-      renderSettings(root, [pageTitle()], []);
-      return;
-    }
-    leaveSettings();
+    // De schil regelt de navigatie; ctx.screen is het gekozen scherm.
+    go = ctx.go;
+    if (ui.view !== ctx.screen) { ui.view = ctx.screen; ui.ovEdit = false; }
     if (ui.view === 'loadouts') {
-      root.replaceChildren(pageTitle(), ...renderLoadouts(ctx));
+      root.replaceChildren(...renderLoadouts(ctx));
       return;
     }
     const done = progressIndex(ctx.data);
     if (ui.view === 'overview') {
       const pinned = pinnedSet(ctx.data);
       if (ui.ovEdit) {
-        root.replaceChildren(pageTitle(), orderEditor(ctx, rerender));
+        root.replaceChildren(orderEditor(ctx, rerender));
         return;
       }
       // Volgorde voor de telefoon: elk blok krijgt zijn plek via --ov-order.
@@ -939,7 +865,6 @@ export const app = {
         return el;
       };
       root.replaceChildren(...[
-        pageTitle(),
         place('summary', summary(done)),
         // Op de laptop: mastery direct onder de totalen, daaronder drie kolommen
         // (Per klasse | Bijna klaar | Wat houdt je tegen + Vastgepind).
@@ -997,7 +922,6 @@ export const app = {
     }
 
     root.replaceChildren(...[
-      pageTitle(),
       controls(ctx, rerender),
       h('p', { class: 'muted shown-count' }, `${weapons.length} van ${WEAPONS.length} wapens`),
       ...list,

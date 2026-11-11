@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.31.0 – 2026-11-11
+
+Dezelfde indeling als je andere apps.
+
+**Gewijzigd**
+- **Navigatie**: tabbalk onderin op de iPhone, tabbladen onder de kopbalk op de iPad rechtop, inklapbare zijbalk op de laptop en de iPad liggend. Dat werkt nu in al je apps hetzelfde.
+- **Instellingen** is het laatste scherm in de navigatie (het tandwiel is weg), met hetzelfde overzicht als in je andere apps.
+- **Kopbalk**: app-icoon, naam en versie linksboven; synchroniseren en vergrendelen rechtsboven, ook op de laptop.
+
+**Toegevoegd**
+- **Ander apparaat koppelen** met een koppelcode en pincode (Instellingen → Synchronisatie), zodat je repo en token niet hoeft over te typen.
+
+Je gegevens en je Face ID-instelling veranderen niet.
+
 ## 1.30.1 – 2026-11-10
 
 **Gewijzigd**

@@ -2,15 +2,6 @@
    App-specifieke stijl — PAS DIT AAN PER APP
    ============================================================= */
 
-/* Veiligheidsmarge bovenin voor de iPad (app op het beginscherm).
-   Op de iPhone geeft iOS via env(safe-area-inset-top) zelf een ruime marge,
-   maar op de iPad is die vaak 0. Dan schuift de kopbalk (en de bovenkant van
-   de zijbalk) onder de statusbalk met de vervaging. Op een groot aanraakscherm
-   in standalone-modus nemen we daarom minstens 24px. Alle onderdelen gebruiken
-   var(--safe-top), dus dit is de enige plek om deze marge te regelen. */
-@media (display-mode: standalone) and (any-pointer: coarse) and (min-width: 700px) and (min-height: 600px) {
-  :root { --safe-top: max(env(safe-area-inset-top, 0px), 24px); }
-}
 
 /* Accentkleur. Wordt ingesteld door de workflow "Nieuwe app instellen"
    (tools/setup.mjs); handmatig wijzigen mag ook (dan ook theme_color in
@@ -56,23 +47,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent) !important;
 }
 
-/* ---------- Titel met logo ---------- */
-.app-title-logo { display: flex; align-items: center; gap: 10px; min-width: 0; margin: 0; overflow: visible; }
-.app-title-logo picture { display: contents; }
-.app-title-logo img { display: block; height: 36px; width: auto; flex: none; }
-.app-title-logo span {
-  width: min-content; flex: none; white-space: normal; /* "Camo" en "Tracker" onder elkaar */
-  font-size: 0.8rem; line-height: 1.15; font-weight: 700; letter-spacing: 0.06em;
-  text-transform: uppercase; color: var(--muted);
-  padding-left: 10px; border-left: 1px solid var(--border);
-}
-@media (min-width: 560px) { .app-title-logo span { width: auto; font-size: 0.9rem; white-space: nowrap; } }
-@media (max-width: 400px) { /* iPhone SE/mini: iets compacter */
-  .app-title-logo { gap: 8px; }
-  .app-title-logo img { height: 32px; }
-  .app-title-logo span { font-size: 0.72rem; padding-left: 8px; }
-}
-@media (max-width: 360px) { .app-title-logo span { display: none; } } /* heel smal scherm: alleen het logo */
+/* heel smal scherm: alleen het logo */
 
 /* ---------- Samenvatting ---------- */
 .summary { padding: 16px; display: grid; gap: 10px; }
@@ -214,88 +189,13 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 .camo-dialog .sheet-body { display: grid; gap: 12px; padding-top: 16px; }
 .missing-list { margin: 0; padding-left: 20px; display: grid; gap: 4px; }
 
-/* ---------- Tabbalk onderin (Overzicht / Camo's / Loadouts) ---------- */
-:root { --tabbar-h: 56px; }
-.app-root { padding-bottom: var(--tabbar-h); } /* inhoud niet onder de balk (safe area zit al in .app-main) */
-.tabbar {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
-  padding: 0 var(--safe-right) var(--safe-bottom) var(--safe-left);
-  background: color-mix(in srgb, var(--bg) 85%, transparent);
-  -webkit-backdrop-filter: saturate(180%) blur(16px);
-  backdrop-filter: saturate(180%) blur(16px);
-  border-top: 1px solid var(--border);
-}
-.tabbar-inner { max-width: 520px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); }
-.tabbar-btn {
-  min-height: var(--tabbar-h); padding: 6px 4px 4px;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
-  font: inherit; font-size: 0.7rem; font-weight: 600; color: var(--muted);
-  background: none; border: 0; cursor: pointer;
-}
-.tabbar-btn svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.tabbar-btn[aria-current="page"] { color: var(--accent); }
-.tabbar-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; border-radius: 8px; }
-/* Meldingen (toast) boven de tabbalk tonen */
-body:has(.tabbar) .toast { bottom: calc(var(--tabbar-h) + 12px + var(--safe-bottom)); }
-
-.side-brand, .page-title, .side-toggle { display: none; } /* alleen naast de zijbalk */
-
-/* Laptop/brede tablet: de knoppen staan als zijbalk links.
+/* ---------- Navigatie ----------
+   De tabbalk, tabbladen en zijbalk komen uit de kern (base.css, core/nav.js).
    --side-w telt mee in de breedte van de lijstweergave (zie onderaan). */
 :root { --side-w: 0px; }
-@media (min-width: 900px) {
-  :root { --side-w: 232px; }
-  #screen-app:has(.tabbar) { padding-left: calc(var(--side-w) + var(--safe-left)); }
-  .app-root { padding-bottom: 0; }
-  #screen-app:has(.tabbar) .app-title { display: none; } /* logo staat in de zijbalk */
-  #screen-app:has(.tabbar) .header-actions { margin-left: auto; }
-  .tabbar {
-    top: 0; right: auto; width: calc(var(--side-w) + var(--safe-left));
-    padding: calc(20px + var(--safe-top)) 12px calc(16px + var(--safe-bottom)) calc(12px + var(--safe-left));
-    display: flex; flex-direction: column; gap: 20px; overflow-y: auto;
-    background: var(--surface); border-top: 0; border-right: 1px solid var(--border);
-    -webkit-backdrop-filter: none; backdrop-filter: none;
-  }
-  /* Bovenin: logo met rechts de inklapknop, daaronder naam en versie */
-  /* Alles in de kop lijnt uit op dezelfde kolom als de knoppen eronder:
-     links op de iconen (12px binnen de knop), rechts op het pijltje. */
-  .side-brand { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 4px; row-gap: 8px; padding: 0; }
-  .side-logo { padding-left: 12px; }
-  .side-logo img { display: block; width: 100%; height: auto; }
-  .side-title { grid-column: 1 / -1; padding: 0 16px 0 12px; }
-  .side-icon { display: none; width: 40px; height: 40px; border-radius: 10px; }
-  .side-title { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
-  .side-name { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
-  .side-version { font-size: 0.75rem; color: var(--muted); font-variant-numeric: tabular-nums; }
-  .side-toggle {
-    display: flex; align-items: center; justify-content: center;
-    width: 36px; height: var(--tap); padding: 0; color: var(--muted);
-    background: none; border: 0; border-radius: var(--radius-sm); cursor: pointer;
-  }
-  .side-toggle:hover { background: var(--surface-2); color: var(--text); }
-  .side-toggle svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.2s; }
-  .tabbar, #screen-app:has(.tabbar) { transition: width 0.2s ease, padding-left 0.2s ease; }
-
-  /* Ingeklapt: smalle balk met alleen iconen */
-  :root:has(.tabbar.is-collapsed) { --side-w: 68px; }
-  .tabbar.is-collapsed { padding-left: calc(10px + var(--safe-left)); padding-right: 10px; }
-  .tabbar.is-collapsed .side-brand { grid-template-columns: none; padding: 0; justify-items: center; row-gap: 4px; }
-  .tabbar.is-collapsed .side-logo, .tabbar.is-collapsed .side-title, .tabbar.is-collapsed .tabbar-label { display: none; }
-  .tabbar.is-collapsed .side-icon { display: block; }
-  .tabbar.is-collapsed .tabbar-btn { justify-content: center; padding: 0; }
-  .tabbar.is-collapsed .side-toggle { width: var(--tap); }
-  .tabbar.is-collapsed .side-toggle svg { transform: rotate(180deg); }
-  .tabbar-inner { max-width: none; margin: 0; display: grid; grid-template-columns: none; gap: 4px; }
-  .tabbar-btn {
-    min-height: var(--tap); padding: 0 12px; flex-direction: row; justify-content: flex-start; gap: 12px;
-    font-size: 0.95rem; color: var(--muted); border-radius: var(--radius-sm); text-align: left;
-  }
-  .tabbar-btn svg { width: 20px; height: 20px; }
-  .tabbar-btn:hover { background: var(--surface-2); color: var(--text); }
-  .tabbar-btn[aria-current="page"] { background: var(--surface-2); color: var(--text); }
-  .tabbar-btn[aria-current="page"] svg { color: var(--accent); }
-  body:has(.tabbar) .toast { bottom: calc(20px + var(--safe-bottom)); left: calc(50% + var(--side-w) / 2); }
-  .page-title { display: block; margin: 0; font-size: 1.5rem; }
+@media (min-width: 1000px) {
+  :root { --side-w: 216px; }
+  :root:has(#screen-app.nav-collapsed) { --side-w: 68px; }
 }
 
 /* ---------- Loadouts ---------- */
@@ -339,7 +239,7 @@ body:has(.tabbar) .toast { bottom: calc(var(--tabbar-h) + 12px + var(--safe-bott
    tweede regel in plaats van zijwaarts te scrollen. Alleen voor het
    app-scherm; het ontgrendel- en instelscherm blijven smal. */
 @media (min-width: 760px) {
-  #screen-app .app-main { max-width: 1600px; padding-left: calc(24px + var(--safe-left)); padding-right: calc(24px + var(--safe-right)); }
+  #screen-app .app-main { max-width: 1600px; padding-right: calc(24px + var(--safe-right)); }
   #screen-app .app-header-inner { max-width: 1552px; } /* = inhoudsbreedte (1600px min. 2× 24px marge) */
 
   .chips { flex-wrap: wrap; overflow: visible; margin: 0; padding: 0; }
@@ -573,93 +473,15 @@ tbody tr + tr > * { border-top: 1px solid var(--border); }
 }
 .weapon { scroll-margin-top: calc(72px + var(--safe-top)); } /* niet onder de kopbalk na springen vanuit Overzicht */
 
-/* ---------- Laptop: knoppen in de zijbalk en instellingen als eigen scherm ----------
-   Op de telefoon blijven sync, slot en tandwiel bovenin staan en opent
-   Instellingen als volledig scherm. Deze onderdelen zijn daar verborgen. */
-.tabbar-desk, .side-lock, .side-sync, .menu-desc { display: none; }
-
-@media (min-width: 900px) {
-  /* De balk bovenin is niet meer nodig: alles staat in de zijbalk. */
-  #screen-app:has(.tabbar) .app-header { display: none; }
-  /* Zonder kopbalk: de inhoud begint onder de statusbalk (iPad) en de
-     kop van de lijstweergave plakt helemaal bovenaan. */
-  #screen-app:has(.tabbar) .app-main { padding-top: calc(16px + var(--safe-top)); }
-  #screen-app:has(.tabbar) .list-head { top: var(--safe-top); }
-  .tabbar-desk { display: flex; }
-
-  /* Sync-status onder naam en versie */
-  .side-sync {
-    /* Even breed als de knoppen eronder; het bolletje staat op de plek van een icoon. */
-    grid-column: 1 / -1; justify-self: stretch; min-width: 0;
-    display: flex; align-items: center; gap: 12px;
-    min-height: 36px; padding: 0 11px; margin-top: 4px;
-    font: inherit; font-size: 0.8rem; font-weight: 600; color: var(--muted);
-    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); cursor: pointer;
-  }
-  .side-sync:hover { color: var(--text); border-color: color-mix(in srgb, var(--text) 25%, var(--border)); }
-  .side-sync:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-  .side-sync-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .side-sync-dot { flex: none; width: 8px; height: 8px; margin: 0 6px; border-radius: 50%; background: var(--muted); }
-  .side-sync[data-state="ok"] .side-sync-dot { background: var(--ok); }
-  .side-sync[data-state="pending"] .side-sync-dot { background: var(--warn); }
-  .side-sync[data-state="error"] .side-sync-dot { background: var(--danger); }
-  .side-sync[data-state="error"] { color: var(--danger); }
-  .side-sync[data-state="syncing"] .side-sync-dot { background: var(--accent); animation: pulse 1s ease-in-out infinite; }
-  .side-sync[data-state="off"] .side-sync-dot { opacity: 0.5; }
-  .tabbar.is-collapsed .side-sync { justify-self: stretch; justify-content: center; width: auto; min-height: 36px; padding: 0; }
-  .tabbar.is-collapsed .side-logo { padding: 0; }
-  .tabbar.is-collapsed .side-sync-label { display: none; }
-
-  /* Vergrendelen helemaal onderin */
-  .side-lock { display: flex; margin-top: auto; }
-
-  /* Het instellingenvenster staat in de pagina: lijst links, onderdeel rechts. */
-  #app-root #dlg-settings {
-    position: static; inset: auto; z-index: auto;
-    width: auto; height: auto; max-width: none; max-height: none; margin: 0; padding: 0;
-    background: none; border: 0; border-radius: 0; box-shadow: none; overflow: visible; animation: none;
-  }
-  #app-root #dlg-settings[open] { display: block; }
-  #app-root #dlg-settings .sheet-header { display: none; } /* titel staat bovenaan de pagina */
-  #app-root #dlg-settings .sheet-body {
-    display: grid; grid-template-columns: minmax(300px, 400px) minmax(0, 640px); gap: 24px; align-items: start;
-    padding: 0; overflow: visible;
-  }
-  /* De schil verbergt de lijst zodra een onderdeel open is; hier blijft hij staan. */
-  #app-root #settings-menu, #app-root #settings-menu[hidden] {
-    display: grid !important; gap: 4px; padding: 0; grid-column: 1; grid-row: 1;
-  }
-  #app-root .menu-group { background: none; border: 0; border-radius: 0; overflow: visible; display: grid; gap: 4px; }
-  #app-root .menu-group + .menu-group { padding-top: 12px; margin-top: 8px; border-top: 1px solid var(--border); }
-  #app-root .menu-group li + li { border-top: 0; }
-  #app-root .menu-row { min-height: 60px; padding: 10px 12px; border-radius: var(--radius-sm); align-items: center; }
-  #app-root .menu-row:hover { background: var(--surface-2); }
-  #app-root .menu-label { display: grid; gap: 2px; }
-  #app-root .menu-desc { display: block; font-size: 0.825rem; font-weight: 400; color: var(--muted); }
-  #app-root .menu-danger .menu-desc { color: var(--muted); }
-  #app-root .menu-summary { font-size: 0.8rem; max-width: 45%; }
-  /* Gekozen onderdeel gemarkeerd, zoals een knop in de zijbalk */
-  #app-root .settings:has(#settings-sync:not([hidden])) [data-page="sync"],
-  #app-root .settings:has(#settings-security:not([hidden])) [data-page="security"],
-  #app-root .settings:has(#settings-backup:not([hidden])) [data-page="backup"],
-  #app-root .settings:has(#settings-about:not([hidden])) [data-page="about"],
-  #app-root .settings:has(#settings-danger:not([hidden])) [data-page="danger"] {
-    background: var(--surface-2); box-shadow: inset 3px 0 0 var(--accent);
-  }
-
-  /* Het onderdeel zelf als kaart, met de naam als kop */
-  #app-root .settings-section {
-    grid-column: 2; grid-row: 1;
-    padding: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow);
-  }
-  #app-root .settings-section::before { content: attr(data-title); font-size: 1.1rem; font-weight: 700; }
-  #app-root .settings-section.danger-zone::before { color: var(--danger); }
+/* Naast de zijbalk: de inhoud mag breed worden. */
+@media (min-width: 760px) and (max-width: 999px) {
+  #screen-app .app-main { padding-left: calc(24px + var(--safe-left)); }
 }
-
-/* iPad (app op het beginscherm, zijbalk): iPadOS legt bovenin een vervaagde
-   band in de achtergrondkleur over de statusbalk. Een lichtere zijbalk lijkt
-   daardoor pas onder die band te beginnen. Met de achtergrondkleur loopt de
-   zijbalk naadloos door tot boven; het lijntje rechts blijft de scheiding. */
-@media (display-mode: standalone) and (any-pointer: coarse) and (min-width: 900px) and (min-height: 600px) {
-  .tabbar { background: var(--bg); }
+@media (min-width: 1000px) {
+  #screen-app .app-main { max-width: calc(1600px + var(--rail)); padding-left: calc(var(--rail) + 24px + var(--safe-left)); }
+  #screen-app .app-header-inner { max-width: none; }
+}
+/* iPad rechtop: de tabbladen staan onder de kopbalk; de kop van de lijst plakt daaronder. */
+@media (min-width: 700px) and (max-width: 999px) and (min-height: 700px) {
+  .list-head { top: calc(118px + var(--safe-top)); }
 }
