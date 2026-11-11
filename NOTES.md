@@ -2,7 +2,7 @@
 
 De **actuele stand**: versie, open punten en sessielog. Werk dit bij aan het eind van elke sessie (zie `CLAUDE.md`). Besluiten staan in `DECISIONS.md`, wensen in `WISHLIST.md`.
 
-Laatst bijgewerkt: 11 november 2026 · versie **1.31.0**
+Laatst bijgewerkt: 11 november 2026 · versie **1.31.1**
 
 ---
 
@@ -17,6 +17,8 @@ PWA om ontgrendelde wapencamo's in Call of Duty Modern Warfare 4 bij te houden, 
 
 ## 4. Sessielog (kort, nieuwste bovenaan)
 
+- **11 nov 2026:**
+  - 1.31.1: kern gelijk aan template 1.4.2 (bredere zijbalk).
 - **11 nov 2026:**
   - 1.31.0: navigatie, Instellingen en kopbalk komen nu uit de kern (template 1.4.1); eigen tabbalk en `settings-view.js` zijn weg. Koppelcode toegevoegd.
 - **10 nov 2026:**

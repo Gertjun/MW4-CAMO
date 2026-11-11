@@ -194,7 +194,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
    --side-w telt mee in de breedte van de lijstweergave (zie onderaan). */
 :root { --side-w: 0px; }
 @media (min-width: 1000px) {
-  :root { --side-w: 216px; }
+  :root { --side-w: 236px; }
   :root:has(#screen-app.nav-collapsed) { --side-w: 68px; }
 }
 
