@@ -56,7 +56,7 @@ Test minimaal deze situaties met een gesimuleerde GitHub API:
 - Test de volgorde van Gold → Platinum → Harmonic Break → Divergence/mastery.
 - Test blokkademeldingen en randgevallen wanneer een wapen of camo nog niet beschikbaar is.
 
-**Acceptatie:** alle in-game vrijspeelregels zijn als testgevallen vastgelegd, inclusief uitzonderingen.
+**Acceptatie:** 11 regressietests controleren de huidige in-game vrijspeelregels: alle negen klasse-aantallen, de 33-wapen-drempel, seizoenswapens die meetellen zonder de drempel te verhogen, en de volgorde van camo's. De in-game bronwaarden blijven periodiek handmatig te verifiëren.
 
 ### 6. Migraties en versiebeheer
 - Test migraties van schema 1, 2 en 3 naar het actuele schema 4.
@@ -96,7 +96,7 @@ Test minimaal deze situaties met een gesimuleerde GitHub API:
 | Tests voor lokale kluis | Toegevoegd |
 | Gesimuleerde sync-tests | Toegevoegd |
 | Versie/precache-controles | Toegevoegd; controle slaat app-root directory correct over |
-| Tests uitvoeren en fouten oplossen | 21 van 21 tests geslaagd op de actuele `main`-commit |
+| Tests uitvoeren en fouten oplossen | 21 van 21 tests geslaagd vóór deze uitbreiding; 32 tests wachten op de CI-run |
 | Echte browser-/iPhone-/twee-apparatentest | Nog handmatig uit te voeren |
 
 ## Grenzen van deze review
