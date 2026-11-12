@@ -27,6 +27,8 @@ export function parsePrecache(source) {
 }
 
 function normalizeLocalPath(value) {
+  // De app-root is een geldige statische precache-entry; index.html blijft daarnaast expliciet opgenomen.
+  if (value === './' || value === '.') return '.';
   if (typeof value !== 'string' || !value.trim()) throw new Error('Leeg pad in PRECACHE.');
   if (/^(?:[a-z]+:)?\/\//i.test(value) || value.startsWith('/')) {
     throw new Error('Precache-pad moet lokaal en relatief zijn: ' + value);
