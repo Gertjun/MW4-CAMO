@@ -20,6 +20,7 @@ test('alle bestanden in PRECACHE bestaan', async () => {
   assert.ok(paths.length > 0, 'PRECACHE is leeg');
   for (const path of paths) {
     const localPath = path.replace(/^\.\//, '');
+    if (!localPath) continue; // './' is de app-root en daarmee een directory.
     await assert.doesNotReject(readFile(new URL(`../${localPath}`, import.meta.url)), `ontbrekend bestand: ${path}`);
   }
 });
