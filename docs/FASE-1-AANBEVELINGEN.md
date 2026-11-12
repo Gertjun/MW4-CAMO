@@ -96,7 +96,7 @@ Test minimaal deze situaties met een gesimuleerde GitHub API:
 | Tests voor lokale kluis | Toegevoegd |
 | Gesimuleerde sync-tests | Toegevoegd |
 | Versie/precache-controles | Toegevoegd; controle slaat app-root directory correct over |
-| Tests uitvoeren en fouten oplossen | 19 van 19 tests geslaagd op de actuele `main`-commit |
+| Tests uitvoeren en fouten oplossen | 21 van 21 tests geslaagd op de actuele `main`-commit |
 | Echte browser-/iPhone-/twee-apparatentest | Nog handmatig uit te voeren |
 
 ## Grenzen van deze review
