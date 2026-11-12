@@ -95,8 +95,8 @@ Test minimaal deze situaties met een gesimuleerde GitHub API:
 | Tests voor AES-GCM en wachtwoordsleutels | Toegevoegd |
 | Tests voor lokale kluis | Toegevoegd |
 | Gesimuleerde sync-tests | Toegevoegd |
-| Versie/precache-controles | Toegevoegd; controle slaat app-root directory correct over |
-| Tests uitvoeren en fouten oplossen | 21 van 21 tests geslaagd vóór deze uitbreiding; 32 tests wachten op de CI-run |
+| Tests voor camo-/mastery-regels | 11 regressietests toegevoegd voor drempels, seizoenswapens en volgorde |\n| Versie/precache-controles | Toegevoegd; controle slaat app-root directory correct over |
+| Tests uitvoeren en fouten oplossen | 32 van 32 tests geslaagd op fase-1-branch; main-controle loopt |
 | Echte browser-/iPhone-/twee-apparatentest | Nog handmatig uit te voeren |
 
 ## Grenzen van deze review
