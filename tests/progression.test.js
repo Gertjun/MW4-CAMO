@@ -40,8 +40,12 @@ test('Platinum telt het eigen wapen mee en blokkeert één onder de drempel', ()
 
 test('seizoenswapens tellen mee voor Platinum, maar verhogen de drempel niet', () => {
   const han = weaponById('han-86');
-  const goldIds = WEAPONS.filter((w) => w.cls === 'ar' && w.id !== han.id).slice(0, 7).map((w) => key(w.id, 'gold'));
-  assert.ok(goldIds.includes(key('cronen-osprey', 'gold')) || WEAPONS.filter((w) => w.cls === 'ar' && w.id !== han.id).slice(0, 7).some(w => w.season));
+  const goldIds = [
+    ...WEAPONS.filter((w) => w.cls === 'ar' && w.id !== han.id && !w.season).slice(0, 6).map((w) => key(w.id, 'gold')),
+    key('cronen-osprey', 'gold'),
+  ];
+  assert.equal(goldIds.length, 7);
+  assert.equal(missingFor(doneWith(...goldIds), han, { id: 'platinum' }), null);
   assert.equal(missingFor(doneWith(...goldIds), han, { id: 'platinum' }), null);
 });
 
@@ -74,7 +78,7 @@ test('Divergence en mastery-camo’s vereisen Harmonic Break op 33 wapens', () =
 });
 
 test('seizoenswapens kunnen het 33e Harmonic Break-wapen zijn', () => {
-  const ids = WEAPONS.filter((w) => w.id !== 'cronen-osprey').slice(0, 32).map((w) => key(w.id, 'harmonic'));
+  const ids = WEAPONS.filter((w) => w.id !== 'cronen-osprey').slice(0, 33).map((w) => key(w.id, 'harmonic'));
   assert.equal(masteryMissing(doneWith(...ids)), null);
 });
 
@@ -82,13 +86,13 @@ test('Platinum en Harmonic Break volgen de volgorde van eerdere camo’s op hetz
   const weapon = weaponById('han-86');
   const camos = camosOf(weapon);
   const platinumPrerequisites = earlierOnWeapon(weapon, { id: 'platinum' });
-  assert.equal(platinumPrerequisites.length, 11);
+  assert.equal(platinumPrerequisites.length, 12);
   assert.deepEqual(platinumPrerequisites.slice(-1), ['gold']);
   assert.equal(platinumPrerequisites.includes('mil1'), true);
   assert.equal(platinumPrerequisites.includes('sp1'), true);
 
   const harmonicPrerequisites = earlierOnWeapon(weapon, { id: 'harmonic' });
-  assert.equal(harmonicPrerequisites.length, 12);
+  assert.equal(harmonicPrerequisites.length, 13);
   assert.deepEqual(harmonicPrerequisites.slice(-2), ['gold', 'platinum']);
   assert.equal(camos.length, 14);
 });
