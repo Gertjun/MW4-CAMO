@@ -6,10 +6,12 @@ Laatst bijgewerkt: 12 november 2026
 
 ## Gepland
 
-- [ ] Uitgebreide tests voor mastery-/camo-vrijspeelregels en handmatige tests op echte apparaten.
 - [ ] Veilige tombstone-opruiming ontwerpen met bevestiging van alle gekoppelde apparaten.
 
 ## Gerealiseerd
+
+- [x] Uitgebreide regressietests voor mastery-/camo-vrijspeelregels en handmatige tests op echte apparaten en twee apparaten.
+- [x] Aanvullende tests voor wachtwoord wijzigen en herstel van versleutelde back-ups.
 
 - [x] Automatische testbasis voor kluis, versleuteling, synchronisatie, records, migraties en offline-cache.
 - [x] Regressietests voor camo-/mastery-vrijspeelregels, lanceeraantallen, seizoenswapens en prerequisite-volgorde.
