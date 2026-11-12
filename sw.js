@@ -185,6 +185,7 @@ const PRECACHE = [
   './js/core/shell.js',
   './js/core/vault.js',
   './js/core/crypto.js',
+  './js/core/deletions.js',
   './js/core/biometric.js',
   './js/core/github.js',
   './js/core/sync.js',
