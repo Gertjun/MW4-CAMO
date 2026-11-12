@@ -32,3 +32,7 @@ Besluiten die een volgende sessie moet kennen. Oude besluiten pas je niet aan; e
 ### D9 – Verwijdermarkeringen niet automatisch opruimen (12 nov 2026)
 - **Besluit:** verwijdermarkeringen (tombstones) blijven bewaard zolang de app niet kan vaststellen dat alle gekoppelde apparaten de verwijdering hebben ontvangen.
 - **Waarom:** een apparaat dat langer offline is dan de bewaartermijn kan anders oude records opnieuw synchroniseren. Opslaggroei is veiliger dan stil verlies van een verwijdering.
+
+### D10 – Vrijspeelregels rechtstreeks testen (12 nov 2026)
+- **Besluit:** de zuivere functies voor camo-vrijspeelregels zijn exporteerbaar vanuit `js/app.js`, zodat de echte productieregels met automatische regressietests kunnen worden gecontroleerd.
+- **Waarom:** tests moeten dezelfde regels controleren die de app gebruikt, niet een tweede testimplementatie.
