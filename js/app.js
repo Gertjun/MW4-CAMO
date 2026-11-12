@@ -143,6 +143,18 @@ function masteryMissing(done) {
 
 const TIER_NAMES = { gold: 'Gold', platinum: 'Platinum', harmonic: 'Harmonic Break' };
 
+/**
+ * Zuivere vrijspeelregels, ook beschikbaar voor regressietests.
+ * done bevat record-id's van reeds vrijgespeelde camo's.
+ */
+export const progressionRules = {
+  missingFor,
+  masteryMissing,
+  earlierOnWeapon,
+  key,
+};
+
+
 /** Tekst voor de pop-up: "Je hebt Gold nodig op 8 assault rifles. Je hebt er 6; nog 2 nodig." */
 function shortText(m, what) {
   return `Je hebt ${TIER_NAMES[m.tier]} nodig op ${m.need} ${what}. Je hebt er nu ${m.have}, dus nog ${m.short} nodig. Wapens zonder ${TIER_NAMES[m.tier]}:`;

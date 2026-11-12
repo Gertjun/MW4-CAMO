@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.31.3 – 2026-11-12
+
+**Verbeterd**
+- De vrijspeelregels voor Platinum, Harmonic Break, Divergence en mastery-camo's hebben nu uitgebreide regressietests. Ook de vaste aantallen bij lancering, seizoenswapens en de volgorde van eerdere camo's worden gecontroleerd.
+- De vrijspeelregels zijn als zuivere functies beschikbaar gemaakt voor automatische tests; het gedrag in de app is niet veranderd.
+
+
 ## 1.31.2 – 2026-11-12
 
 **Verbeterd**
