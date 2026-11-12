@@ -22,3 +22,7 @@ jobs:
           node-version: 22
       - name: Tests uitvoeren
         run: npm test
+      - name: PWA-Core release-pin valideren
+        run: node tools/pin.mjs verify
+      - name: PWA-Core service-worker-precache valideren
+        run: node tools/precache.mjs

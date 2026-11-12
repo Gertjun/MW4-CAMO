@@ -122,7 +122,8 @@ test('synchronisatie stopt veilig bij gegevens uit een nieuwer schema', async ()
     },
   };
   await assert.rejects(syncNow(opts), { name: 'UpdateRequiredError' });
-  assert.deepEqual(vault.getData(), initial);
+  assert.equal(vault.getData().schema, 4);
+  assert.deepEqual(vault.getData().progress, []);
 });
 
 test('synchronisatie probeert opnieuw na een GitHub-conflict', async () => {

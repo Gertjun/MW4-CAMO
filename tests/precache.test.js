@@ -24,3 +24,9 @@ test('alle bestanden in PRECACHE bestaan', async () => {
     await assert.doesNotReject(readFile(new URL(`../${localPath}`, import.meta.url)), `ontbrekend bestand: ${path}`);
   }
 });
+
+
+test('precache-parser accepteert de bestaande app-root entry', async () => {
+  const { parsePrecache } = await import('../tools/precache.mjs');
+  assert.deepEqual(parsePrecache("const PRECACHE = ['./', './index.html'];"), ['./', './index.html']);
+});
