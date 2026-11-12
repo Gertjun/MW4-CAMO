@@ -14,7 +14,7 @@
 // De wapen- en camolijst zelf staat in js/catalog.js.
 
 import { h, today } from './core/dom.js';
-import { newRecord, updateById, mergeCollections, purgeTombstones } from './core/records.js';
+import { newRecord, updateById, mergeCollections } from './core/records.js';
 import {
   CLASSES, WEAPONS, camosOf, classById, CAMOS_PER_WEAPON, imageOf, weaponImageOf,
   PRESTIGE_CAMOS, MASTERY_CAMOS, MASTERY_MODES, LAUNCH_COUNT, LAUNCH_IN_CLASS,
@@ -25,7 +25,6 @@ import { APP } from './config.js';
 // 1 = alleen camo-voortgang; 2 = ook loadouts; 3 = ook vastgepinde wapens,
 // prestige- en mastery-camo's.
 const SCHEMA = 4;
-const TOMBSTONE_DAYS = 180;
 
 // Schermkeuzes (alleen tijdens gebruik, niet in de kluis).
 // layout: 'grid' (kaarten) of 'list' (tabel met alle camo's naast elkaar).
@@ -822,9 +821,9 @@ export const app = {
     // Schema 3 → 4: volgorde van het Overzicht erbij (null = standaardvolgorde).
     data.overviewOrder ??= null;
     data.schema = Math.max(data.schema || 0, SCHEMA);
-    data.progress = purgeTombstones(data.progress, TOMBSTONE_DAYS);
-    data.loadouts = purgeTombstones(data.loadouts, TOMBSTONE_DAYS);
-    data.pins = purgeTombstones(data.pins, TOMBSTONE_DAYS);
+    // Verwijdermarkeringen blijven bewaard: een apparaat kan langer dan
+    // 180 dagen offline zijn. Zonder bevestiging van alle apparaten is
+    // automatisch opruimen niet veilig (een oude kopie kan terugkomen).
     return data;
   },
 
