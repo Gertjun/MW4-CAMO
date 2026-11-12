@@ -129,11 +129,16 @@ test('synchronisatie probeert opnieuw na een GitHub-conflict', async () => {
   await vault.reset();
   let remote = null;
   let revision = 0;
-  let conflicts = 0;
+  let conflictReturned = false;
+  let putAttempts = 0;
   globalThis.fetch = async (url, options = {}) => {
     if (options.method === 'PUT') {
-      if (conflicts++ === 0) return new Response('{}', { status: 409 });
+      putAttempts++;
       const body = JSON.parse(options.body);
+      if (body.sha && !conflictReturned) {
+        conflictReturned = true;
+        return new Response('{}', { status: 409 });
+      }
       remote = {
         sha: `retry-sha-${++revision}`,
         envelope: JSON.parse(Buffer.from(body.content, 'base64').toString('utf8')),
@@ -155,6 +160,7 @@ test('synchronisatie probeert opnieuw na een GitHub-conflict', async () => {
   assert.equal(await syncNow(opts), 'uploaded');
   await vault.setData({ ...initial, progress: [{ id: 'retry', done: true, updatedAt: 60 }] });
   assert.equal(await syncNow(opts), 'uploaded');
-  assert.equal(conflicts, 2);
+  assert.equal(conflictReturned, true);
+  assert.equal(putAttempts, 3);
   assert.deepEqual(vault.getData().progress.map((r) => r.id), ['retry']);
 });
