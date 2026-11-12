@@ -21,7 +21,7 @@ PWA om ontgrendelde wapencamo's in Call of Duty Modern Warfare 4 bij te houden, 
 - **12 nov 2026:**
   - Featurebranch `migration/pwa-core-v1.0.0` aangemaakt vanaf `0cb8284` na goedkeuring van het migratieontwerp.
   - PWA-Core v1.0.0 geïntegreerd op de featurebranch; bestaande opslagprefix, datapad en app-schema 4 behouden.
-  - Synthetische legacy-kluis-, deletion-ledger- en merge-regressietests toegevoegd; CI- en browseracceptatie nog uit te voeren.
+  - CI op PR #4: 61 tests geslaagd; release-pin en alle 13 Core-bestanden in de precache gevalideerd. Browser-/iPhone-/twee-apparatenacceptatie met uitsluitend synthetische gegevens staat nog open.
 
 - **12 nov 2026:**
   - 1.31.4: vijf regressietests toegevoegd voor wachtwoord wijzigen en back-upherstel; alle zes kluistests slagen lokaal.
