@@ -2,7 +2,7 @@
 
 De **actuele stand**: versie, open punten en sessielog. Werk dit bij aan het eind van elke sessie (zie `CLAUDE.md`). Besluiten staan in `DECISIONS.md`, wensen in `WISHLIST.md`.
 
-Laatst bijgewerkt: 12 november 2026 · versie **1.31.2**
+Laatst bijgewerkt: 12 november 2026 · versie **1.31.3**
 
 ---
 
@@ -14,12 +14,13 @@ PWA om ontgrendelde wapencamo's in Call of Duty Modern Warfare 4 bij te houden, 
 
 ## 3. Open punten en bekende problemen
 - Wapenlijst per seizoen bijwerken (staat in de code).
-- Fase 1: tests voor mastery/camo-vrijspeelregels uitbreiden en echte browser-/iPhone-/twee-apparatentests uitvoeren.
+- Fase 1: automatische tests voor mastery-/camo-vrijspeelregels toegevoegd; echte browser-/iPhone-/twee-apparatentests nog uitvoeren.
 - Tombstones worden bewust niet automatisch opgeruimd; een veilige opruimstrategie vraagt bevestiging van alle gekoppelde apparaten.
 
 ## 4. Sessielog (kort, nieuwste bovenaan)
 
 - **12 nov 2026:**
+  - 1.31.3: regressietests toegevoegd voor Platinum/Harmonic-drempels, seizoenswapens, mastery-vrijgave en camo-volgorde.
   - 1.31.2: automatische tests toegevoegd; migratie bewaart tombstones onbeperkt om herintroductie van verwijderde gegevens door lang offline apparaten te voorkomen.
 - **11 nov 2026:**
   - 1.31.1: kern gelijk aan template 1.4.2 (bredere zijbalk).
