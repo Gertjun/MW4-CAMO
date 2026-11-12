@@ -2,7 +2,7 @@
 
 De **actuele stand**: versie, open punten en sessielog. Werk dit bij aan het eind van elke sessie (zie `CLAUDE.md`). Besluiten staan in `DECISIONS.md`, wensen in `WISHLIST.md`.
 
-Laatst bijgewerkt: 12 november 2026 · versie **1.31.4**
+Laatst bijgewerkt: 12 november 2026 · versie **1.31.5**
 
 ---
 
@@ -17,6 +17,11 @@ PWA om ontgrendelde wapencamo's in Call of Duty Modern Warfare 4 bij te houden, 
 - Tombstones worden bewust niet automatisch opgeruimd; een veilige opruimstrategie vraagt bevestiging van alle gekoppelde apparaten.
 
 ## 4. Sessielog (kort, nieuwste bovenaan)
+
+- **12 nov 2026:**
+  - Featurebranch `migration/pwa-core-v1.0.0` aangemaakt vanaf `0cb8284` na goedkeuring van het migratieontwerp.
+  - PWA-Core v1.0.0 geïntegreerd op de featurebranch; bestaande opslagprefix, datapad en app-schema 4 behouden.
+  - Synthetische legacy-kluis-, deletion-ledger- en merge-regressietests toegevoegd; CI- en browseracceptatie nog uit te voeren.
 
 - **12 nov 2026:**
   - 1.31.4: vijf regressietests toegevoegd voor wachtwoord wijzigen en back-upherstel; alle zes kluistests slagen lokaal.

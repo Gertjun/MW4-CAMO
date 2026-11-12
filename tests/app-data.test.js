@@ -65,3 +65,14 @@ test('merge bewaart een verwijdermarkering van een loadout', () => {
   const remote = { schema: 4, progress: [], loadouts: [{ id: 'lo', name: 'Loadout', updatedAt: 40 }], pins: [], overviewOrder: null };
   assert.equal(app.merge(local, remote).loadouts[0].deleted, true);
 });
+
+
+test('app-merge behoudt onbekende top-level metadata voor de Core-ledger', () => {
+  const local = { schema: 4, progress: [], loadouts: [], pins: [], overviewOrder: null, customMetadata: { keep: true }, __pwaSync: { version: 1, marker: 'synthetic' } };
+  const remote = { schema: 4, progress: [], loadouts: [], pins: [], overviewOrder: null, remoteMetadata: 'also-kept' };
+  const merged = app.merge(local, remote);
+  assert.deepEqual(merged.customMetadata, { keep: true });
+  assert.equal(merged.remoteMetadata, 'also-kept');
+  assert.deepEqual(merged.__pwaSync, { version: 1, marker: 'synthetic' });
+  assert.equal(merged.schema, 4);
+});

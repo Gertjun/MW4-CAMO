@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.31.5 – 2026-11-12
+
+**Gewijzigd**
+- De gedeelde kern is vervangen door de onveranderlijk gepinde PWA-Core v1.0.0-release; de app-specifieke gegevensstructuur en het schema blijven ongewijzigd.
+- De synchronisatie registreert nu apparaten en verwijderbevestigingen via de versleutelde `__pwaSync`-administratie.
+
+**Toegevoegd**
+- Apparaatbeheer in Instellingen → Synchronisatie en regressietests voor legacy-kluizen, verwijderingen en back-upherstel.
+- CI-controles voor de Core-release-pin en service-worker-precache.
+
 ## 1.31.4 – 2026-11-12
 
 **Verbeterd**

@@ -1,5 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { webcrypto } from 'node:crypto';
+
+globalThis.crypto = webcrypto;
 
 class MemoryStorage {
   #data = new Map();
@@ -14,6 +17,11 @@ Object.defineProperty(globalThis, 'localStorage', { value: new MemoryStorage(), 
 
 const vault = await import('../js/core/vault.js');
 const { sameKey } = await import('../js/core/crypto.js');
+
+function withoutSyncState(data) {
+  const { __pwaSync, ...appData } = data;
+  return appData;
+}
 
 test('kluis aanmaken, vergrendelen, ontgrendelen en opslaan', async () => {
   const initial = { schema: 4, progress: [{ id: 'm4:gold', done: true }], loadouts: [], pins: [], overviewOrder: null };
@@ -85,7 +93,8 @@ test('back-up terugzetten herstelt de oudere gegevens en markeert synchronisatie
 
   const result = await vault.restoreBackup(backup, phase2Password);
   assert.equal(result.sameKey, true);
-  assert.deepEqual(vault.getData(), initial);
+  assert.deepEqual(withoutSyncState(vault.getData()), initial);
+  assert.deepEqual(vault.getData().__pwaSync, { version: 1, devices: {}, deletions: {} });
   assert.equal(vault.getSyncMeta().dirty, true);
   assert.equal(vault.getSyncMeta().keyDirty, true);
   assert.equal(vault.getSyncMeta().force, true);
@@ -118,8 +127,73 @@ test('back-up van een andere kluis vervangt ook de lokale datasleutel', async ()
   const result = await vault.restoreBackup(backup, phase2Password);
 
   assert.equal(result.sameKey, false);
-  assert.deepEqual(vault.getData(), backupData);
+  assert.deepEqual(withoutSyncState(vault.getData()), backupData);
   vault.lock();
   await vault.unlockWithPassword(phase2Password);
-  assert.deepEqual(vault.getData(), backupData);
+  assert.deepEqual(withoutSyncState(vault.getData()), backupData);
+  assert.deepEqual(vault.getData().__pwaSync, { version: 1, devices: {}, deletions: {} });
+});
+
+test('bestaande Core 1.0.0-kluis opent legacy-envelope zonder sleutel- of dataconversie', async () => {
+  await vault.reset();
+  const password = 'synthetische legacy wachtzin 2026';
+  const salt = Uint8Array.from({ length: 16 }, (_, i) => i + 1);
+  const wrapIv = Uint8Array.from({ length: 12 }, (_, i) => i + 21);
+  const payloadIv = Uint8Array.from({ length: 12 }, (_, i) => i + 41);
+  const dataKeyBytes = Uint8Array.from({ length: 32 }, (_, i) => i + 1);
+  const legacyData = {
+    schema: 4,
+    progress: [{ id: 'synthetic-weapon:gold', weaponId: 'synthetic-weapon', camoId: 'gold', done: true, updatedAt: 100 }],
+    loadouts: [{ id: 'synthetic-loadout', name: 'Synthetische loadout', updatedAt: 110 }],
+    pins: [],
+    overviewOrder: null,
+  };
+  const passwordMaterial = await webcrypto.subtle.importKey(
+    'raw', new TextEncoder().encode(password.normalize('NFC')), 'PBKDF2', false, ['deriveKey'],
+  );
+  const wrappingKey = await webcrypto.subtle.deriveKey(
+    { name: 'PBKDF2', hash: 'SHA-256', salt, iterations: 600_000 },
+    passwordMaterial,
+    { name: 'AES-GCM', length: 256 },
+    false,
+    ['wrapKey', 'unwrapKey'],
+  );
+  const dataKey = await webcrypto.subtle.importKey(
+    'raw', dataKeyBytes, { name: 'AES-GCM' }, true, ['encrypt', 'decrypt'],
+  );
+  const wrappedKey = await webcrypto.subtle.wrapKey(
+    'raw', dataKey, wrappingKey, { name: 'AES-GCM', iv: wrapIv },
+  );
+  const payload = await webcrypto.subtle.encrypt(
+    { name: 'AES-GCM', iv: payloadIv }, dataKey,
+    new TextEncoder().encode(JSON.stringify(legacyData)),
+  );
+  const b64 = (bytes) => Buffer.from(bytes).toString('base64');
+  const envelope = {
+    format: 'pwa-vault',
+    version: 1,
+    kdf: { name: 'PBKDF2-SHA256', iterations: 600_000, salt: b64(salt) },
+    wrappedKey: { iv: b64(wrapIv), data: b64(wrappedKey) },
+    payload: { iv: b64(payloadIv), data: b64(payload) },
+    updatedAt: 123456789,
+  };
+
+  localStorage.setItem(vault.KEYS.vault, JSON.stringify(envelope));
+  assert.equal(vault.hasVault(), true);
+  await vault.unlockWithPassword(password);
+  assert.deepEqual(vault.getData(), legacyData);
+  const openedKey = new Uint8Array(await webcrypto.subtle.exportKey('raw', vault.getDataKey()));
+  assert.deepEqual(openedKey, dataKeyBytes);
+  assert.equal(vault.getEnvelope().format, 'pwa-vault');
+  assert.equal(vault.getEnvelope().version, 1);
+
+  await vault.prepareSyncData();
+  await vault.flush();
+  assert.deepEqual(vault.getData().progress, legacyData.progress);
+  assert.deepEqual(vault.getData().loadouts, legacyData.loadouts);
+  assert.equal(vault.getData().schema, 4);
+  assert.equal(vault.getData().__pwaSync.version, 1);
+  const persistedKey = new Uint8Array(await webcrypto.subtle.exportKey('raw', vault.getDataKey()));
+  assert.deepEqual(persistedKey, dataKeyBytes);
+  assert.equal(vault.getEnvelope().version, 1);
 });
