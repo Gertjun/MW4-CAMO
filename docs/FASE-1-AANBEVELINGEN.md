@@ -6,7 +6,7 @@ Dit document bundelt de technische aanbevelingen uit de repositoryreview en de u
 
 De app heeft een goede basis: de kluis gebruikt AES-GCM, wachtwoorden worden via PBKDF2 afgeleid, synchronisatie verloopt via een versleuteld bestand en de service worker houdt de app offline beschikbaar. De belangrijkste zwakte was niet de versleuteling, maar het ontbreken van geautomatiseerde tests rond gegevensverlies en synchronisatie.
 
-**Prioriteit 1: voorkom dat verwijderde gegevens na lange offlineperioden terugkomen.** De huidige code ruimt verwijdermarkeringen (tombstones) na 180 dagen op. Een apparaat dat langer offline is, kan nog een oude versie van een record hebben en die na terugkeer opnieuw synchroniseren. Zonder een mechanisme dat bevestigt dat alle apparaten de verwijdering hebben ontvangen, is opruimen niet veilig.
+**Prioriteit 1: voorkom dat verwijderde gegevens na lange offlineperioden terugkomen.** De oorspronkelijke code ruimde verwijdermarkeringen (tombstones) na 180 dagen op. Dat is aangepast: tombstones blijven nu bewaard zolang niet bekend is dat alle apparaten de verwijdering hebben ontvangen. Zonder een mechanisme dat bevestigt dat alle apparaten de verwijdering hebben ontvangen, is opruimen niet veilig.
 
 ## Aanbevelingen
 
@@ -95,8 +95,8 @@ Test minimaal deze situaties met een gesimuleerde GitHub API:
 | Tests voor AES-GCM en wachtwoordsleutels | Toegevoegd |
 | Tests voor lokale kluis | Toegevoegd |
 | Gesimuleerde sync-tests | Toegevoegd |
-| Versie/precache-controles | Toegevoegd |
-| Tests uitvoeren en fouten oplossen | Nog te bevestigen via GitHub Actions |
+| Versie/precache-controles | Toegevoegd; controle slaat app-root directory correct over |
+| Tests uitvoeren en fouten oplossen | Eerste run vond twee problemen; gecorrigeerd, definitieve run volgt |
 | Echte browser-/iPhone-/twee-apparatentest | Nog handmatig uit te voeren |
 
 ## Grenzen van deze review
