@@ -83,3 +83,78 @@ test('synchronisatie uploadt, herkent gelijke versies, downloadt en voegt samen'
   }) }), 'merged');
   assert.deepEqual(vault.getData().loadouts.map((r) => r.id).sort(), ['local-lo', 'remote-lo']);
 });
+
+
+test('synchronisatie stopt veilig bij gegevens uit een nieuwer schema', async () => {
+  await vault.reset();
+  let remote = null;
+  let revision = 0;
+  globalThis.fetch = async (url, options = {}) => {
+    if (options.method === 'PUT') {
+      const body = JSON.parse(options.body);
+      remote = {
+        sha: `future-sha-${++revision}`,
+        envelope: JSON.parse(Buffer.from(body.content, 'base64').toString('utf8')),
+      };
+      return Response.json({ content: { sha: remote.sha } });
+    }
+    if (!remote) return new Response('{}', { status: 404 });
+    return Response.json({
+      sha: remote.sha,
+      encoding: 'base64',
+      content: Buffer.from(JSON.stringify(remote.envelope)).toString('base64'),
+    });
+  };
+
+  const initial = { schema: 4, progress: [], loadouts: [], pins: [], overviewOrder: null };
+  await vault.create('een sterke wachtzin van twaalf tekens', initial);
+  const settings = { owner: 'owner', repo: 'private-data', branch: 'main', path: 'vault.json', token: 'test-token' };
+  const opts = { settings, merge: (local, cloud) => ({ ...cloud, ...local }), schemaVersion: 4 };
+  await syncNow(opts);
+
+  const future = { ...initial, schema: 5, progress: [{ id: 'future', done: true, updatedAt: 50 }] };
+  remote = {
+    sha: `future-sha-${++revision}`,
+    envelope: {
+      ...remote.envelope,
+      payload: await encryptJSON(future, vault.getDataKey()),
+      updatedAt: Date.now(),
+    },
+  };
+  await assert.rejects(syncNow(opts), { name: 'UpdateRequiredError' });
+  assert.deepEqual(vault.getData(), initial);
+});
+
+test('synchronisatie probeert opnieuw na een GitHub-conflict', async () => {
+  await vault.reset();
+  let remote = null;
+  let revision = 0;
+  let conflicts = 0;
+  globalThis.fetch = async (url, options = {}) => {
+    if (options.method === 'PUT') {
+      if (conflicts++ === 0) return new Response('{}', { status: 409 });
+      const body = JSON.parse(options.body);
+      remote = {
+        sha: `retry-sha-${++revision}`,
+        envelope: JSON.parse(Buffer.from(body.content, 'base64').toString('utf8')),
+      };
+      return Response.json({ content: { sha: remote.sha } });
+    }
+    if (!remote) return new Response('{}', { status: 404 });
+    return Response.json({
+      sha: remote.sha,
+      encoding: 'base64',
+      content: Buffer.from(JSON.stringify(remote.envelope)).toString('base64'),
+    });
+  };
+
+  const initial = { schema: 4, progress: [], loadouts: [], pins: [], overviewOrder: null };
+  await vault.create('een sterke wachtzin van twaalf tekens', initial);
+  const settings = { owner: 'owner', repo: 'private-data', branch: 'main', path: 'vault.json', token: 'test-token' };
+  const opts = { settings, merge: (local, cloud) => ({ ...cloud, ...local }), schemaVersion: 4 };
+  assert.equal(await syncNow(opts), 'uploaded');
+  await vault.setData({ ...initial, progress: [{ id: 'retry', done: true, updatedAt: 60 }] });
+  assert.equal(await syncNow(opts), 'uploaded');
+  assert.equal(conflicts, 2);
+  assert.deepEqual(vault.getData().progress.map((r) => r.id), ['retry']);
+});
