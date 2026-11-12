@@ -12,3 +12,4 @@ Laatst bijgewerkt: 12 november 2026
 ## Gerealiseerd
 
 - [x] Automatische testbasis voor kluis, versleuteling, synchronisatie, records, migraties en offline-cache.
+- [x] Regressietests voor camo-/mastery-vrijspeelregels, lanceeraantallen, seizoenswapens en prerequisite-volgorde.
