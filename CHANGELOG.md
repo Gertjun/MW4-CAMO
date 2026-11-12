@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.31.4 – 2026-11-12
+
+**Verbeterd**
+- De kluistests controleren nu ook wachtwoord wijzigen, een verkeerd huidig wachtwoord, back-upherstel, een verkeerd back-upwachtwoord en herstel van een back-up uit een andere kluis.
+- De tests controleren dat gegevens en datasleutels behouden of correct vervangen worden en dat herstel synchronisatie markeert om de back-up naar GitHub terug te zetten.
+
+
 ## 1.31.3 – 2026-11-12
 
 **Verbeterd**

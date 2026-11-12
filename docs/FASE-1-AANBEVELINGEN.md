@@ -97,8 +97,8 @@ Test minimaal deze situaties met een gesimuleerde GitHub API:
 | Gesimuleerde sync-tests | Toegevoegd |
 | Tests voor camo-/mastery-regels | 11 regressietests toegevoegd voor drempels, seizoenswapens en volgorde |
 | Versie/precache-controles | Toegevoegd; controle slaat app-root directory correct over |
-| Tests uitvoeren en fouten oplossen | 32 van 32 tests geslaagd op fase-1-branch; main-controle loopt |
-| Echte browser-/iPhone-/twee-apparatentest | Nog handmatig uit te voeren |
+| Tests uitvoeren en fouten oplossen | 32 van 32 tests geslaagd op main |
+| Echte browser-/iPhone-/twee-apparatentest | Succesvol uitgevoerd en bevestigd op 12 november 2026 |
 
 ## Grenzen van deze review
 
