@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.31.2 – 2026-11-12
+
+**Verbeterd**
+- Verwijdermarkeringen worden niet meer automatisch na 180 dagen verwijderd. Zo kan een apparaat dat lang offline was geen oude loadout of ander verwijderd record terugzetten bij synchronisatie. De opslag kan hierdoor langzaam groeien; een veilige opruimfunctie vraagt eerst bevestiging van alle gekoppelde apparaten.
+- Automatische tests controleren nu de kluis, versleuteling, synchronisatie, record-samenvoeging, migraties, versies en bestanden in de offline-cache.
+
 ## 1.31.1 – 2026-11-11
 
 **Verbeterd**

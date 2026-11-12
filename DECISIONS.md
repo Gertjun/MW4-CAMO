@@ -28,3 +28,7 @@ Besluiten die een volgende sessie moet kennen. Oude besluiten pas je niet aan; e
 ### D8 – Navigatie en Instellingen uit de kern (11 nov 2026, 1.31.0)
 - **Besluit:** de app heeft geen eigen tabbalk, zijbalk of instellingenweergave meer; schermen staan in `app.screens` en de schil tekent ze (template D6). Vervangt D5 voor de vorm van de navigatie; de drie schermen blijven.
 - **Waarom:** Geert wil al zijn apps dezelfde indeling geven.
+
+### D9 – Verwijdermarkeringen niet automatisch opruimen (12 nov 2026)
+- **Besluit:** verwijdermarkeringen (tombstones) blijven bewaard zolang de app niet kan vaststellen dat alle gekoppelde apparaten de verwijdering hebben ontvangen.
+- **Waarom:** een apparaat dat langer offline is dan de bewaartermijn kan anders oude records opnieuw synchroniseren. Opslaggroei is veiliger dan stil verlies van een verwijdering.
