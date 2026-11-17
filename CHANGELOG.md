@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.32.0 – 2026-11-17
+
+**Toegevoegd**
+- Nieuw apparaat koppelen door op de laptop een QR-code te tonen en die met de iPhone-camera te scannen.
+- De QR-link opent het bestaande-koppelscherm en vult de versleutelde overdracht automatisch in; de pincode blijft apart.
+- De overdracht gebruikt PWA-Core v1.2.1 met app-context, AES-256-GCM, korte geldigheid en lokale replaybescherming.
+- Het wachtwoord van de kluis wordt op het nieuwe apparaat ingevoerd; de kluis zelf wordt veilig vanaf de ingestelde private GitHub-repository opgehaald.
+
+**Behouden**
+- Bestaande kluizen, gegevensstructuur, opslagprefix, passkeys en synchronisatieformaat blijven ongewijzigd.
+
 ## 1.31.6 – 2026-11-17
 
 **Gewijzigd**
