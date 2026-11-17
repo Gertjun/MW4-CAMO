@@ -36,3 +36,8 @@ Besluiten die een volgende sessie moet kennen. Oude besluiten pas je niet aan; e
 ### D10 – Vrijspeelregels rechtstreeks testen (12 nov 2026)
 - **Besluit:** de zuivere functies voor camo-vrijspeelregels zijn exporteerbaar vanuit `js/app.js`, zodat de echte productieregels met automatische regressietests kunnen worden gecontroleerd.
 - **Waarom:** tests moeten dezelfde regels controleren die de app gebruikt, niet een tweede testimplementatie.
+
+
+### D11 – QR-koppeling van een nieuw apparaat (17 nov 2026)
+- **Besluit:** MW4 toont op een bestaand, ontgrendeld apparaat een QR-link met een tijdelijke, versleutelde overdracht van alleen de GitHub-synchronisatie-instellingen. De pincode wordt apart getoond. Het nieuwe apparaat voert zelf het kluiswachtwoord in en haalt de versleutelde kluis via GitHub op.
+- **Veiligheidsgrenzen:** overdracht is gebonden aan `mw4-camo/device-pairing/v1`, verloopt na drie minuten en wordt lokaal tegen hergebruik beschermd. Passkeys en kluisgegevens worden niet via de QR-code overgedragen; de bestaande kluis- en synchronisatiemechanismen blijven leidend.
