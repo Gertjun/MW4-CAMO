@@ -10,7 +10,7 @@ import { webcrypto } from 'node:crypto';
 // bewijs van ondersteuning door een echte browser of platform-authenticator.
 const root = await mkdtemp(path.join(tmpdir(), 'pwa-core-biometric-'));
 await mkdir(path.join(root, 'js', 'core'), { recursive: true });
-for (const file of ['biometric.js', 'crypto.js']) {
+for (const file of ['biometric.js', 'biometric-factory.js', 'crypto.js']) {
   await cp(new URL(`../js/core/${file}`, import.meta.url), path.join(root, 'js', 'core', file));
 }
 await writeFile(path.join(root, 'js', 'config.js'), `
@@ -101,6 +101,7 @@ test('enroll bewaart PRF-credentialmetadata en unlock levert dezelfde datasleute
       assert.equal(options.publicKey.authenticatorSelection.residentKey, 'required');
       assert.equal(options.publicKey.authenticatorSelection.userVerification, 'required');
       assert.ok(options.publicKey.extensions.prf.eval.first instanceof Uint8Array);
+      assert.ok(options.publicKey.user.id.byteLength <= 64, 'WebAuthn user.id mag maximaal 64 bytes zijn');
       return {
         rawId: credentialId,
         getClientExtensionResults: () => ({ prf: { enabled: true, results: { first: secret } } }),

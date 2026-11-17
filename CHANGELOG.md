@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.31.6 – 2026-11-17
+
+**Gewijzigd**
+- De gedeelde kern is bijgewerkt naar de officiële, onveranderlijk gepinde PWA-Core v1.2.1-release.
+- De compatibele kluis-, synchronisatie- en passkey-facades blijven de bestaande app-aanroepen ondersteunen.
+- Nieuwe WebAuthn user.id-waarden zijn compact en app-/functiegebonden en blijven binnen de limiet van 64 bytes.
+
+**Toegevoegd**
+- De Core-modules voor apparaatkoppeling en sessievergrendeling, plus de bijbehorende factory-modules, zijn opgenomen in de offline-cache.
+- De automatische tests controleren nu ook de 64-byte-limiet van nieuwe WebAuthn user.id-waarden.
+
+Bestaande kluizen, opslagprefix, gegevensstructuur en synchronisatiepad blijven behouden.
+
 ## 1.31.5 – 2026-11-12
 
 **Gewijzigd**
