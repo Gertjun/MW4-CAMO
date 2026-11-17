@@ -80,3 +80,13 @@ test('de QR-generator kan een realistische app-link met pairing-data encoderen',
   assert.ok(qr.getModuleCount() >= 21);
   assert.ok(qr.createDataURL(3, 4).startsWith('data:image/gif;base64,'));
 });
+
+test('een eerder succesvol gebruikte QR-code kan op hetzelfde apparaat niet opnieuw worden geopend', async () => {
+  const created = await createPairingQrPayload({ github, pin: 'AB3D-7KMP', now: 1_000 });
+  const storage = new MemoryStorage();
+  markPairingNonceUsed(created.nonce, storage, 2_000);
+  await assert.rejects(
+    openPairingQrPayload(created.payload, 'AB3D-7KMP', 2_500, storage),
+    /op dit apparaat al gebruikt/,
+  );
+});
