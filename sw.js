@@ -3,7 +3,7 @@
 // BIJ ELKE RELEASE: VERSION ophogen (gelijk aan js/config.js).
 // NIEUW BESTAND?    Toevoegen aan PRECACHE.
 
-const VERSION = '1.31.5';
+const VERSION = '1.31.6';
 
 // De cache-naam bevat het pad van de app, zodat meerdere apps onder
 // <gebruiker>.github.io elkaars cache niet opruimen.
@@ -199,6 +199,13 @@ const PRECACHE = [
   './icons/icon-maskable-512.png',
   './icons/apple-touch-icon.png',
   './icons/favicon-32.png',
+
+  './js/core/biometric-factory.js',
+  './js/core/device-pairing.js',
+  './js/core/session-lock-factory.js',
+  './js/core/session-lock.js',
+  './js/core/sync-factory.js',
+  './js/core/vault-factory.js',
 ];
 
 self.addEventListener('install', (event) => {

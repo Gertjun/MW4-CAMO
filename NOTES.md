@@ -2,7 +2,7 @@
 
 De **actuele stand**: versie, open punten en sessielog. Werk dit bij aan het eind van elke sessie (zie `CLAUDE.md`). Besluiten staan in `DECISIONS.md`, wensen in `WISHLIST.md`.
 
-Laatst bijgewerkt: 12 november 2026 · versie **1.31.5**
+Laatst bijgewerkt: 17 november 2026 · versie **1.31.6**
 
 ---
 
@@ -17,6 +17,11 @@ PWA om ontgrendelde wapencamo's in Call of Duty Modern Warfare 4 bij te houden, 
 - Tombstones worden bewust niet automatisch opgeruimd; een veilige opruimstrategie vraagt bevestiging van alle gekoppelde apparaten.
 
 ## 4. Sessielog (kort, nieuwste bovenaan)
+
+- **17 nov 2026:**
+  - Upgradebranch `migration/pwa-core-v1.2.1` aangemaakt vanaf actuele `main` (`83f6237`).
+  - PWA-Core v1.2.1 geïntegreerd; release-pin, manifestchecksums en offline-precache bijgewerkt. Bestaande opslagprefix, kluisformaat en app-schema 4 behouden.
+  - Extra regressiecontrole toegevoegd voor de WebAuthn user.id-limiet van 64 bytes. PR-controles en praktische browser-/apparaatacceptatie volgen.
 
 - **12 nov 2026:**
   - Featurebranch `migration/pwa-core-v1.0.0` aangemaakt vanaf `0cb8284` na goedkeuring van het migratieontwerp.
