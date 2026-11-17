@@ -10,6 +10,8 @@ Laatst bijgewerkt: 12 november 2026
 
 ## Gerealiseerd
 
+- [x] QR-koppeling van laptop naar nieuw apparaat met versleutelde Core-overdracht en aparte pincode (praktische apparaattest volgt).
+
 - [x] Uitgebreide regressietests voor mastery-/camo-vrijspeelregels en handmatige tests op echte apparaten en twee apparaten.
 - [x] Aanvullende tests voor wachtwoord wijzigen en herstel van versleutelde back-ups.
 
