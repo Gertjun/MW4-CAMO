@@ -32,6 +32,30 @@ function validatePin(pin) {
   return normalized;
 }
 
+function assertPairingNotUsed(storage, pairingId, now) {
+  if (!storage || typeof storage.getItem !== 'function') {
+    throw new Error('Lokale replaybescherming is niet beschikbaar; de QR-code wordt geweigerd.');
+  }
+  let entries = [];
+  const stored = storage.getItem(USED_KEY);
+  if (stored !== null) {
+    try { entries = JSON.parse(stored); }
+    catch { throw new Error('De lokale replayhistorie is beschadigd; de QR-code wordt uit veiligheid geweigerd.'); }
+    if (!Array.isArray(entries) || entries.some((entry) =>
+      !entry || typeof entry.pairingId !== 'string' ||
+      !/^[A-Za-z0-9_-]{32}$/.test(entry.pairingId) ||
+      !Number.isSafeInteger(entry.usedAt) || entry.usedAt < 0)) {
+      throw new Error('De lokale replayhistorie is ongeldig; de QR-code wordt uit veiligheid geweigerd.');
+    }
+  }
+  if (entries.some((entry) =>
+    entry.pairingId === pairingId &&
+    now - entry.usedAt <= 10 * 60 * 1000 &&
+    entry.usedAt <= now + 30000)) {
+    throw new Error('Deze QR-code is op dit apparaat al gebruikt. Maak een nieuwe code.');
+  }
+}
+
 export async function createPairingQrPayload({ github, pin, now = Date.now() } = {}) {
   const created = await createPairingPayload({
     data: { github: validateGithubSettings(github) },
@@ -42,13 +66,15 @@ export async function createPairingQrPayload({ github, pin, now = Date.now() } =
   return { payload: created.payload, expiresAt: created.expiresAt, nonce: created.pairingId };
 }
 
-export async function openPairingQrPayload(payload, pin, now = Date.now()) {
+export async function openPairingQrPayload(payload, pin, now = Date.now(), storage = globalThis.localStorage) {
   const opened = await openPairingPayload({
     payload,
     secrets: [validatePin(pin)],
     context: CONTEXT,
     now,
   });
+  // Controleer de nonce vóórdat ontsleutelde GitHub-gegevens aan de UI worden teruggegeven.
+  assertPairingNotUsed(storage, opened.pairingId, now);
   const github = validateGithubSettings(opened.data?.github);
   return { github, nonce: opened.pairingId, expiresAt: opened.expiresAt };
 }
