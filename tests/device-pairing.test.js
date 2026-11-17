@@ -70,9 +70,12 @@ test('een gebruikte pairing-nonce kan lokaal niet opnieuw worden gemarkeerd', as
   );
 });
 
-test('de QR-generator kan een app-link met pairing-data encoderen', () => {
+test('de QR-generator kan een realistische app-link met pairing-data encoderen', async () => {
+  const created = await createPairingQrPayload({ github: { ...github, token: 'x'.repeat(500) }, pin: 'AB3D-7KMP', now: 1_000 });
+  const url = new URL('https://gertjun.github.io/MW4-CAMO/');
+  url.searchParams.set('pair', created.payload);
   const qr = qrcode(0, 'L');
-  qr.addData('https://gertjun.github.io/MW4-CAMO/?pair=PWA-CORE-PAIR-1%3Atest', 'Byte');
+  qr.addData(url.toString(), 'Byte');
   qr.make();
   assert.ok(qr.getModuleCount() >= 21);
   assert.match(qr.createDataURL(3, 4), /^data:image\\/gif;base64,/);
