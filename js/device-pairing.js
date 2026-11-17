@@ -20,8 +20,8 @@ function validateGithubSettings(github) {
   const { owner, repo, branch, path, token } = github;
   if (typeof owner !== 'string' || !/^[A-Za-z0-9-]{1,39}$/.test(owner)) throw new Error('De GitHub-eigenaar is ongeldig.');
   if (typeof repo !== 'string' || !/^[A-Za-z0-9._-]{1,100}$/.test(repo)) throw new Error('De GitHub-repository is ongeldig.');
-  if (typeof branch !== 'string' || !branch.trim() || branch.length > 255) throw new Error('De GitHub-branch is ongeldig.');
-  if (typeof path !== 'string' || !path.trim() || path.startsWith('/') || path.length > 500) throw new Error('Het pad naar de kluis is ongeldig.');
+  if (typeof branch !== 'string' || !/^[A-Za-z0-9._/-]{1,255}$/.test(branch) || branch.includes('..')) throw new Error('De GitHub-branch is ongeldig.');
+  if (typeof path !== 'string' || !/^[A-Za-z0-9._/-]{1,500}$/.test(path) || path.split('/').some((part) => part === '..')) throw new Error('Het pad naar de kluis is ongeldig.');
   if (typeof token !== 'string' || !token.trim() || token.length > 500) throw new Error('Het GitHub-token ontbreekt of is ongeldig.');
   return { owner, repo, branch, path, token };
 }
