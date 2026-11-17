@@ -78,5 +78,5 @@ test('de QR-generator kan een realistische app-link met pairing-data encoderen',
   qr.addData(url.toString(), 'Byte');
   qr.make();
   assert.ok(qr.getModuleCount() >= 21);
-  assert.match(qr.createDataURL(3, 4), /^data:image\\/gif;base64,/);
+  assert.ok(qr.createDataURL(3, 4).startsWith('data:image/gif;base64,'));
 });
