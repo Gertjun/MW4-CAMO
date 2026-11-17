@@ -27,7 +27,7 @@ class MemoryStorage {
 test('QR-pairing roundtrip geeft alleen de gevalideerde GitHub-instellingen terug', async () => {
   const created = await createPairingQrPayload({ github, pin: 'AB3D-7KMP', now: 1_000 });
   assert.ok(created.payload.startsWith('PWA-CORE-PAIR-1:'));
-  const opened = await openPairingQrPayload(created.payload, 'AB3D-7KMP', 2_000);
+  const opened = await openPairingQrPayload(created.payload, 'AB3D-7KMP', 2_000, new MemoryStorage());
   assert.deepEqual(opened.github, github);
   assert.equal(opened.nonce, created.nonce);
   assert.equal(opened.expiresAt, 181_000);
