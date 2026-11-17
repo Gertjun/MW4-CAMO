@@ -1104,7 +1104,7 @@ async function openPairOut() {
   qr.make();
   const qrImage = h('img', {
     class: 'pair-qr',
-    src: qr.createDataURL(4, 4),
+    src: qr.createDataURL(5, 4),
     alt: 'QR-code om MW4 Camo Tracker op een nieuw apparaat te koppelen',
   });
   const field = h('textarea', { class: 'pair-code', readonly: true, rows: 4, 'aria-label': 'Versleutelde koppelcode' }, code);
