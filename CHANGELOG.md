@@ -13,8 +13,6 @@
 
 Bestaande kluizen, opslagprefix, gegevensstructuur en synchronisatiepad blijven behouden.
 
-# Changelog
-
 ## 1.31.5 – 2026-11-12
 
 **Gewijzigd**
