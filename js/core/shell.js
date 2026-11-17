@@ -12,6 +12,8 @@ import { syncNow, UpdateRequiredError } from './sync.js';
 import { createClient } from './github.js';
 import { createNav } from './nav.js';
 import * as pair from './pair.js';
+import * as devicePairing from '../device-pairing.js';
+import qrcode from '../vendor/qrcode.js';
 import { $, $$, h, formValues, saveFile, formatWhen, today, isMobileStandalone } from './dom.js';
 
 const SCREENS = ['loading', 'setup', 'lock', 'app'];
@@ -42,6 +44,8 @@ let syncPromise = null;
 let syncController = null;
 let storageConflict = false;
 let storageConflictExternalValues = new Map();
+let pendingPairingNonce = null;
+let scannedPairLinkWithExistingVault = false;
 const busyOperations = new Set();
 
 // Wijzigingen lopen één voor één, zodat elke wijziging voortbouwt op de vorige
@@ -483,6 +487,9 @@ function wireSetup() {
   linkForm.elements.path.setAttribute('value', APP.defaultDataPath);
 
   for (const form of [newForm, linkForm]) form.addEventListener('input', () => showError('#setup-error', ''));
+  linkForm.addEventListener('input', (event) => {
+    if (event.target.name === 'pairCode' || event.target.name === 'pairPin') pendingPairingNonce = null;
+  });
 
   $$('[data-setup-tab]').forEach((tab) => tab.addEventListener('click', () => {
     const mode = tab.dataset.setupTab;
@@ -496,7 +503,16 @@ function wireSetup() {
   $('#btn-pair-in')?.addEventListener('click', async (e) => {
     showError('#setup-error', '');
     await withBusy(e.currentTarget, async () => {
-      const gh = await pair.readPairCode(linkForm.elements.pairCode.value, linkForm.elements.pairPin.value);
+      const code = linkForm.elements.pairCode.value.trim();
+      let gh;
+      if (code.startsWith('PWA-CORE-PAIR-1:')) {
+        const opened = await devicePairing.openPairingQrPayload(code, linkForm.elements.pairPin.value);
+        gh = opened.github;
+        pendingPairingNonce = opened.nonce;
+      } else {
+        gh = await pair.readPairCode(code, linkForm.elements.pairPin.value);
+        pendingPairingNonce = null;
+      }
       for (const k of ['owner', 'repo', 'branch', 'path', 'token']) linkForm.elements[k].value = gh[k] ?? '';
       linkForm.elements.pairCode.value = '';
       linkForm.elements.pairPin.value = '';
@@ -504,6 +520,22 @@ function wireSetup() {
       toast('Koppeling ingevuld. Vul nu het wachtwoord van je kluis in.', 'ok');
     }).catch((err) => showError('#setup-error', err.message));
   });
+
+  // Een QR-link opent rechtstreeks het bestaande-koppelformulier op een nieuw apparaat.
+  const incomingUrl = new URL(location.href);
+  const incomingPairCode = incomingUrl.searchParams.get('pair');
+  if (incomingPairCode) {
+    incomingUrl.searchParams.delete('pair');
+    history.replaceState(history.state, '', `${incomingUrl.pathname}${incomingUrl.search}${incomingUrl.hash}`);
+    if (vault.hasVault()) {
+      scannedPairLinkWithExistingVault = true;
+    } else if (incomingPairCode.startsWith('PWA-CORE-PAIR-1:')) {
+      linkForm.elements.pairCode.value = incomingPairCode;
+      $('[data-setup-tab="link"]')?.click();
+    } else {
+      showError('#setup-error', 'De QR-link bevat geen geldige MW4-koppeling. Scan een nieuwe QR-code.');
+    }
+  }
 
   newForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -541,6 +573,10 @@ function wireSetup() {
         await vault.importEnvelope(remote.envelope, v.password);
         vault.setSyncMeta({ sha: remote.sha, dirty: false, lastSyncAt: Date.now() });
         await vault.setDeviceSettings({ github, autoSync: true });
+        if (pendingPairingNonce) {
+          devicePairing.markPairingNonceUsed(pendingPairingNonce);
+          pendingPairingNonce = null;
+        }
         linkForm.reset();
         await afterUnlock({ skipSync: true });
         toast('Kluis opgehaald van GitHub.', 'ok');
@@ -648,6 +684,10 @@ async function afterUnlock({ skipSync = false } = {}) {
   showScreen('app');
   hideNotice();
   render();
+  if (scannedPairLinkWithExistingVault) {
+    scannedPairLinkWithExistingVault = false;
+    toast('Deze app heeft al een kluis. QR-koppeling is alleen bedoeld voor een nieuw of gewist apparaat; je bestaande kluis is niet gewijzigd.', 'error');
+  }
   updateSyncIndicator();
   resetIdle();
   requestPersistentStorage();
@@ -1055,20 +1095,32 @@ async function updateBioUI() {
 async function openPairOut() {
   if (!isSyncConfigured()) throw new Error('Stel eerst de synchronisatie in.');
   const pin = pair.newPin();
-  const code = await pair.makePairCode(settings.github, pin);
-  const field = h('textarea', { class: 'pair-code', readonly: true, rows: 4, 'aria-label': 'Koppelcode' }, code);
+  const created = await devicePairing.createPairingQrPayload({ github: settings.github, pin });
+  const code = created.payload;
+  const appUrl = new URL('./', location.href);
+  appUrl.searchParams.set('pair', code);
+  const qr = qrcode(0, 'L');
+  qr.addData(appUrl.toString(), 'Byte');
+  qr.make();
+  const qrImage = h('img', {
+    class: 'pair-qr',
+    src: qr.createDataURL(4, 4),
+    alt: 'QR-code om MW4 Camo Tracker op een nieuw apparaat te koppelen',
+  });
+  const field = h('textarea', { class: 'pair-code', readonly: true, rows: 4, 'aria-label': 'Versleutelde koppelcode' }, code);
   const copy = h('button', { class: 'btn btn-primary', type: 'button' }, 'Koppelcode kopiëren');
   const close = h('button', { class: 'btn', type: 'button' }, 'Klaar');
   const dlg = h('dialog', { id: 'dlg-pair', class: 'sheet pair-sheet', 'aria-labelledby': 'pair-title' },
     h('div', { class: 'sheet-header' }, h('h2', { id: 'pair-title' }, 'Ander apparaat koppelen')),
     h('div', { class: 'sheet-body stack' },
       h('ol', { class: 'pair-steps' },
-        h('li', {}, 'Zet de koppelcode op je andere apparaat, bijvoorbeeld via AirDrop, Notities of een bericht aan jezelf.'),
-        h('li', {}, `Open daar ${APP.name}, kies `, h('strong', {}, 'Bestaande koppelen'), ' en plak de koppelcode.'),
-        h('li', {}, 'Typ de pincode hieronder over en vul het wachtwoord van je kluis in.')),
-      field,
+        h('li', {}, 'Open de camera op je iPhone en scan de QR-code. Tik op de melding om MW4 Camo Tracker te openen.'),
+        h('li', {}, 'Vul op het nieuwe apparaat de pincode hieronder in en kies ' , h('strong', {}, 'Koppelcode gebruiken'), '.'),
+        h('li', {}, 'Vul daarna het wachtwoord van je kluis in om de gegevens van GitHub op te halen.')),
+      qrImage,
       h('p', { class: 'pair-pin' }, h('span', { class: 'muted' }, 'Pincode'), h('strong', {}, pin)),
-      h('p', { class: 'hint' }, 'Stuur de pincode niet samen met de koppelcode mee. De code werkt alleen met deze pincode; sluit je dit venster, dan is de pincode weg.'),
+      h('p', { class: 'hint' }, 'De QR-code bevat een versleutelde koppeling en is 3 minuten geldig. Deel de pincode apart; wie beide heeft, kan de GitHub-koppeling uitlezen.'),
+      field,
       h('div', { class: 'button-row' }, copy, close)));
   copy.addEventListener('click', async () => {
     try {
