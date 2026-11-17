@@ -207,6 +207,7 @@ const PRECACHE = [
   './js/core/sync-factory.js',
   './js/core/vault-factory.js',
   './js/device-pairing.js',
+  './js/device-pairing-ui.js',
   './js/vendor/qrcode.js',
 ];
 
