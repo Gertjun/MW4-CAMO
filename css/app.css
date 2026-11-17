@@ -490,7 +490,7 @@ tbody tr + tr > * { border-top: 1px solid var(--border); }
 /* QR-koppeling: scherp en groot genoeg om vanaf een laptop te scannen. */
 .pair-qr {
   display: block;
-  width: min(100%, 320px);
+  width: min(100%, 400px);
   height: auto;
   aspect-ratio: 1;
   margin: 0 auto;
