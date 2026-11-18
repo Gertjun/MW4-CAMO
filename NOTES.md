@@ -2,7 +2,7 @@
 
 De **actuele stand**: versie, open punten en sessielog. Werk dit bij aan het eind van elke sessie (zie `CLAUDE.md`). Besluiten staan in `DECISIONS.md`, wensen in `WISHLIST.md`.
 
-Laatst bijgewerkt: 17 november 2026 · versie **1.32.0**
+Laatst bijgewerkt: 18 november 2026 · versie **1.32.0** · PWA-Core v1.2.1
 
 ---
 
@@ -13,16 +13,19 @@ Zie `CLAUDE.md`.
 PWA om ontgrendelde wapencamo's in Call of Duty Modern Warfare 4 bij te houden, op iPhone, iPad en laptop. Gebouwd op de PWA-template; sync via `Gertjun/SyncData`.
 
 ## 3. Open punten en bekende problemen
-- QR-koppeling moet na de PR nog praktisch worden getest tussen laptop en iPhone, inclusief openen van de link vanuit de iOS-camera.
+- QR-koppeling is gemerged via PR #6. De praktische scan- en koppeltest tussen laptop en iPhone, inclusief openen vanuit de iOS-camera, staat nog open.
 - Wapenlijst per seizoen bijwerken (staat in de code).
 - Tombstones worden bewust niet automatisch opgeruimd; een veilige opruimstrategie vraagt bevestiging van alle gekoppelde apparaten.
 
 ## 4. Sessielog (kort, nieuwste bovenaan)
 
+- **18 nov 2026:**
+  - Actuele controle: QR-koppeling staat al op `main` via PR #6 (`12c7766` als PR-head). De code is dus niet langer alleen een featurebranch.
+  - Praktische scan- en koppeltest tussen laptop en iPhone is nog niet bevestigd; deze blijft open.
+
 - **17 nov 2026:**
-  - Featurebranch `feature/qr-device-pairing` aangemaakt vanaf de actuele `main` na praktische validatie van PWA-Core v1.2.1.
-  - QR-koppeling toegevoegd met de Core-module voor versleutelde overdracht, een losse pincode, een link die het koppelveld automatisch invult en lokale replaybescherming.
-  - De bestaande kluis, het schema, de opslagprefix, passkeys en het GitHub-syncformaat blijven ongewijzigd. Praktische iPhone-scan- en koppeltest staat nog open.
+  - QR-koppeling ontwikkeld op `feature/qr-device-pairing` met de Core-module voor versleutelde overdracht, een afzonderlijke pincode, automatische invulling van het koppelveld en lokale replaybescherming.
+  - De bestaande kluis, het schema, de opslagprefix, passkeys en het GitHub-syncformaat blijven ongewijzigd.
 
 - **17 nov 2026:**
   - Upgradebranch `migration/pwa-core-v1.2.1` aangemaakt vanaf actuele `main` (`83f6237`).
