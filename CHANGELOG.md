@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.33.0 – 2026-11-18
+
+**Toegevoegd**
+- De drie Warzone-mastery-camo's staan nu bij de mastery-camo's, naast Multiplayer en DMZ: Parallax, Damascus Reforged en Empyros, elk met de opdracht erbij. Ze komen vrij na Harmonic Break op 33 wapens, net als de andere mastery-camo's. Afbeeldingen volgen zodra die beschikbaar zijn.
+
+**Behouden**
+- Je bestaande voortgang en de gegevensstructuur blijven ongewijzigd; er komen alleen drie nieuwe vinkjes bij.
+
 ## 1.32.0 – 2026-11-17
 
 **Toegevoegd**

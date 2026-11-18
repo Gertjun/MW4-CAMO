@@ -4,7 +4,7 @@
 // Gegevens in de kluis:
 //   progress: [{ id, weaponId, camoId, done, doneAt, createdAt, updatedAt }]
 //     id = '<wapen>:<camo>' voor gewone en prestige-camo's (pres1–pres4),
-//     id = 'mastery:<camo>' voor de 6 mastery-camo's (weaponId 'mastery').
+//     id = 'mastery:<camo>' voor de 9 mastery-camo's (MP, DMZ, Warzone) (weaponId 'mastery').
 //   pins:     [{ id: '<wapen>', pinned, createdAt, updatedAt }] (sinds schema 3)
 //   loadouts: zie js/loadouts.js (sinds schema 2)
 //   overviewOrder: { order: ['summary', …], updatedAt } of null (sinds schema 4)

@@ -2,7 +2,7 @@
 
 De **actuele stand**: versie, open punten en sessielog. Werk dit bij aan het eind van elke sessie (zie `CLAUDE.md`). Besluiten staan in `DECISIONS.md`, wensen in `WISHLIST.md`.
 
-Laatst bijgewerkt: 18 november 2026 · versie **1.32.1** · PWA-Core v1.2.2
+Laatst bijgewerkt: 18 november 2026 · versie **1.33.0** · PWA-Core v1.2.2
 
 ---
 
@@ -14,10 +14,15 @@ PWA om ontgrendelde wapencamo's in Call of Duty Modern Warfare 4 bij te houden, 
 
 ## 3. Open punten en bekende problemen
 - QR-koppeling is gemerged via PR #6 en de praktische koppeling tussen laptop en iPhone is op 18 november 2026 door de gebruiker bevestigd als geslaagd.
-- Wapenlijst per seizoen bijwerken (staat in de code).
+- Wapenlijst per seizoen bijwerken (staat in de code). Later in Season 1 komen de JAK 12 (shotgun) en ZLR Talonhawk (melee) via events; op 18 nov nog geen datum of opdrachten bekend.
+- Nog onbekend (stand 18 nov): wapenlevels van de speciale camo's van Cronen Osprey, CSG-35 en Mosin-Nagant (Fractal Snow, Sticker Shock), DMZ-opdracht van Chained, en afbeeldingen van de zes Season 1-camo's en de drie Warzone-mastery-camo's.
 - Tombstones worden bewust niet automatisch opgeruimd; een veilige opruimstrategie vraagt bevestiging van alle gekoppelde apparaten.
 
 ## 4. Sessielog (kort, nieuwste bovenaan)
+
+- **18 nov 2026 (avond):**
+  - Bronnen nagelopen op nieuwe camo-info; opdrachten van Cronen Osprey en CSG-35 bevestigd via callofduty.com.
+  - 1.33.0: Warzone-mastery-camo's (Parallax, Damascus Reforged, Empyros) toegevoegd.
 
 - **18 nov 2026:**
   - PWA-Core v1.2.2 geïntegreerd via PR #7; versie 1.32.1. De upgrade bevat de officiële release-pin, bijgewerkte manifestchecksums en de tombstone-herlevingsfix. PR #7 is gemerged.

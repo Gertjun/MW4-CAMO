@@ -106,7 +106,7 @@ test('prestige-camo’s worden in vaste volgorde vrijgespeeld', () => {
 });
 
 test('mastery-camo’s komen allemaal tegelijk vrij en zijn accountbreed', () => {
-  assert.equal(MASTERY_CAMOS.length, 6);
+  assert.equal(MASTERY_CAMOS.length, 9);
   const ids = doneWith(...WEAPONS.slice(0, 33).map((w) => key(w.id, 'harmonic')));
   assert.equal(masteryMissing(ids), null);
 });

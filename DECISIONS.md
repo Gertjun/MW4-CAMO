@@ -41,3 +41,6 @@ Besluiten die een volgende sessie moet kennen. Oude besluiten pas je niet aan; e
 ### D11 – QR-koppeling van een nieuw apparaat (17 nov 2026)
 - **Besluit:** MW4 toont op een bestaand, ontgrendeld apparaat een QR-link met een tijdelijke, versleutelde overdracht van alleen de GitHub-synchronisatie-instellingen. De pincode wordt apart getoond. Het nieuwe apparaat voert zelf het kluiswachtwoord in en haalt de versleutelde kluis via GitHub op.
 - **Veiligheidsgrenzen:** overdracht is gebonden aan `mw4-camo/device-pairing/v1`, verloopt na drie minuten en wordt lokaal tegen hergebruik beschermd. Passkeys en kluisgegevens worden niet via de QR-code overgedragen; de bestaande kluis- en synchronisatiemechanismen blijven leidend.
+
+### D12 – Warzone-mastery-camo's (18 nov 2026)
+- **Besluit:** de mastery-camo's hebben drie blokken: Multiplayer, DMZ en Warzone (Parallax, Damascus Reforged, Empyros). Ze komen, net als MP en DMZ, vrij na Harmonic Break op 33 wapens en staan in de kluis als `mastery:<camo-id>` (`parallax`, `damascus`, `empyros`). Geen schemawijziging.
