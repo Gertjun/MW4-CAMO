@@ -6,7 +6,7 @@ import qrcode from './vendor/qrcode.js';
 import { h } from './core/dom.js';
 
 const $ = (selector) => document.querySelector(selector);
-const QR_PREFIX = 'PWA-CORE-PAIR-1:';
+const QR_PREFIX = 'PWA-CORE-PAIR-2:';
 
 let pendingNonce = null;
 let pendingImport = false;
@@ -98,7 +98,7 @@ export function installDevicePairingUi() {
     } finally {
       button.disabled = false;
     }
-  });
+  }, true);
 
   const pairIn = $('#btn-pair-in');
   pairIn?.addEventListener('click', async (event) => {
@@ -128,7 +128,7 @@ export function installDevicePairingUi() {
     } finally {
       button.disabled = false;
     }
-  });
+  }, true);
 
   const linkForm = $('#form-setup-link');
   linkForm?.addEventListener('submit', () => {
