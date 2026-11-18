@@ -2,7 +2,7 @@
 
 De **actuele stand**: versie, open punten en sessielog. Werk dit bij aan het eind van elke sessie (zie `CLAUDE.md`). Besluiten staan in `DECISIONS.md`, wensen in `WISHLIST.md`.
 
-Laatst bijgewerkt: 18 november 2026 · kandidaatversie **1.32.1** · PWA-Core v1.2.2 (PR #7 open)
+Laatst bijgewerkt: 18 november 2026 · versie **1.32.1** · PWA-Core v1.2.2
 
 ---
 
@@ -13,17 +13,17 @@ Zie `CLAUDE.md`.
 PWA om ontgrendelde wapencamo's in Call of Duty Modern Warfare 4 bij te houden, op iPhone, iPad en laptop. Gebouwd op de PWA-template; sync via `Gertjun/SyncData`.
 
 ## 3. Open punten en bekende problemen
-- QR-koppeling is gemerged via PR #6. De praktische scan- en koppeltest tussen laptop en iPhone, inclusief openen vanuit de iOS-camera, staat nog open.
+- QR-koppeling is gemerged via PR #6 en de praktische koppeling tussen laptop en iPhone is op 18 november 2026 door de gebruiker bevestigd als geslaagd.
 - Wapenlijst per seizoen bijwerken (staat in de code).
 - Tombstones worden bewust niet automatisch opgeruimd; een veilige opruimstrategie vraagt bevestiging van alle gekoppelde apparaten.
 
 ## 4. Sessielog (kort, nieuwste bovenaan)
 
 - **18 nov 2026:**
-  - PWA-Core v1.2.2 geïntegreerd op PR #7; kandidaatversie 1.32.1. De upgrade bevat de officiële release-pin, bijgewerkte manifestchecksums en de tombstone-herlevingsfix.
-  - De unit-testworkflow is geslaagd; daarin worden ook de Core-pin en service-worker-precache gevalideerd. De PR staat nog open en is niet gemerged.
-  - Opslagprefix `mw4-camo`, datapad `mw4-camo/vault.json` en app-schema 4 blijven ongewijzigd.
-  - QR-koppeling staat al op `main` via PR #6. Praktische scan- en koppeltest tussen laptop en iPhone is nog niet bevestigd.
+  - PWA-Core v1.2.2 geïntegreerd via PR #7; versie 1.32.1. De upgrade bevat de officiële release-pin, bijgewerkte manifestchecksums en de tombstone-herlevingsfix. PR #7 is gemerged.
+  - CI op de PR-head is geslaagd; Core-pin, tests en service-worker-precache zijn gevalideerd.
+  - Opslagprefix `mw4-camo`, datapad `mw4-camo/vault.json` en app-schema 4 zijn ongewijzigd gebleven.
+  - QR-koppeling via PR #6 is praktisch getest tussen laptop en iPhone; de gebruiker bevestigde dat de koppeling is gelukt.
 
 - **17 nov 2026:**
   - QR-koppeling ontwikkeld op `feature/qr-device-pairing` met de Core-module voor versleutelde overdracht, een afzonderlijke pincode, automatische invulling van het koppelveld en lokale replaybescherming.
