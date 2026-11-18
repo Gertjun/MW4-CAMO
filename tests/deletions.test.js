@@ -72,3 +72,36 @@ test('tombstone blijft bestaan tot ieder actief apparaat de verwijdering heeft b
   });
   assert.deepEqual(fullyAcknowledged.loadouts, []);
 });
+
+
+test('nieuwere hercreatie wint van een oudere verwijdering', () => {
+  const state = { version: 1, devices: {}, deletions: { 'loadouts:revived-item': 20 } };
+  const result = applyDeletionLedger({
+    [SYSTEM_KEY]: state,
+    loadouts: [
+      { id: 'revived-item', deleted: true, updatedAt: 20 },
+      { id: 'revived-item', name: 'opnieuw aangemaakt', updatedAt: 21 },
+    ],
+  });
+  assert.deepEqual(result.loadouts, [
+    { id: 'revived-item', name: 'opnieuw aangemaakt', updatedAt: 21 },
+  ]);
+  assert.equal(Object.hasOwn(result[SYSTEM_KEY].deletions, 'loadouts:revived-item'), false);
+});
+
+test('gelijke of oudere hercreatie heft een verwijdering niet op', () => {
+  for (const updatedAt of [20, 19, undefined]) {
+    const state = { version: 1, devices: {}, deletions: { 'loadouts:still-deleted': 20 } };
+    const record = { id: 'still-deleted', name: 'ambigu of ouder' };
+    if (updatedAt !== undefined) record.updatedAt = updatedAt;
+    const result = applyDeletionLedger({
+      [SYSTEM_KEY]: state,
+      loadouts: [
+        { id: 'still-deleted', deleted: true, updatedAt: 20 },
+        record,
+      ],
+    });
+    assert.deepEqual(result.loadouts, []);
+    assert.equal(result[SYSTEM_KEY].deletions['loadouts:still-deleted'], 20);
+  }
+});

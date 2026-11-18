@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "coreVersion": "1.2.1",
+  "coreVersion": "1.2.2",
   "releaseStatus": "released",
   "source": {
-    "repository": "Gertjun/PWA-Template",
+    "repository": "Gertjun/PWA-Core",
     "ref": "main",
-    "commit": "0f538f8acf40d086df38e9bc4ed2cd875925c569"
+    "commit": "fa7b6a8b5ed5fa955a32c646ef2d1cee2bf2c0f0"
   },
   "allowlist": [
     "css/base.css",
@@ -33,7 +33,7 @@
     "js/core/biometric-factory.js": "37bb12303c302684a9321293d2755676a02066fcf569828586cbe1ae9a3eea3d",
     "js/core/biometric.js": "e6198102ac261cfb1455124d8782ad33fd0ca7de047b1ed9ee5af077ad0623a4",
     "js/core/crypto.js": "b919c15e021232ce20b0710b1818c87664d6acc794b9d95baf4f14664b7e636f",
-    "js/core/deletions.js": "2b8a853b86323c0c06d1087e605c0a2467b4079c0b77ecc62031299600410a0d",
+    "js/core/deletions.js": "de8837db085ffb548fdfeadc7f0f192b14e362744fb7ce8cec4effc2193b08be",
     "js/core/device-pairing.js": "24d4047146660b6cacbfaecc13d32b068ce46b056821a07a6dcc9dbdd961ce1a",
     "js/core/dom.js": "9a2b16ae0fcd5dc547efcca5088f35a532dfe40e94c2cd384f68fce9d913d141",
     "js/core/github.js": "970b1e0b1da88bd93c0ef3a4c3c2aea084403419271f4484a7ffba653e73ecb9",
