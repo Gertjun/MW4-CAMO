@@ -104,8 +104,8 @@ export function installDevicePairingUi() {
   pairIn?.addEventListener('click', async (event) => {
     const form = $('#form-setup-link');
     const code = form?.elements.pairCode.value.trim() || '';
-    // Oude PWK1-codes blijven via de bestaande Core-shell ondersteund.
-    if (!code.startsWith(QR_PREFIX)) return;
+    // Lange handmatige PAIR-2-codes vallen terug op de Core-shell; deze adapter verwerkt QR-formaatcodes.
+    if (!code.startsWith(QR_PREFIX) || code.length > devicePairing.PAIRING_QR_MAX_CHARS) return;
 
     event.preventDefault();
     event.stopImmediatePropagation();

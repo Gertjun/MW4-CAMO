@@ -8,3 +8,5 @@ export async function createPairingQrPayload({github,pin,now=Date.now()}={}){con
 export async function openPairingQrPayload(payload,pin,now=Date.now(),storage=globalThis.localStorage){const o=await openPairingPayload({payload,pin,context:CONTEXT,now,transport:'qr'});assertPairingNotUsed(storage,o.pairingId,now);return{github:validateGithubSettings(o.syncConfig),nonce:o.pairingId,expiresAt:o.expiresAt}}
 export function markPairingNonceUsed(nonce,storage=globalThis.localStorage,now=Date.now()){markPairingUsed(storage,nonce,{storageKey:USED_KEY,now})}
 export const PAIRING_QR_TTL_MS=DEVICE_PAIRING_TTL_MS;
+
+export { PAIRING_QR_MAX_CHARS } from './core/pair.js';
