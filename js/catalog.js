@@ -293,10 +293,11 @@ export const PRESTIGE_CAMOS = [
 
 // Mastery-camo's na Divergence (Harmonic Break op 33 wapens). Eén keer
 // vrij te spelen, niet per wapen. Record-id in de kluis: "mastery:<camo-id>".
-// Bron: codmunity.gg (okt. 2026).
+// Bron: codmunity.gg (okt. 2026); Warzone: beebom.com en codmunity.gg (nov. 2026).
 export const MASTERY_MODES = [
   { id: 'mp', label: 'Multiplayer' },
   { id: 'dmz', label: 'DMZ' },
+  { id: 'wz', label: 'Warzone' },
 ];
 export const MASTERY_CAMOS = [
   { id: 'mercurial', mode: 'mp', name: 'Mercurial Drift', mp: '10 kills in één potje, 250 keer' },
@@ -305,6 +306,10 @@ export const MASTERY_CAMOS = [
   { id: 'chiral', mode: 'dmz', name: 'Chiral', mp: '2.500 kills op vijanden van Tier 3 of hoger' },
   { id: 'ripple', mode: 'dmz', name: 'Ripple Tide', mp: '50 keer exfiltreren met 2 LT-dogtags in één deployment' },
   { id: 'helio', mode: 'dmz', name: 'Helio', mp: '25.000 kills met Legendary-wapens op een Operator van maximaal level' },
+  // Warzone: met elk wapen of een mix van wapens te halen.
+  { id: 'parallax', mode: 'wz', name: 'Parallax', mp: '5 kills in één potje, 300 keer' },
+  { id: 'damascus', mode: 'wz', name: 'Damascus Reforged', mp: '2 kills zonder plating, 200 keer' },
+  { id: 'empyros', mode: 'wz', name: 'Empyros', mp: 'In de top 5 eindigen met minstens 6 kills, 75 keer' },
 ];
 export const weaponById = (id) => WEAPONS.find((w) => w.id === id);
 export const classById = (id) => CLASSES.find((c) => c.id === id);
