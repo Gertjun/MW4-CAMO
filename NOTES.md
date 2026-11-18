@@ -2,9 +2,11 @@
 
 De **actuele stand**: versie, open punten en sessielog. Werk dit bij aan het eind van elke sessie (zie `CLAUDE.md`). Besluiten staan in `DECISIONS.md`, wensen in `WISHLIST.md`.
 
-Laatst bijgewerkt: 18 november 2026 · versie **1.33.0** · PWA-Core v1.2.2
+Laatst bijgewerkt: 18 november 2026 · `main` 1.33.0 / PWA-Core v1.2.2; PR #10 stelt 1.33.1 / PWA-Core v1.3.0 voor
 
 ---
+
+- **18 november 2026:** PR #10 migreert de QR-adapter naar het gedeelde PAIR-2-protocol en draagt alleen de GitHub Sync-configuratie over. CI op de PR-branch is geslaagd; nog niet gemerged of praktisch getest.
 
 ## 1. Werkwijze
 Zie `CLAUDE.md`.

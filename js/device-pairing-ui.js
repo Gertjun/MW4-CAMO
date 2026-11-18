@@ -6,7 +6,7 @@ import qrcode from './vendor/qrcode.js';
 import { h } from './core/dom.js';
 
 const $ = (selector) => document.querySelector(selector);
-const QR_PREFIX = 'PWA-CORE-PAIR-1:';
+const QR_PREFIX = 'PWA-CORE-PAIR-2:';
 
 let pendingNonce = null;
 let pendingImport = false;
@@ -98,14 +98,14 @@ export function installDevicePairingUi() {
     } finally {
       button.disabled = false;
     }
-  });
+  }, true);
 
   const pairIn = $('#btn-pair-in');
   pairIn?.addEventListener('click', async (event) => {
     const form = $('#form-setup-link');
     const code = form?.elements.pairCode.value.trim() || '';
-    // Oude PWK1-codes blijven via de bestaande Core-shell ondersteund.
-    if (!code.startsWith(QR_PREFIX)) return;
+    // Lange handmatige PAIR-2-codes vallen terug op de Core-shell; deze adapter verwerkt QR-formaatcodes.
+    if (!code.startsWith(QR_PREFIX) || code.length > devicePairing.PAIRING_QR_MAX_CHARS) return;
 
     event.preventDefault();
     event.stopImmediatePropagation();
@@ -128,7 +128,7 @@ export function installDevicePairingUi() {
     } finally {
       button.disabled = false;
     }
-  });
+  }, true);
 
   const linkForm = $('#form-setup-link');
   linkForm?.addEventListener('submit', () => {
