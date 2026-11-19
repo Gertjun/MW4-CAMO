@@ -50,7 +50,17 @@ async function openPairingDialog() {
     rows: 4,
     'aria-label': 'Versleutelde koppelcode',
   }, code);
-  const copy = h('button', { class: 'btn btn-primary', type: 'button' }, 'Koppelcode kopiëren');
+  const copyCode = h('button', { class: 'btn btn-primary', type: 'button' }, 'Koppelcode kopiëren');
+  const showPin = h('button', { class: 'btn', type: 'button' }, 'Pincode tonen (QR en koppelcode verbergen)');
+  const qrPanel = h('div', { class: 'stack', id: 'pair-qr-panel' },
+    qrImage, field, copyCode, showPin);
+  const pinPanel = h('div', { class: 'stack', id: 'pair-pin-panel', hidden: true },
+    h('p', { class: 'pair-pin' }, h('span', { class: 'muted' }, 'Pincode'), h('strong', {}, pin)),
+    h('p', { class: 'hint' }, 'De QR-code en koppelcode zijn verborgen. Deel deze pincode via een ander kanaal.'),
+    h('button', { class: 'btn btn-primary', type: 'button' }, 'Pincode kopiëren'),
+    h('button', { class: 'btn', type: 'button' }, 'Terug naar QR-code'));
+  const copyPin = pinPanel.querySelectorAll('button')[0];
+  const backToQr = pinPanel.querySelectorAll('button')[1];
   const close = h('button', { class: 'btn', type: 'button' }, 'Klaar');
   const dialog = h('dialog', {
     id: 'dlg-pair-qr',
@@ -61,15 +71,13 @@ async function openPairingDialog() {
   h('div', { class: 'sheet-body stack' },
     h('ol', { class: 'pair-steps' },
       h('li', {}, 'Open de camera op je iPhone en scan de QR-code. Tik op de melding om MW4 Camo Tracker te openen.'),
-      h('li', {}, 'Vul op het nieuwe apparaat de pincode hieronder in en kies ', h('strong', {}, 'Koppelcode gebruiken'), '.'),
-      h('li', {}, 'Vul daarna het wachtwoord van je kluis in om de gegevens van GitHub op te halen.')),
-    qrImage,
-    h('p', { class: 'pair-pin' }, h('span', { class: 'muted' }, 'Pincode'), h('strong', {}, pin)),
-    h('p', { class: 'hint' }, 'De QR-code bevat een versleutelde koppeling en is 3 minuten geldig. Deel de pincode apart; wie beide heeft, kan de GitHub-koppeling uitlezen.'),
-    field,
-    h('div', { class: 'button-row' }, copy, close)));
+      h('li', {}, 'Kopieer de koppelcode indien nodig en kies op het nieuwe apparaat ', h('strong', {}, 'Koppelcode gebruiken'), '.'),
+      h('li', {}, 'Toon daarna de pincode en deel deze via een ander kanaal. Vul vervolgens het wachtwoord van je kluis in.')),
+    qrPanel, pinPanel, close));
 
-  copy.addEventListener('click', async () => {
+  showPin.addEventListener('click', () => { qrPanel.hidden = true; pinPanel.hidden = false; });
+  backToQr.addEventListener('click', () => { pinPanel.hidden = true; qrPanel.hidden = false; });
+  copyCode.addEventListener('click', async () => {
     try {
       await navigator.clipboard.writeText(code);
       showToast('Koppelcode gekopieerd.', 'ok');
@@ -78,12 +86,15 @@ async function openPairingDialog() {
       showToast('Kopiëren lukte niet. Selecteer de code en kopieer hem zelf.');
     }
   });
+  copyPin.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(pin); showToast('Pincode gekopieerd.', 'ok'); }
+    catch { showToast('Kopiëren lukte niet. Selecteer de pincode en kopieer hem zelf.'); }
+  });
   close.addEventListener('click', () => dialog.close());
   dialog.addEventListener('close', () => dialog.remove());
   document.body.append(dialog);
   dialog.showModal();
 }
-
 export function installDevicePairingUi() {
   const pairOut = $('#btn-pair-out');
   pairOut?.addEventListener('click', async (event) => {
