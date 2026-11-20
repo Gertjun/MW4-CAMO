@@ -44,3 +44,8 @@ Besluiten die een volgende sessie moet kennen. Oude besluiten pas je niet aan; e
 
 ### D12 – Warzone-mastery-camo's (18 nov 2026)
 - **Besluit:** de mastery-camo's hebben drie blokken: Multiplayer, DMZ en Warzone (Parallax, Damascus Reforged, Empyros). Ze komen, net als MP en DMZ, vrij na Harmonic Break op 33 wapens en staan in de kluis als `mastery:<camo-id>` (`parallax`, `damascus`, `empyros`). Geen schemawijziging.
+
+### D13 – Documenten naar verleden, heden en toekomst (20 nov 2026)
+- **Besluit:** vier bestanden houden de app bij. Heden: `README.md`, met een blok "Stand" (vervangt `NOTES.md`; geen sessielog meer). Toekomst: `ROADMAP.md`, de enige takenlijst met genummerde punten (vervangt `WISHLIST.md`; de lijst "Gerealiseerd" vervalt). Verleden: `CHANGELOG.md` (wat) en `DECISIONS.md` (waarom). Een wijziging alleen aan deze documenten krijgt geen nieuwe appversie.
+- **Waarom:** NOTES, WISHLIST en de changelog herhaalden elkaar en liepen uit de pas (NOTES noemde PR #10 nog als voorstel terwijl die al gemerged was). Dezelfde indeling geldt voor al Geerts projecten.
+

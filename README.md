@@ -10,7 +10,29 @@ Live: https://gertjun.github.io/MW4-CAMO/
 - De app werkt **offline**. Updates installeer je met de knop "Bijwerken".
 - Er zijn geen frameworks en geen build-stap: alleen HTML, CSS en JavaScript-modules.
 
-De app is gebouwd op mijn PWA-template. De map `js/core/` is de kern uit die template.
+De app is gebouwd op PWA-Core (`Gertjun/PWA-Core`); de map `js/core/` is die gedeelde kern.
+
+## Waar vind je wat
+
+Elk onderwerp staat op één plek (D13).
+
+| | Vraag | Bestand |
+| --- | --- | --- |
+| Heden | Waar staan we nu, hoe zit het in elkaar, hoe werk je ermee? | dit bestand, `README.md` |
+| Toekomst | Wat moet of kan er nog gebeuren? | [`ROADMAP.md`](ROADMAP.md) |
+| Verleden | Wat is er per versie veranderd? | [`CHANGELOG.md`](CHANGELOG.md) |
+| Verleden | Waarom is iets zo gekozen? | [`DECISIONS.md`](DECISIONS.md) |
+
+Werkafspraken voor Claude: [`CLAUDE.md`](CLAUDE.md). Momentopname, wordt niet bijgewerkt: `docs/FASE-1-AANBEVELINGEN.md`.
+
+## Stand
+
+Bijgewerkt: 20 november 2026 · `main` **1.33.1** met PWA-Core v1.3.0. Dit blok wordt aan het eind van elke sessie overschreven.
+
+- QR-koppeling via het gedeelde PAIR-2-protocol (PR #10) en de aparte weergave van QR-code en pincode (PR #11) zijn gemerged; de automatische tests zijn geslaagd. Na deze twee wijzigingen is de koppeling nog niet opnieuw praktisch getest tussen laptop en iPhone (ROADMAP #4).
+- De changelog heeft nog geen regel voor 1.33.1 (ROADMAP #5).
+- Wapenlijst en camo's: bij met Season 1 tot en met de Warzone-mastery-camo's (1.33.0); wat nog onbekend is staat in ROADMAP #2 en #3.
+- Tombstones (sporen van verwijderde gegevens) worden bewust niet automatisch opgeruimd (D9 en ROADMAP #1).
 
 ## Structuur
 
@@ -39,6 +61,8 @@ js/core/                Template-kern (niet aanpassen voor deze app alleen)
 icons/                  App-iconen
 img/                    Logo, camo- en wapenafbeeldingen
 CHANGELOG.md            Wijzigingen per versie
+ROADMAP.md              Wat er nog moet gebeuren
+DECISIONS.md            Besluiten en waarom
 ```
 
 ## Synchronisatie instellen
@@ -55,7 +79,7 @@ Er is **geen herstel** als je je wachtwoord vergeet. Bewaar het daarom in je wac
 1. Verhoog `version` in `js/config.js` **en** `VERSION` in `sw.js` naar hetzelfde nummer.
 2. Nieuw bestand toegevoegd? Zet het in `PRECACHE` in `sw.js`.
 3. Datamodel gewijzigd? Verhoog `SCHEMA` in `js/app.js` en schrijf een migratie.
-4. Noteer de wijziging in `CHANGELOG.md`.
+4. Noteer de wijziging in `CHANGELOG.md` en haal gebouwde punten weg uit `ROADMAP.md`.
 5. Push naar `main`. Geïnstalleerde apps tonen daarna "Nieuwe versie beschikbaar → Bijwerken".
 
 ## Lokaal testen
