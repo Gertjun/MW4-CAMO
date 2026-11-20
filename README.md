@@ -30,7 +30,7 @@ Werkafspraken voor Claude: [`CLAUDE.md`](CLAUDE.md). Momentopname, wordt niet bi
 Bijgewerkt: 20 november 2026 · `main` **1.33.1** met PWA-Core v1.3.0. Dit blok wordt aan het eind van elke sessie overschreven.
 
 - QR-koppeling via het gedeelde PAIR-2-protocol (PR #10) en de aparte weergave van QR-code en pincode (PR #11) zijn gemerged; de automatische tests zijn geslaagd. Na deze twee wijzigingen is de koppeling nog niet opnieuw praktisch getest tussen laptop en iPhone (ROADMAP #4).
-- De changelog heeft nog geen regel voor 1.33.1 (ROADMAP #5).
+- De changelog heeft nog geen regel voor 1.33.1 (ROADMAP #5), en PR #11 is gemerged zonder nieuw versienummer (ROADMAP #6).
 - Wapenlijst en camo's: bij met Season 1 tot en met de Warzone-mastery-camo's (1.33.0); wat nog onbekend is staat in ROADMAP #2 en #3.
 - Tombstones (sporen van verwijderde gegevens) worden bewust niet automatisch opgeruimd (D9 en ROADMAP #1).
 
