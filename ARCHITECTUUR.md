@@ -20,9 +20,8 @@ js/catalog.js           Wapens, klassen, camo's, opdrachten en afbeeldingen
 js/loadouts.js          Loadouts-scherm
 js/attachments.js       Attachments per wapen en slot
 js/attachments-data.js  Lijst met attachments
-js/device-pairing.js    Koppelen van een nieuw apparaat via QR (adapter op de kern)
-js/device-pairing-ui.js Schermen voor de QR-koppeling
-js/vendor/qrcode.js     QR-codegenerator (lokaal, met licentiebestand)
+js/core/pairing-ui.js   Gedeelde QR-koppeling (Core)
+js/core/qrcode.js      Gedeelde QR-generator (Core)
 js/core/                Gedeelde kern PWA-Core (niet aanpassen, zie hieronder)
 icons/                  App-iconen
 img/                    Logo, camo- en wapenafbeeldingen (.webp)
@@ -42,8 +41,7 @@ docs/                   Momentopnames, worden niet bijgewerkt
   - `screens`: de schermen Overzicht, Camo's en Loadouts (Instellingen voegt de kern zelf toe). De schil tekent de tabbalk onderin (iPhone) en de inklapbare zijbalk links (laptop).
   - `schemaVersion`, `initialData()`, `migrate(data)`, `merge(local, remote)` en `render(root, ctx)`.
 - **Waarin deze app afwijkt:**
-  - QR-koppeling: `js/device-pairing.js` en `js/device-pairing-ui.js` zijn app-eigen schermen rond de kernfunctie, met context `mw4-camo` en eigen bescherming tegen hergebruik (D11). `js/main.js` installeert ze vóór de schil start.
-  - De QR-code wordt lokaal gemaakt met `js/vendor/qrcode.js`.
+  - QR-koppeling: gedeelde Core-shell en `js/core/pairing-ui.js`, context `mw4-camo`, v3 zonder PIN of wachtwoord (Core D25); v2 blijft ondersteund. QR-generator staat in `js/core/qrcode.js`.
 
 ## Instellingen in `js/config.js`
 
