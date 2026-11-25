@@ -29,9 +29,9 @@ Momentopname, wordt niet bijgewerkt: `docs/FASE-1-AANBEVELINGEN.md`.
 
 ## Stand
 
-Bijgewerkt: 20 november 2026 · `main` **1.33.1** met PWA-Core v1.3.0. Dit blok wordt aan het eind van elke sessie overschreven.
+Bijgewerkt: 25 november 2026 · migratie-PR **1.34.0** met PWA-Core v1.4.0. Dit blok wordt aan het eind van elke sessie overschreven.
 
-- QR-koppeling via het gedeelde PAIR-2-protocol (PR #10) en de aparte weergave van QR-code en pincode (PR #11) zijn gemerged; de automatische tests zijn geslaagd. Na deze twee wijzigingen is de koppeling nog niet opnieuw praktisch getest tussen laptop en iPhone (W4).
+- PWA-Core v1.4.0: gedeelde QR-koppeling zonder PIN of wachtwoord, bestaande v2-codes blijven ondersteund. De code geeft volledige toegang (Core D25). App-eigen QR-code verwijderd; fysieke acceptatie nog open (W4).
 - De changelog heeft nog geen regel voor 1.33.1 (W5), en PR #11 is gemerged zonder nieuw versienummer (W6).
 - Wapenlijst en camo's: bij met Season 1 tot en met de Warzone-mastery-camo's (1.33.0); wat nog onbekend is staat in W2 en W3.
 - Tombstones (sporen van verwijderde gegevens) worden bewust niet automatisch opgeruimd (D9 en W1).
@@ -42,6 +42,6 @@ Bijgewerkt: 20 november 2026 · `main` **1.33.1** met PWA-Core v1.3.0. Dit blok 
 1. Gebruik een **private** data-repo. Het kluisbestand staat standaard in `mw4-camo/vault.json`.
 2. Maak een **fine-grained personal access token** met alleen toegang tot de data-repo en **Contents: Read and write**.
 3. Ga in de app naar Instellingen → Synchronisatie, vul eigenaar, repo en token in en kies *Opslaan en testen*.
-4. Op een tweede apparaat kies je bij de eerste start **Bestaande koppelen**. Vul daar dezelfde gegevens en hetzelfde wachtwoord in.
+4. Op een tweede apparaat kies je bij de eerste start **Bestaande koppelen**. Scan de QR-code van het gekoppelde apparaat (Instellingen → Synchronisatie → Ander apparaat koppelen) of plak de koppelcode. Bij oude v2-codes of handmatige configuratie blijven PIN en/of wachtwoord nodig.
 
 Er is **geen herstel** als je je wachtwoord vergeet. Bewaar het daarom in je wachtwoordmanager.
